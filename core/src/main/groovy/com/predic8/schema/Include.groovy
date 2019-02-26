@@ -16,6 +16,7 @@ package com.predic8.schema
 
 
 import com.predic8.util.HTTPUtil
+import com.predic8.wsdl.util.NamespaceUtil
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -52,7 +53,9 @@ class Include extends SchemaComponent {
     def origBaseDir = schema.baseDir
     schema.baseDir = HTTPUtil.updateBaseDir(schemaLocation, schema.baseDir)
     log.debug("includedSchema.baseDir ${schema.baseDir}")
+    NamespaceUtil.push(schema)
     schema.parse(incToken, ctx.createNewSubContext([targetNamespace: schema.targetNamespace]))
+    NamespaceUtil.pop(schema)
     schema.baseDir = origBaseDir
   }
 

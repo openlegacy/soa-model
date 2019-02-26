@@ -14,6 +14,7 @@ package com.predic8.wsdl
 import com.predic8.soamodel.AbstractParser
 import com.predic8.soamodel.Consts
 import com.predic8.soamodel.WrongGrammarException
+import com.predic8.wsdl.util.NamespaceUtil
 import com.predic8.wsi.WSIResult
 
 import javax.xml.stream.XMLStreamReader
@@ -23,14 +24,17 @@ class WSDLParser extends AbstractParser {
   Registry registry
 
   Definitions parse(String input) {
+    NamespaceUtil.clear();
     super.parse(new WSDLParserContext(input: input))
   }
 
   Definitions parse(InputStream input) {
+    NamespaceUtil.clear();
     super.parse(new WSDLParserContext(input: input))
   }
 
   Definitions parse(WSDLParserContext ctx) {
+    NamespaceUtil.clear();
     super.parse(ctx)
   }
 
