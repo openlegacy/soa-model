@@ -14,6 +14,7 @@
 
 package com.predic8.soamodel
 
+import com.predic8.wsdl.util.NamespaceUtil
 import com.predic8.xml.util.PrefixedName
 import groovy.xml.QName
 import org.slf4j.Logger
@@ -96,6 +97,8 @@ abstract class XMLElement {
   abstract String getPrefix()
 
   def getNamespace(prefix) {
+    //get modified prefix if possible
+    prefix = NamespaceUtil.getPrefix(this, prefix)
     if (prefix == "xml") return Consts.XML_NS
     def res = namespaces[prefix] // Don't use ?: because res == '' should be a valid response
     if (res == null) return parent?.getNamespace(prefix) ?: prefix == '' ? '' : null
@@ -128,7 +131,9 @@ abstract class XMLElement {
 
   protected parseNamespaces(token) {
     token.getNamespaceCount().times {
-      namespaces[token.getNamespacePrefix(it) ?: ''] = token.getNamespaceURI(it) ?: ''
+      //avoids prefix override
+      Map.Entry<String, String> ns = NamespaceUtil.getNamespace(this, token.getNamespacePrefix(it) ?: '', token.getNamespaceURI(it)?:'')
+      namespaces[ns.key] = ns.value
     }
   }
 
@@ -137,4 +142,10 @@ abstract class XMLElement {
     parent.namespaceContext + namespaces
   }
 
+  /**
+   * Java compatible getter
+   * */
+  def Map<String, String> getNamespaces() {
+    namespaces;
+  }
 }
