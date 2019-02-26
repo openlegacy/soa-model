@@ -237,4 +237,44 @@
         </profile>
     </profiles>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <configuration>
+                            <flattenMode>bom</flattenMode>
+                            <pomElements>
+                                <!-- Interpolate versions but keep scope import -->
+                                <dependencyManagement>interpolate</dependencyManagement>
+                                <!-- Make sure to keep plugin management -->
+                                <pluginManagement>resolve</pluginManagement>
+                                <!-- Keep distribution management as is to allow control via properties -->
+                                <distributionManagement>keep</distributionManagement>
+                            </pomElements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
