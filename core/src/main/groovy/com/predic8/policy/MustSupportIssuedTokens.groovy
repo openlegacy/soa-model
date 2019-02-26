@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class MustSupportIssuedTokens extends PolicyOperator{
+class MustSupportIssuedTokens extends PolicyOperator {
 
 }
 

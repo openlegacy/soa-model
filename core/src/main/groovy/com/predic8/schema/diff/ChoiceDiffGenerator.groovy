@@ -14,32 +14,36 @@
 
 package com.predic8.schema.diff
 
-import com.predic8.soamodel.*
-import com.predic8.schema.*
 
-class ChoiceDiffGenerator extends AbstractModelDiffGenerator{
-  
+import com.predic8.soamodel.Difference
+
+class ChoiceDiffGenerator extends AbstractModelDiffGenerator {
+
   private def labelChoice, labelRemoved, labelAdded, labelHasChanged
-  	
-  def removed = {new Difference(description:"'${labelChoice}' ${labelRemoved}.", type: 'choice', breaks: ctx.exchange ? true: null, exchange: a.exchange)}
 
-  def added = { new Difference(description:"'${labelChoice}' ${labelAdded}.", type: 'choice', breaks: ctx.exchange ? true: null, exchange: b.exchange)}
+  def removed = {
+    new Difference(description: "'${labelChoice}' ${labelRemoved}.", type: 'choice', breaks: ctx.exchange ? true : null, exchange: a.exchange)
+  }
+
+  def added = {
+    new Difference(description: "'${labelChoice}' ${labelAdded}.", type: 'choice', breaks: ctx.exchange ? true : null, exchange: b.exchange)
+  }
 
   def changed = { diffs ->
-    new Difference(description:"'${labelChoice}':" , type: 'choice' ,  diffs : diffs, exchange: a.exchange)
+    new Difference(description: "'${labelChoice}':", type: 'choice', diffs: diffs, exchange: a.exchange)
   }
-  
-  public ChoiceDiffGenerator(){
-	  updateLabels()
+
+  public ChoiceDiffGenerator() {
+    updateLabels()
   }
-  
-  protected def updateLabels(){
-	  labelChoice = bundle.getString("com.predic8.schema.diff.labelChoice")
-	  labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
-	  labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
-	  labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
-		labelParticle = bundle.getString("com.predic8.schema.diff.labelParticle")
+
+  protected def updateLabels() {
+    labelChoice = bundle.getString("com.predic8.schema.diff.labelChoice")
+    labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
+    labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
+    labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
+    labelParticle = bundle.getString("com.predic8.schema.diff.labelParticle")
   }
-  
+
 }
 

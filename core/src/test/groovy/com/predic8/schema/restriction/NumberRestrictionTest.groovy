@@ -14,16 +14,14 @@
 
 package com.predic8.schema.restriction
 
-import junit.framework.TestCase
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.SchemaParser
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-import com.predic8.xml.util.*
-import com.predic8.schema.*
-import com.predic8.schema.creator.*
+class NumberRestrictionTest extends GroovyTestCase {
 
-class NumberRestrictionTest extends GroovyTestCase{
-  
   def schema
   def createdSchema
 
@@ -31,16 +29,18 @@ class NumberRestrictionTest extends GroovyTestCase{
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/number-restriction.xsd")
   }
-  
+
   void testRestrictions() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     createdSchema = new XmlSlurper().parseText(strWriter.toString())
-    schema.simpleTypes.each{ sT ->
+    schema.simpleTypes.each { sT ->
       //assertEquals(sT.restriction.base.toString(), createdSchema.simpleType.find{it.@name == sT.name}.restriction.@base.toString())
-      assertEquals("${sT.restriction.base.prefix}:${sT.restriction.base.localPart}", createdSchema.simpleType.find{it.@name == sT.name}.restriction.@base.toString())
+      assertEquals("${sT.restriction.base.prefix}:${sT.restriction.base.localPart}", createdSchema.simpleType.find {
+        it.@name == sT.name
+      }.restriction.@base.toString())
     }
   }
-  
+
 }

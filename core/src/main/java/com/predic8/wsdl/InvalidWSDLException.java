@@ -14,5 +14,5 @@ package com.predic8.wsdl;
 public class InvalidWSDLException extends RuntimeException {
 
   private static final long serialVersionUID = 4414283795961883803L;
-	
+
 }

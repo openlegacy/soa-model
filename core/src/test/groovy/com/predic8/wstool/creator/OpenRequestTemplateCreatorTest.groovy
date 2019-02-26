@@ -12,27 +12,29 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wstool.creator;
+package com.predic8.wstool.creator
 
-import com.predic8.wsdl.*
+
+import com.predic8.wsdl.AbstractWSDLTest
+import com.predic8.wsdl.Definitions
 
 class OpenRequestTemplateCreatorTest extends AbstractWSDLTest {
-  
-	Definitions wsdl
-	
-	public void setUp() {
+
+  Definitions wsdl
+
+  public void setUp() {
 //		wsdl = new WSDLParser().parse('C:/Users/predic8/Desktop/soa-model-distribution-1.4.1.5-bin/samples/diff/modified/article.wsdl')
-	}
-	
-	void testParserAndWSDLCreator() {
+  }
+
+  void testParserAndWSDLCreator() {
 //		assert wsdl.asString
-	}
-	
+  }
+
 //	void testReqTempCreator() {
 //		wsdl.operations.each {
 //			println wsdl.getInputElementForOperation(it.name).requestTemplate
 //			println ''
 //		}
 //	}
-                       
+
 }

@@ -14,15 +14,12 @@
 
 package com.predic8.wsdl
 
-import javax.xml.stream.*
-
 import com.predic8.wsdl.soap11.SOAPBinding as Soap11Binding
-import com.predic8.xml.util.ClasspathResolver
 
 class ServiceTest extends AbstractWSDLTest {
-  
+
   def service
-  
+
   def static wsdl = '''<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
                                          xmlns="http://schemas.xmlsoap.org/wsdl/" 
                                          xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" 
@@ -46,29 +43,29 @@ class ServiceTest extends AbstractWSDLTest {
 		  </wsdl:port>
 		</wsdl:service>
   </wsdl:definitions>'''
-  
+
   void setUp() {
-		super.setUp()
-		def binding = new Binding(name:'BLZServiceSOAP11Binding', binding : new Soap11Binding())
-		definitions.localBindings << binding
-		service = definitions.services[0]
+    super.setUp()
+    def binding = new Binding(name: 'BLZServiceSOAP11Binding', binding: new Soap11Binding())
+    definitions.localBindings << binding
+    service = definitions.services[0]
   }
-	
+
   void testBinding() {
-    assert service.ports.binding 
+    assert service.ports.binding
     assert service.ports[0].binding.name == 'BLZServiceSOAP11Binding'
   }
-  
+
   void testService() {
-    assert  service.name == 'BLZService'
+    assert service.name == 'BLZService'
   }
-  
+
   void testPort() {
-    assert service.ports[0].name == 'BLZServiceSOAP11port_http' 
-    assert service.ports[0].address.location == "http://www.thomas-bayer.com:80/axis2/services/BLZService" 
+    assert service.ports[0].name == 'BLZServiceSOAP11port_http'
+    assert service.ports[0].address.location == "http://www.thomas-bayer.com:80/axis2/services/BLZService"
   }
-	
-	void testMultiServices() {
-		assert 2 == definitions.services.size()
-	}
+
+  void testMultiServices() {
+    assert 2 == definitions.services.size()
+  }
 }

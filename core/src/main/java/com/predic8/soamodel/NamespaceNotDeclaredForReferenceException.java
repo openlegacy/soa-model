@@ -14,27 +14,27 @@ package com.predic8.soamodel;
 import com.predic8.xml.util.PrefixedName;
 
 public class NamespaceNotDeclaredForReferenceException extends RuntimeException {
-	
+
   private static final long serialVersionUID = -2200072011898720523L;
 
-	public NamespaceNotDeclaredForReferenceException(String message, Object reference, XMLElement element) { 
-		super(message);
-		setReference((PrefixedName) reference);
-		setElement(element);
-	}
+  public NamespaceNotDeclaredForReferenceException(String message, Object reference, XMLElement element) {
+    super(message);
+    setReference((PrefixedName) reference);
+    setElement(element);
+  }
 
-	PrefixedName reference;
-	XMLElement element;
+  PrefixedName reference;
+  XMLElement element;
 
-	public PrefixedName getReference() {
-		return reference;
-	}
+  public PrefixedName getReference() {
+    return reference;
+  }
 
-	private void setReference(PrefixedName reference) {
-		this.reference = reference;
-	}
+  private void setReference(PrefixedName reference) {
+    this.reference = reference;
+  }
 
-	private void setElement(XMLElement element) {
-		this.element = element;
-	}
+  private void setElement(XMLElement element) {
+    this.element = element;
+  }
 }

@@ -14,17 +14,15 @@
 
 package com.predic8.schema.restriction
 
-import junit.framework.TestCase
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.SchemaParser
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.wstool.creator.FormCreator
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-import com.predic8.xml.util.*
-import com.predic8.schema.*
-import com.predic8.schema.creator.*
-import com.predic8.wstool.creator.FormCreator;
+class RestrictionTest extends GroovyTestCase {
 
-class RestrictionTest extends GroovyTestCase{
-  
   def schema
   def schema2
   def createdSchema
@@ -32,34 +30,36 @@ class RestrictionTest extends GroovyTestCase{
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/restriction.xsd")
-    
+
     parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema2 = parser.parse("/restriction-baserewriting.xsd")
   }
-  
+
   void testRestrictions() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     createdSchema = new XmlSlurper().parseText(strWriter.toString())
-    schema.simpleTypes.each{ sT ->
-			if(sT.restriction) assertEquals("${sT.restriction.base.prefix}:${sT.restriction.base.localPart}", createdSchema.simpleType.find{it.@name == sT.name}.restriction.@base.toString()) 
+    schema.simpleTypes.each { sT ->
+      if (sT.restriction) assertEquals("${sT.restriction.base.prefix}:${sT.restriction.base.localPart}", createdSchema.simpleType.find {
+        it.@name == sT.name
+      }.restriction.@base.toString())
     }
   }
-  
-  void testFormCreatorWithRestriction(){
+
+  void testFormCreatorWithRestriction() {
     def strWriter = new StringWriter()
-    def creator = new FormCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new FormCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
   }
-  
+
   void testBaseRewriting() {
     def testSchema = new XmlSlurper().parseText(schema2.asXml([:]))
     assertEquals('xsd:string', testSchema.element.simpleType.restriction.@base.toString())
   }
-  
+
   void testGetBuildInType() {
-  	def fee = schema.getElement("fee")
-	assertEquals("decimal", fee.getBuildInTypeNameLocal())
-  }  
+    def fee = schema.getElement("fee")
+    assertEquals("decimal", fee.getBuildInTypeNameLocal())
+  }
 }

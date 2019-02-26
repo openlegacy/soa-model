@@ -11,44 +11,42 @@
 
 package com.predic8.wadl
 
-import java.util.List;
+import com.predic8.soamodel.Consts
 
 import javax.xml.namespace.QName
 
-import com.predic8.soamodel.Consts
-
 class ResourceType extends WADLElement {
 
-	public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'resource_type')
+  public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'resource_type')
 
-	String id // Type: xsd:id, required
-	
-	List<Param> params = []
-	List<Method> methods = [] 
-	List<Resource> resources = []
-		
-	protected parseChildren(token, child, ctx) {
-		super.parseChildren(token, child, ctx)
-		switch (token.name) {
-			case Param.ELEMENTNAME :
-				def param = new Param(application: application, parent: this)
-				param.parse(token, ctx)
-				params << param
-				break
-			case Method.ELEMENTNAME :
-				def method = new Method(application: application, parent: this)
-				method.parse(token, ctx)
-				methods << method
-				break
-			case Resource.ELEMENTNAME :
-				def resource = new Resource(application: application, parent: this)
-				resource.parse(token, ctx)
-				resources << resource
-				break
-		}
-	}
-	
-	String toString() {
-		"resource_type"
-	}
+  String id // Type: xsd:id, required
+
+  List<Param> params = []
+  List<Method> methods = []
+  List<Resource> resources = []
+
+  protected parseChildren(token, child, ctx) {
+    super.parseChildren(token, child, ctx)
+    switch (token.name) {
+      case Param.ELEMENTNAME:
+        def param = new Param(application: application, parent: this)
+        param.parse(token, ctx)
+        params << param
+        break
+      case Method.ELEMENTNAME:
+        def method = new Method(application: application, parent: this)
+        method.parse(token, ctx)
+        methods << method
+        break
+      case Resource.ELEMENTNAME:
+        def resource = new Resource(application: application, parent: this)
+        resource.parse(token, ctx)
+        resources << resource
+        break
+    }
+  }
+
+  String toString() {
+    "resource_type"
+  }
 }

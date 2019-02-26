@@ -14,28 +14,27 @@
 
 package com.predic8.schema.diff
 
-import java.util.ResourceBundle;
+import com.predic8.soamodel.AbstractDiffGenerator
+import com.predic8.soamodel.Difference
 
-import com.predic8.soamodel.*
+abstract class UnitDiffGenerator extends AbstractDiffGenerator {
 
-abstract class UnitDiffGenerator extends AbstractDiffGenerator{
-  
   public List<Difference> compare() {
-    if(a && !b) return [removed()]
-    if(!a && b) return [added()]
-		
-		//If the unit is already visited, return to avoid recursion.
-		if(ctx.visited.contains(a)) return []
-		ctx.visited << a
-		
+    if (a && !b) return [removed()]
+    if (!a && b) return [added()]
+
+    //If the unit is already visited, return to avoid recursion.
+    if (ctx.visited.contains(a)) return []
+    ctx.visited << a
+
     def lDiffs = compareUnit()
-		
-		if(a && b && lDiffs) {
+
+    if (a && b && lDiffs) {
       return [changed(lDiffs)]
     }
     []
   }
 
   abstract List<Difference> compareUnit()
-  
+
 }

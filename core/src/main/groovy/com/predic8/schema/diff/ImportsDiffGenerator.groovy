@@ -14,55 +14,54 @@
 
 package com.predic8.schema.diff
 
-import java.util.List;
+import com.predic8.soamodel.AbstractDiffGenerator
+import com.predic8.soamodel.Difference
 
-import com.predic8.soamodel.*
+class ImportsDiffGenerator extends AbstractDiffGenerator {
 
-class ImportsDiffGenerator extends AbstractDiffGenerator{
-  
-  private List<String> alreadyImportedNamespaces 
-  
-   def labelImportedSchema, labelRemoved, labelAdded, labelHasChanged
-  
-  def compare(){
+  private List<String> alreadyImportedNamespaces
+
+  def labelImportedSchema, labelRemoved, labelAdded, labelHasChanged
+
+  def compare() {
     def diffs = compareAddRemove()
-    intersection.each{ ns ->
+    intersection.each { ns ->
       diffs.addAll(compareImport(ns))
     }
     diffs
   }
-  
-  private compareAddRemove(){
+
+  private compareAddRemove() {
     compare(a, b,
-        { new Difference(description:"${labelImportedSchema} ${it} ${labelRemoved}.", type: 'import') },
-        { new Difference(description:"${labelImportedSchema} ${it} ${labelAdded}.", type: 'import') })
+      { new Difference(description: "${labelImportedSchema} ${it} ${labelRemoved}.", type: 'import') },
+      { new Difference(description: "${labelImportedSchema} ${it} ${labelAdded}.", type: 'import') })
   }
 
-  public ImportsDiffGenerator(){
-	  updateLabels()
+  public ImportsDiffGenerator() {
+    updateLabels()
   }
-  
-  private compareImport(ns){
-    def aSchema = a.find{it.namespace == ns}.importSchema
-    def bSchema = b.find{it.namespace == ns}.importSchema
-    if ( !aSchema || !bSchema ) return []
-    def schemaDiffGenerator = new SchemaDiffGenerator(a:aSchema, b:bSchema, alreadyImportedNamespaces: alreadyImportedNamespaces)
+
+  private compareImport(ns) {
+    def aSchema = a.find { it.namespace == ns }.importSchema
+    def bSchema = b.find { it.namespace == ns }.importSchema
+    if (!aSchema || !bSchema) return []
+    def schemaDiffGenerator = new SchemaDiffGenerator(a: aSchema, b: bSchema, alreadyImportedNamespaces: alreadyImportedNamespaces)
     def lDiffs = schemaDiffGenerator.compare()
-    if(lDiffs) {
-      return [new Difference(description:"${labelImportedSchema} ${ns}:" , type: 'import', diffs : lDiffs)]
+    if (lDiffs) {
+      return [new Difference(description: "${labelImportedSchema} ${ns}:", type: 'import', diffs: lDiffs)]
     }
     []
   }
 
-  private getIntersection(){
+  private getIntersection() {
     (a.namespace).intersect(b.namespace)
   }
-  
-  protected def updateLabels(){
-	  labelImportedSchema = bundle.getString("com.predic8.schema.diff.labelImportedSchema")
-	  labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
-	  labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
-	  labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
+
+  protected def updateLabels() {
+    labelImportedSchema = bundle.getString("com.predic8.schema.diff.labelImportedSchema")
+    labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
+    labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
+    labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
 
   }
 

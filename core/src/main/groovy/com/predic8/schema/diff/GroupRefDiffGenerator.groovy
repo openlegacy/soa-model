@@ -14,34 +14,35 @@
 
 package com.predic8.schema.diff
 
-import com.predic8.soamodel.*
 
-class GroupRefDiffGenerator extends UnitDiffGenerator{
-	
-	public GroupRefDiffGenerator() {
-		updateLabels()
-	}
-	
-  private def labelGroup, labelRemoved, labelAdded, labelChanged, labelHasChanged, labelRef
-	
-  def removed = {new Difference(description:"${labelGroup} ${labelRemoved}.", type: 'group', exchange: a.exchange)}
+import com.predic8.soamodel.Difference
 
-  def added = {new Difference(description:"${labelGroup} ${labelAdded}.", type: 'group', exchange: b.exchange)}
+class GroupRefDiffGenerator extends UnitDiffGenerator {
 
-  def changed = {new Difference(description:"${labelGroup} ${labelChanged}.", type: 'group', exchange: a.exchange)}
-
-  List<Difference> compareUnit(){
-    if(a.ref == b.ref) return []
-    [new Difference(description:"${labelRef} {labelGroup}:" , type: 'group', exchange: a.exchange)]
+  public GroupRefDiffGenerator() {
+    updateLabels()
   }
-  
-  protected def updateLabels(){
-	  labelGroup = bundle.getString("com.predic8.schema.diff.labelGroup")
-	  labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
-	  labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
-	  labelChanged = bundle.getString("com.predic8.schema.diff.labelChanged")
-	  labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
-	  labelRef = bundle.getString("com.predic8.schema.diff.labelRef")
+
+  private def labelGroup, labelRemoved, labelAdded, labelChanged, labelHasChanged, labelRef
+
+  def removed = { new Difference(description: "${labelGroup} ${labelRemoved}.", type: 'group', exchange: a.exchange) }
+
+  def added = { new Difference(description: "${labelGroup} ${labelAdded}.", type: 'group', exchange: b.exchange) }
+
+  def changed = { new Difference(description: "${labelGroup} ${labelChanged}.", type: 'group', exchange: a.exchange) }
+
+  List<Difference> compareUnit() {
+    if (a.ref == b.ref) return []
+    [new Difference(description: "${labelRef} {labelGroup}:", type: 'group', exchange: a.exchange)]
+  }
+
+  protected def updateLabels() {
+    labelGroup = bundle.getString("com.predic8.schema.diff.labelGroup")
+    labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
+    labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
+    labelChanged = bundle.getString("com.predic8.schema.diff.labelChanged")
+    labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
+    labelRef = bundle.getString("com.predic8.schema.diff.labelRef")
 
   }
 }

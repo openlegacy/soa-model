@@ -14,35 +14,45 @@
 
 package com.predic8.schema
 
-import javax.xml.xpath.*
-import groovy.xml.*
-import com.predic8.schema.creator.*
-import com.predic8.wstool.creator.*
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.wstool.creator.FormCreator
+import com.predic8.wstool.creator.FormCreatorContext
+import com.predic8.wstool.creator.RequestCreator
+import com.predic8.wstool.creator.RequestCreatorContext
+import com.predic8.wstool.creator.RequestTemplateCreator
+import com.predic8.wstool.creator.RequestTemplateCreatorContext
 import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.DOMBuilder
+import groovy.xml.MarkupBuilder
+import groovy.xml.QName
 
-class ExtensionTest extends GroovyTestCase{
-  
+import javax.xml.xpath.XPathConstants
+import javax.xml.xpath.XPathFactory
+
+class ExtensionTest extends GroovyTestCase {
+
   def schema
-  
+
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/schema/ExtensionTest.xsd")
   }
-  
+
   void testParsing() {
     assertEquals(new QName('http://www.example.com/IPO', 'BaseAddress'), schema.getType('Address').model.derivation.base)
     assertEquals(new QName('http://www.example.com/IPO', 'Address'), schema.getType('USAddress').model.derivation.base)
     assertEquals(2, schema.getType('USAddress').model.derivation.model.particles.size())
-    
+
   }
 
-  void testExtensionAttributes(){
+  void testExtensionAttributes() {
     assertEquals('USAddressAttribute', schema.getType('USAddress').model.derivation.attributes[0].name)
   }
-  
+
   void testSchemaCreator() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     def testSchema = new XmlSlurper().parseText(strWriter.toString())
     assertEquals("ipo:BaseAddress", testSchema.complexType[1].complexContent.extension.@base.toString())
@@ -52,49 +62,49 @@ class ExtensionTest extends GroovyTestCase{
 
   void testSchemaCreatorCreateLinks() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
-    schema.create(creator, new SchemaCreatorContext(createLinks:true))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
+    schema.create(creator, new SchemaCreatorContext(createLinks: true))
     def str = creator.escapeMarkup(strWriter.toString())
   }
 
   void testRequestTemplateCreator() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('MyAddress').create(creator, new RequestTemplateCreatorContext())
     assertTrue(strWriter.toString().contains('<!-- This element can be extended by any attribute from ##any namespace -->'))
     def testXML = new XmlSlurper().parseText(strWriter.toString())
     assertEquals(6, testXML.children().size())
-    def elementsNames =[]
-    testXML.childNodes().each{ elementsNames << it.name() }
+    def elementsNames = []
+    testXML.childNodes().each { elementsNames << it.name() }
     assertEquals(["name", "street", "number", "city", "state", "zip"], elementsNames)
   }
 
   void testFormCreator() {
     def strWriter = new StringWriter()
-    def creator = new FormCreator(builder : new MarkupBuilder(strWriter))
-    schema.getElement('MyAddress').create(creator, new FormCreatorContext(formParams:'',path:"xpath:/"))
+    def creator = new FormCreator(builder: new MarkupBuilder(strWriter))
+    schema.getElement('MyAddress').create(creator, new FormCreatorContext(formParams: '', path: "xpath:/"))
     def testXML = new XmlSlurper().parseText(strWriter.toString())
     def dom = DOMBuilder.parse(new StringReader(strWriter.toString()))
     def nodeList = XPathFactory.newInstance().newXPath().evaluate('//input', dom.documentElement, XPathConstants.NODESET)
     assertEquals(9, nodeList.length)
-    def elementsNames =[]
-    for(int i=0; i < nodeList.length; i++) {
+    def elementsNames = []
+    for (int i = 0; i < nodeList.length; i++) {
       elementsNames << nodeList.item(i).getAttributes().getNamedItem('name').getNodeValue()
     }
     assertEquals(['xpath:/MyAddress/name', 'xpath:/MyAddress/street', 'xpath:/MyAddress/number', 'xpath:/MyAddress/@BaseAddressAttribute', 'xpath:/MyAddress/city', 'xpath:/MyAddress/@AddressAttribute', 'xpath:/MyAddress/state', 'xpath:/MyAddress/zip', 'xpath:/MyAddress/@USAddressAttribute'], elementsNames)
   }
-  
+
   void testRequestCreator() {
     def strWriter = new StringWriter()
-    def creator = new RequestCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestCreator(builder: new MarkupBuilder(strWriter))
     def formParams = [:]
-    formParams['xpath:/MyAddress/name']='predic8'
-    formParams['xpath:/MyAddress/street']='B9'
-    formParams['xpath:/MyAddress/number']='40'
-    formParams['xpath:/MyAddress/city']='Bonn'
-    formParams['xpath:/MyAddress/state']='NRW'
-    formParams['xpath:/MyAddress/zip']='53177'
-    schema.getElement('MyAddress').create(creator, new RequestCreatorContext(formParams:formParams, path:"xpath:/"))
+    formParams['xpath:/MyAddress/name'] = 'predic8'
+    formParams['xpath:/MyAddress/street'] = 'B9'
+    formParams['xpath:/MyAddress/number'] = '40'
+    formParams['xpath:/MyAddress/city'] = 'Bonn'
+    formParams['xpath:/MyAddress/state'] = 'NRW'
+    formParams['xpath:/MyAddress/zip'] = '53177'
+    schema.getElement('MyAddress').create(creator, new RequestCreatorContext(formParams: formParams, path: "xpath:/"))
     def testXML = new XmlSlurper().parseText(strWriter.toString())
     assertEquals(6, testXML.children().size())
     assertEquals('predic8', testXML.name.text())

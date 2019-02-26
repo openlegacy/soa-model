@@ -17,21 +17,21 @@ package com.predic8.policy
 import com.predic8.policy.creator.PolicyCreator
 import com.predic8.soamodel.CreatorContext
 
-class UsernameToken extends PolicyOperator{
+class UsernameToken extends PolicyOperator {
 
-	String includeToken
-	
-	protected def parseAttributes( token,  ctx) {
-		includeToken = token.getAttributeValue( null , 'IncludeToken')
-	}
-	
-	protected parseChildren(token, child, ctx){
-		super.parseChildren(token, child, ctx)
-	}
-	
-	void create(PolicyCreator creator, CreatorContext ctx){
-		creator.createUsernameToken(this, ctx)
-	}
+  String includeToken
+
+  protected def parseAttributes(token, ctx) {
+    includeToken = token.getAttributeValue(null, 'IncludeToken')
+  }
+
+  protected parseChildren(token, child, ctx) {
+    super.parseChildren(token, child, ctx)
+  }
+
+  void create(PolicyCreator creator, CreatorContext ctx) {
+    creator.createUsernameToken(this, ctx)
+  }
 
 }
 

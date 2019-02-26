@@ -15,9 +15,9 @@
 package com.predic8.schema.restriction;
 
 class IntegerRestriction extends DecimalRestriction {
-  
-  String getBuildInType(){
+
+  String getBuildInType() {
     'int'
   }
-  
+
 }

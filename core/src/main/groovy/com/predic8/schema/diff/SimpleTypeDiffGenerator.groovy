@@ -14,39 +14,46 @@
 
 package com.predic8.schema.diff
 
-import com.predic8.soamodel.*
+
+import com.predic8.soamodel.Difference
 
 class SimpleTypeDiffGenerator extends UnitDiffGenerator {
-	
-	public SimpleTypeDiffGenerator() {
-		updateLabels()
-	}
-	
-  private def labelSimpleType, labelRemoved, labelAdded, labelHasChanged, labelList
-	
-  def removed = {new Difference(description:"${labelSimpleType} ${a?.name} ${labelRemoved}.", type: 'simpleType', breaks: ctx.exchange ? true: null, exchange: a.exchange)}
-  def added = { new Difference(description:"${labelSimpleType} ${a?.name} ${labelAdded}.", type: 'simpleType', breaks: ctx.exchange ? true: null, exchange: b.exchange)}
-  def changed = { new Difference(description:"${labelSimpleType} ${a?.name}:", type: 'simpleType', diffs:compareUnit(), exchange: a.exchange)}
 
-  List<Difference> compareUnit(){
+  public SimpleTypeDiffGenerator() {
+    updateLabels()
+  }
+
+  private def labelSimpleType, labelRemoved, labelAdded, labelHasChanged, labelList
+
+  def removed = {
+    new Difference(description: "${labelSimpleType} ${a?.name} ${labelRemoved}.", type: 'simpleType', breaks: ctx.exchange ? true : null, exchange: a.exchange)
+  }
+  def added = {
+    new Difference(description: "${labelSimpleType} ${a?.name} ${labelAdded}.", type: 'simpleType', breaks: ctx.exchange ? true : null, exchange: b.exchange)
+  }
+  def changed = {
+    new Difference(description: "${labelSimpleType} ${a?.name}:", type: 'simpleType', diffs: compareUnit(), exchange: a.exchange)
+  }
+
+  List<Difference> compareUnit() {
     def lDiffs = []
     lDiffs.addAll(generator.compareAnnotation(a.annotation, b.annotation))
-    if(a.restriction && b.restriction) {
+    if (a.restriction && b.restriction) {
       lDiffs.addAll(a.restriction.compare(generator, b.restriction))
     }
-    if(a.list?.itemType != b.list?.itemType) {
-      lDiffs.add(new Difference(description:"${labelList} ${labelHasChanged}.", type: 'simpleType', diffs:compareUnit(), exchange: a.exchange))
+    if (a.list?.itemType != b.list?.itemType) {
+      lDiffs.add(new Difference(description: "${labelList} ${labelHasChanged}.", type: 'simpleType', diffs: compareUnit(), exchange: a.exchange))
     }
     // Union is not handled yet.
     lDiffs
   }
-  
-  protected def updateLabels(){
-	  labelSimpleType = bundle.getString("com.predic8.schema.diff.labelSimpleType")
-	  labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
-	  labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
-	  labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
-	  labelList = bundle.getString("com.predic8.schema.diff.labelList")
+
+  protected def updateLabels() {
+    labelSimpleType = bundle.getString("com.predic8.schema.diff.labelSimpleType")
+    labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
+    labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
+    labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
+    labelList = bundle.getString("com.predic8.schema.diff.labelList")
 
   }
 }

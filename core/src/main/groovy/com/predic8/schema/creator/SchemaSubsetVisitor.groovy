@@ -9,45 +9,49 @@
  See the License for the specific language governing permissions and
  limitations under the License. */
 
-package com.predic8.schema.creator;
+package com.predic8.schema.creator
 
+import com.predic8.schema.BuiltInSchemaType
+import com.predic8.schema.ComplexType
+import com.predic8.schema.Element
+import com.predic8.schema.Extension
+import com.predic8.schema.Schema
+import com.predic8.schema.SimpleType
 import groovy.xml.MarkupBuilder
 
-import com.predic8.schema.*
+class SchemaSubsetVisitor extends AbstractSchemaCreator<SchemaCreatorContext> {
 
-class SchemaSubsetVisitor extends AbstractSchemaCreator <SchemaCreatorContext>{
+  Schema createSchema4Element(Element element, SchemaCreatorContext ctx = new SchemaCreatorContext()) {
+    ctx.subSchema = new Schema(element.schema.targetNamespace)
+    ctx.subSchema.elements << element
+    element.create(this, ctx)
+    return ctx.subSchema
+  }
 
-	Schema createSchema4Element(Element element, SchemaCreatorContext ctx = new SchemaCreatorContext()){
-		ctx.subSchema = new Schema(element.schema.targetNamespace)
-		ctx.subSchema.elements << element
-		element.create(this, ctx)
-		return ctx.subSchema
-	}
+  void createComplexType(ComplexType complexType, SchemaCreatorContext ctx) {
+    /*To avoid creating cycling complexTypes return if CT already known.*/
+    if (complexType in ctx.subSchema.complexTypes) return
+    /*ComplexType should only be created, if it is not embedded and has a name.*/
+    if (complexType.name) ctx.subSchema.complexTypes << complexType
+    if (complexType.model) complexType.model.create(this, ctx)
+  }
 
-	void createComplexType(ComplexType complexType, SchemaCreatorContext ctx) {
-		/*To avoid creating cycling complexTypes return if CT already known.*/
-		if(complexType in ctx.subSchema.complexTypes) return
-		/*ComplexType should only be created, if it is not embedded and has a name.*/
-		if(complexType.name) ctx.subSchema.complexTypes << complexType
-		if(complexType.model) complexType.model.create(this, ctx)
-	}
-	
-	void createSimpleType(SimpleType simpleType, SchemaCreatorContext ctx){
-		/*SimpleType should only be created, if it is not embedded and has a name.*/
-		if(simpleType.name) ctx.subSchema.simpleTypes << simpleType
-		if ( simpleType.restriction ) simpleType.restriction.create(this, ctx)
-	}
-	
-	void createBuiltInSchemaType(BuiltInSchemaType type, SchemaCreatorContext ctx){}
-	
-	void createExtension(Extension extension, SchemaCreatorContext ctx){
-		if(extension.base) extension.schema.getType(extension.base).create(this, ctx)
-	}
-	
-	String getSchemaAsString(Element element) {
-		def strWriter = new StringWriter()
-		def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
-		createSchema4Element(element).create(creator, new SchemaCreatorContext())
-		strWriter.toString()
-	}
+  void createSimpleType(SimpleType simpleType, SchemaCreatorContext ctx) {
+    /*SimpleType should only be created, if it is not embedded and has a name.*/
+    if (simpleType.name) ctx.subSchema.simpleTypes << simpleType
+    if (simpleType.restriction) simpleType.restriction.create(this, ctx)
+  }
+
+  void createBuiltInSchemaType(BuiltInSchemaType type, SchemaCreatorContext ctx) {}
+
+  void createExtension(Extension extension, SchemaCreatorContext ctx) {
+    if (extension.base) extension.schema.getType(extension.base).create(this, ctx)
+  }
+
+  String getSchemaAsString(Element element) {
+    def strWriter = new StringWriter()
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
+    createSchema4Element(element).create(creator, new SchemaCreatorContext())
+    strWriter.toString()
+  }
 }

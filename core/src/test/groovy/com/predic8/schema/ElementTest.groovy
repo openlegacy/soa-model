@@ -14,68 +14,69 @@
 
 package com.predic8.schema
 
-import groovy.xml.*
-
 import com.predic8.schema.creator.SchemaCreator
 import com.predic8.schema.creator.SchemaCreatorContext
-import com.predic8.wstool.creator.*
+import com.predic8.wstool.creator.RequestTemplateCreator
+import com.predic8.wstool.creator.RequestTemplateCreatorContext
 import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
+import groovy.xml.QName
 
-class ElementTest extends GroovyTestCase{
-  
+class ElementTest extends GroovyTestCase {
+
   def schema
-  def static final compTypeName = new QName("http://predic8.com" , "compType")
-   
+  def static final compTypeName = new QName("http://predic8.com", "compType")
+
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/schema/ElementTest.xsd")
   }
-  
+
   void testElement() {
     assertEquals(6, schema.elements.size())
   }
-  
+
   void testElementType() {
-    assertEquals('string' , schema.elements[0].type.localPart)
+    assertEquals('string', schema.elements[0].type.localPart)
   }
-  
+
   void testElementName() {
-    assertEquals('Text' , schema.elements[0].name)
+    assertEquals('Text', schema.elements[0].name)
   }
-  
+
   void testElementMinOccurs() {
-    assertEquals('0' , schema.getType(compTypeName).sequence.particles[0].minOccurs)
+    assertEquals('0', schema.getType(compTypeName).sequence.particles[0].minOccurs)
   }
-  
+
   void testElementMaxOccurs() {
-    assertEquals('3' , schema.getType(compTypeName).sequence.particles[0].maxOccurs)
+    assertEquals('3', schema.getType(compTypeName).sequence.particles[0].maxOccurs)
   }
-	
+
   void testReferencedSimpleType() {
     def typeName = schema.getElement('Farbauswahl').type
     assertNotNull(schema.getType(typeName))
   }
-  
+
   void testCreateXMLFarbauswahl() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('Farbauswahl').create(creator, new RequestTemplateCreatorContext())
     def Farbauswahl = new XmlSlurper().parseText(strWriter.toString())
-    assertEquals('Farbauswahl' , Farbauswahl.name())
-    assertEquals('???' , Farbauswahl.text())
+    assertEquals('Farbauswahl', Farbauswahl.name())
+    assertEquals('???', Farbauswahl.text())
   }
-  
+
   void testElementDocumentation() {
     assertEquals('Docu', schema.getElement('datum').annotation.documentations[0].content.toString())
   }
-	
-	void testElementWithDefaultAndFixedPlusCreator() {
-		def strWriter = new StringWriter()
-		def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
-		schema.create(creator, new SchemaCreatorContext())
-		def parser = new SchemaParser()
-		Schema createdSchema = parser.parse(new ByteArrayInputStream(strWriter.toString().bytes))
-		assertEquals('This is the default value!', createdSchema.getElement('elementWithDefault').defaultValue)
-		assertEquals('This value is fixed and can not be changed!', createdSchema.getElement('elementWithFixed').fixedValue)
-	}
+
+  void testElementWithDefaultAndFixedPlusCreator() {
+    def strWriter = new StringWriter()
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
+    schema.create(creator, new SchemaCreatorContext())
+    def parser = new SchemaParser()
+    Schema createdSchema = parser.parse(new ByteArrayInputStream(strWriter.toString().bytes))
+    assertEquals('This is the default value!', createdSchema.getElement('elementWithDefault').defaultValue)
+    assertEquals('This value is fixed and can not be changed!', createdSchema.getElement('elementWithFixed').fixedValue)
+  }
 }

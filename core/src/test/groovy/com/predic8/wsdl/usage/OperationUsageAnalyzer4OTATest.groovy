@@ -14,29 +14,25 @@
 
 package com.predic8.wsdl.usage
 
-import groovy.xml.*
-
-import com.predic8.schema.*
+import com.predic8.schema.Element
 import com.predic8.wsdl.Definitions
 import com.predic8.wsdl.WSDLParser
-import com.predic8.wstool.creator.*
-import com.predic8.xml.util.*
+import com.predic8.xml.util.ClasspathResolver
 
+class OperationUsageAnalyzer4OTATest extends GroovyTestCase {
 
-class OperationUsageAnalyzer4OTATest extends GroovyTestCase{
-  
-	Definitions wsdl
-	
+  Definitions wsdl
+
   void setUp() {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     wsdl = parser.parse("hotel.wsdl")
   }
-	
-	void testAnalyzeOperationUsage() {
-		assert 150 == OperationUsageAnalyzer.analyzeOperationUsage(wsdl).elementsInfo.size()
-		assert 55 == OperationUsageAnalyzer.analyzeOperationUsage(wsdl).complexTypesInfo.size()
-		assert 5 == OperationUsageAnalyzer.analyzeOperationUsage(wsdl).simpleTypesInfo.size()
-		
+
+  void testAnalyzeOperationUsage() {
+    assert 150 == OperationUsageAnalyzer.analyzeOperationUsage(wsdl).elementsInfo.size()
+    assert 55 == OperationUsageAnalyzer.analyzeOperationUsage(wsdl).complexTypesInfo.size()
+    assert 5 == OperationUsageAnalyzer.analyzeOperationUsage(wsdl).simpleTypesInfo.size()
+
 //		OperationUsageAnalyzer.analyzeOperationUsage(wsdl).elementsInfo.each { k,v ->
 //			if(v.input && v.output) {
 //				print k.name + ' is used in '
@@ -55,11 +51,11 @@ class OperationUsageAnalyzer4OTATest extends GroovyTestCase{
 //				println v.operation.name + "( ${v.input} , ${v.output}, ${v.fault})" 
 //			}
 //		}
-	}
-	
-	void testGetOperationUsageInfos() {
-		Element element = wsdl.getElement('ota:TPA_Extensions')
-		assert 2 == OperationUsageAnalyzer.getOperationUsageInfos(element, wsdl).operation.size()
-	}
-	
+  }
+
+  void testGetOperationUsageInfos() {
+    Element element = wsdl.getElement('ota:TPA_Extensions')
+    assert 2 == OperationUsageAnalyzer.getOperationUsageInfos(element, wsdl).operation.size()
+  }
+
 }

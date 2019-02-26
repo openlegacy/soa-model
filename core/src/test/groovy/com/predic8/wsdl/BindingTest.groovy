@@ -14,13 +14,11 @@
 
 package com.predic8.wsdl
 
-import javax.xml.stream.*
-
 class BindingTest extends AbstractWSDLTest {
-  
+
   def binding
-  def static wsdl = 
-  '''<?xml version="1.0" encoding="UTF-8"?>
+  def static wsdl =
+    '''<?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
@@ -117,30 +115,30 @@ class BindingTest extends AbstractWSDLTest {
   </wsdl:service>
 </wsdl:definitions>
 '''
-  
+
   void testNumberOfBindings() {
     assertEquals(3, definitions.bindings.size())
   }
 
   void testBinding() {
-    assertEquals("BLZServiceSOAP11Binding" , definitions.bindings[0].name)
-    assertEquals("BLZServicePortType" , definitions.bindings[0].type.localPart)
+    assertEquals("BLZServiceSOAP11Binding", definitions.bindings[0].name)
+    assertEquals("BLZServicePortType", definitions.bindings[0].type.localPart)
     assertEquals("http://schemas.xmlsoap.org/soap/http", definitions.bindings[0].binding.transport)
   }
-  
+
   void testOperation() {
     assertEquals(1, definitions.bindings[0].operations.size())
-    assertEquals('getBank' , definitions.bindings[0].operations[0].name)
-    assertEquals('document' , definitions.bindings[0].operations[0].operation.style)
-    assertEquals('literal' , definitions.bindings[0].operations[0].input.bindingElements[0].use)
-  }
-  
-  void testSetPortType() {
-    assertEquals("BLZServicePortType",definitions.bindings[0].portType.name)
+    assertEquals('getBank', definitions.bindings[0].operations[0].name)
+    assertEquals('document', definitions.bindings[0].operations[0].operation.style)
+    assertEquals('literal', definitions.bindings[0].operations[0].input.bindingElements[0].use)
   }
 
-  void testBindingMessage(){
-    
+  void testSetPortType() {
+    assertEquals("BLZServicePortType", definitions.bindings[0].portType.name)
   }
-  
+
+  void testBindingMessage() {
+
+  }
+
 }

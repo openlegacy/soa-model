@@ -14,32 +14,35 @@
 
 package com.predic8.wsdl
 
-import com.predic8.soamodel.*
-import com.predic8.xml.util.*
+
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.CreatorContext
+import com.predic8.soamodel.ModelAccessException
+import com.predic8.xml.util.PrefixedName
 
 abstract class AbstractPortTypeMessage extends WSDLElement {
 
-	PrefixedName messagePrefixedName
-	Message message
+  PrefixedName messagePrefixedName
+  Message message
 
-  protected parseAttributes(token, WSDLParserContext ctx){
-    name = token.getAttributeValue(null , 'name')
-    messagePrefixedName = new PrefixedName(token.getAttributeValue(null , 'message'))
+  protected parseAttributes(token, WSDLParserContext ctx) {
+    name = token.getAttributeValue(null, 'name')
+    messagePrefixedName = new PrefixedName(token.getAttributeValue(null, 'message'))
   }
-  
-	Message getMessage() {
-		if(message)	return message
-		if(!messagePrefixedName) throw new ModelAccessException("No message declared in ${ELEMENTNAME.localPart}${name?' '+name:''}.", this)
-		definitions.getMessage(getQNameForPN(messagePrefixedName))
-	}
-	
+
+  Message getMessage() {
+    if (message) return message
+    if (!messagePrefixedName) throw new ModelAccessException("No message declared in ${ELEMENTNAME.localPart}${name ? ' ' + name : ''}.", this)
+    definitions.getMessage(getQNameForPN(messagePrefixedName))
+  }
+
   void create(AbstractCreator creator, CreatorContext ctx) {
     creator.createPortTypeMessage(this, ctx)
   }
-  
-  Message newMessage(String name){
-		message = definitions.newMessage(name)
-  }	
-  
+
+  Message newMessage(String name) {
+    message = definitions.newMessage(name)
+  }
+
 }
 

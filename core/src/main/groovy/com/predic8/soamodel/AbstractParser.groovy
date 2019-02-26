@@ -11,43 +11,40 @@
 
 package com.predic8.soamodel
 
-import javax.xml.stream.*
-
+import com.predic8.util.HTTPUtil
+import com.predic8.xml.util.ExternalResolver
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import com.predic8.io.*
-import com.predic8.schema.*
-import com.predic8.util.*
-import com.predic8.xml.util.*
+import javax.xml.stream.XMLInputFactory
 
-abstract class AbstractParser{
+abstract class AbstractParser {
 
-	private static final Logger log = LoggerFactory.getLogger(AbstractParser.class)
+  private static final Logger log = LoggerFactory.getLogger(AbstractParser.class)
 
-	def resourceResolver = new ExternalResolver()
+  def resourceResolver = new ExternalResolver()
 
-	
-		protected parse(AbstractParserContext ctx) {
-		updatectx(ctx)
-		log.debug("AbstractParser: ctx.newBaseDir: ${ctx.newBaseDir} , ctx.input: " + ctx.input)
-		log.debug("parsing " + ctx.input + " input from baseDir: ${ctx.baseDir}")
-		parseLocal(getResourceToken(ctx), ctx)
-	}
 
-	private updatectx(ctx) {
-		ctx.baseDir = ctx.baseDir ?: ''
-		ctx.newBaseDir = HTTPUtil.updateBaseDir(ctx.input, ctx.baseDir)
-		ctx.resourceResolver = ctx.resourceResolver ?: resourceResolver
-		ctx.wsiResults = ctx.wsiResults ?: []
-		ctx.errors = ctx.errors ?: []
-	}
+  protected parse(AbstractParserContext ctx) {
+    updatectx(ctx)
+    log.debug("AbstractParser: ctx.newBaseDir: ${ctx.newBaseDir} , ctx.input: " + ctx.input)
+    log.debug("parsing " + ctx.input + " input from baseDir: ${ctx.baseDir}")
+    parseLocal(getResourceToken(ctx), ctx)
+  }
 
-	private getResourceToken(ctx) {
-		getToken(resourceResolver.resolve(ctx.input, ctx.baseDir))
-	}
+  private updatectx(ctx) {
+    ctx.baseDir = ctx.baseDir ?: ''
+    ctx.newBaseDir = HTTPUtil.updateBaseDir(ctx.input, ctx.baseDir)
+    ctx.resourceResolver = ctx.resourceResolver ?: resourceResolver
+    ctx.wsiResults = ctx.wsiResults ?: []
+    ctx.errors = ctx.errors ?: []
+  }
 
-	private getToken(res) {
-		XMLInputFactory.newInstance().createXMLStreamReader(res)
-	}
+  private getResourceToken(ctx) {
+    getToken(resourceResolver.resolve(ctx.input, ctx.baseDir))
+  }
+
+  private getToken(res) {
+    XMLInputFactory.newInstance().createXMLStreamReader(res)
+  }
 }

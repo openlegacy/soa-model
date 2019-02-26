@@ -14,28 +14,24 @@
 
 package com.predic8.schema.namespace
 
-import junit.framework.TestCase
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.SchemaParser
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-import com.predic8.schema.* 
-import com.predic8.schema.creator.SchemaCreator;
-import com.predic8.schema.creator.SchemaCreatorContext;
-import com.predic8.wstool.creator.*
-import com.predic8.xml.util.*
+class SchemaWithXMLPrefixTest extends GroovyTestCase {
 
-class SchemaWithXMLPrefixTest extends GroovyTestCase{
-  
   def schema
-    
+
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/namespaces.xsd")
   }
-    
+
   void testCreatorOutput() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     assertEquals('base', schema.attributeGroups[0].attributes[0].ref.localPart)
     assertEquals('http://www.w3.org/XML/1998/namespace', schema.attributeGroups[0].attributes[0].ref.namespaceURI)

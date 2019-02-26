@@ -12,35 +12,34 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wstool.creator;
+package com.predic8.wstool.creator
 
-import groovy.xml.*
-
-import com.predic8.schema.BuiltInSchemaType;
+import com.predic8.schema.BuiltInSchemaType
+import groovy.xml.QName;
 
 class TemplateUtil {
 
-  public static getTemplateValue(QName type){
-    if ( !type ) return ""
+  public static getTemplateValue(QName type) {
+    if (!type) return ""
     getTemplateValue(type.localPart)
   }
-  
-	public static getTemplateValue(BuiltInSchemaType type){
-		getTemplateValue(type.type)
-	}
-	
-  public static getTemplateValue(String type){
+
+  public static getTemplateValue(BuiltInSchemaType type) {
+    getTemplateValue(type.type)
+  }
+
+  public static getTemplateValue(String type) {
     switch (type) {
-        case 'string' : return '?XXX?'
-        case ['int','integer', 'long' , 'short','nonNegativeInteger','positiveInteger'] : return '?999?'
-        case 'nonPositiveInteger' : return '?-999?'
-        case ['double','float','decimal'] : return '?999.99?'
-        case 'boolean' : return '?true?'
-        case 'date' : return '2008-12-31'
-        case 'dateTime' : return '2008-12-31T23:59:00.000-05:00'
-        default :
-          //"Type: ${type} is not supported yet"
-          return '???'
-     }
+      case 'string': return '?XXX?'
+      case ['int', 'integer', 'long', 'short', 'nonNegativeInteger', 'positiveInteger']: return '?999?'
+      case 'nonPositiveInteger': return '?-999?'
+      case ['double', 'float', 'decimal']: return '?999.99?'
+      case 'boolean': return '?true?'
+      case 'date': return '2008-12-31'
+      case 'dateTime': return '2008-12-31T23:59:00.000-05:00'
+      default:
+        //"Type: ${type} is not supported yet"
+        return '???'
+    }
   }
 }

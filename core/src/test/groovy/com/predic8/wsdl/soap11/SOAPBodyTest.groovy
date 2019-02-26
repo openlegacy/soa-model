@@ -14,21 +14,22 @@
 
 package com.predic8.wsdl.soap11
 
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
 
-class SOAPBodyTest extends GroovyTestCase{
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
+
+class SOAPBodyTest extends GroovyTestCase {
 
   def wsdl
 
-  void setUp(){
+  void setUp() {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     wsdl = parser.parse("/RPCLiteralSample.wsdl")
   }
 
-  void testGetMessage(){
+  void testGetMessage() {
     assertEquals 4, (wsdl.getBinding('RPCLiteralSampleBinding').getOperation('addPerson').input.bindingElements[0].parts).size()
   }
-	
+
 }
 

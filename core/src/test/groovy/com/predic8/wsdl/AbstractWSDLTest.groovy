@@ -14,17 +14,13 @@
 
 package com.predic8.wsdl
 
-import groovy.xml.*
+abstract class AbstractWSDLTest extends GroovyTestCase {
 
-import javax.xml.stream.*
-
-abstract class AbstractWSDLTest extends GroovyTestCase{
-  
   def token
   Definitions definitions
-  
-	void setUp() {
-		definitions = new WSDLParser().parse(new ByteArrayInputStream(wsdl.bytes))
+
+  void setUp() {
+    definitions = new WSDLParser().parse(new ByteArrayInputStream(wsdl.bytes))
   }
-  
+
 }

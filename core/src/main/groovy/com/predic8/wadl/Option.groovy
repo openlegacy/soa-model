@@ -11,23 +11,23 @@
 
 package com.predic8.wadl
 
-import javax.xml.namespace.QName
-
 import com.predic8.soamodel.Consts
+
+import javax.xml.namespace.QName
 
 class Option extends WADLElement {
 
-	public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'option')
-	
-	String value // use required
-	String mediaType
+  public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'option')
 
-	protected parseAttributes(token, ctx){
-		value = token.getAttributeValue( null , 'value')
-		mediaType = token.getAttributeValue( null , 'mediaType')
-	}
-	
-	String toString() {
-		"option[]"
-	}
+  String value // use required
+  String mediaType
+
+  protected parseAttributes(token, ctx) {
+    value = token.getAttributeValue(null, 'value')
+    mediaType = token.getAttributeValue(null, 'mediaType')
+  }
+
+  String toString() {
+    "option[]"
+  }
 }

@@ -11,54 +11,53 @@
 
 package com.predic8.wsdl
 
-import groovy.xml.*
-
-import javax.xml.namespace.QName as JQName
-import javax.xml.stream.*
-
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.CreatorContext
+import com.predic8.soamodel.XMLElement
+import groovy.xml.QName
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import com.predic8.soamodel.*
-import com.predic8.xml.util.*
+import javax.xml.namespace.QName as JQName
+
 //import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.HeaderTokenizer.Token;
 
 abstract class WSDLElement extends XMLElement {
 
-	private static final Logger log = LoggerFactory.getLogger(WSDLElement.class)
+  private static final Logger log = LoggerFactory.getLogger(WSDLElement.class)
 
-	String name
-	Definitions definitions
-	Documentation documentation
+  String name
+  Definitions definitions
+  Documentation documentation
 
-	abstract void create(AbstractCreator creator, CreatorContext ctx)
+  abstract void create(AbstractCreator creator, CreatorContext ctx)
 
-	protected parseChildren(token, child, WSDLParserContext ctx) {
-		switch (token.name) {
-			case Documentation.ELEMENTNAME :
-				documentation = new Documentation(definitions: definitions, parent : parent)
-				documentation.parse(token, ctx)
-				break
-		}
-	}
+  protected parseChildren(token, child, WSDLParserContext ctx) {
+    switch (token.name) {
+      case Documentation.ELEMENTNAME:
+        documentation = new Documentation(definitions: definitions, parent: parent)
+        documentation.parse(token, ctx)
+        break
+    }
+  }
 
-	String getNamespaceUri() {
-		definitions.targetNamespace
-	}
+  String getNamespaceUri() {
+    definitions.targetNamespace
+  }
 
-	/**
-	 * Should return the prefix for the namespace of the element, like wsdl, soap, http & etc.
-	 * Used in WSDLCreator.
-	 */
-	String getPrefix(){
-		getPrefix(ELEMENTNAME.namespaceURI)
-	}
+  /**
+   * Should return the prefix for the namespace of the element, like wsdl, soap, http & etc.
+   * Used in WSDLCreator.
+   */
+  String getPrefix() {
+    getPrefix(ELEMENTNAME.namespaceURI)
+  }
 
-	JQName getElementName() {
-		ELEMENTNAME
-	}
+  JQName getElementName() {
+    ELEMENTNAME
+  }
 
-	QName getQName() {
-		new QName(namespaceUri, name)
-	}
+  QName getQName() {
+    new QName(namespaceUri, name)
+  }
 }

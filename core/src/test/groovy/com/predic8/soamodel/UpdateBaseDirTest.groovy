@@ -14,22 +14,23 @@
 
 package com.predic8.soamodel
 
-import com.predic8.util.*
 
-class UpdateBaseDirTest extends GroovyTestCase{
-  void testUpdateBaseDir(){
+import com.predic8.util.HTTPUtil
+
+class UpdateBaseDirTest extends GroovyTestCase {
+  void testUpdateBaseDir() {
     assertEquals("data/", HTTPUtil.updateBaseDir("data\\Planning.xsd", ''))
     assertEquals("data/", HTTPUtil.updateBaseDir("data/Planning.xsd", ''))
     assertEquals("a/b/", HTTPUtil.updateBaseDir("b/foo.xsd", 'a'))
     assertEquals("data", HTTPUtil.updateBaseDir("Planning.xsd", 'data'))
     assertEquals("", HTTPUtil.updateBaseDir("Planning.xsd", ''))
   }
-  
-  void testNormalizer(){
-    assertEquals('/' , HTTPUtil.normalize('///'))
-    assertEquals('/a/b/' , HTTPUtil.normalize('\\\\a\\\\b/'))
+
+  void testNormalizer() {
+    assertEquals('/', HTTPUtil.normalize('///'))
+    assertEquals('/a/b/', HTTPUtil.normalize('\\\\a\\\\b/'))
   }
-  
+
   void testHttpUrls() {
     assertEquals("http://x.com/data/", HTTPUtil.updateBaseDir("http://x.com/data/Planning.xsd", ''))
     assertEquals("http://x.com/data/soup/", HTTPUtil.updateBaseDir("http://x.com/data/soup/Planning.xsd", ''))

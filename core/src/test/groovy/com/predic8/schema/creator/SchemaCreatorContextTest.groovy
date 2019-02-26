@@ -14,12 +14,12 @@
 
 package com.predic8.schema.creator
 
-class SchemaCreatorContextTest extends GroovyTestCase{
-  
+class SchemaCreatorContextTest extends GroovyTestCase {
+
   void testClone() {
     def ctx = new SchemaCreatorContext()
-    ctx.clone().declNS.ns=true
+    ctx.clone().declNS.ns = true
     assertNull(ctx.declNS.ns)
   }
-  
+
 }

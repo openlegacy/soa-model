@@ -14,45 +14,49 @@
 
 package com.predic8.wsdl
 
-import com.predic8.soamodel.*
-import com.predic8.wsdl.style.*
 
-abstract class AbstractSOAPBinding extends AbstractBinding{
-  
-	Binding binding
-	private String style 
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.CreatorContext
+import com.predic8.wsdl.style.BindingStyle
+import com.predic8.wsdl.style.DocumentLiteralStyle
+import com.predic8.wsdl.style.RPCStyle
+
+abstract class AbstractSOAPBinding extends AbstractBinding {
+
+  Binding binding
+  private String style
   String transport = "http://schemas.xmlsoap.org/soap/http"
-	
 
-  protected parseAttributes(token, WSDLParserContext ctx){
-    style = token.getAttributeValue(null , 'style')
-    transport = token.getAttributeValue(null , 'transport')
+
+  protected parseAttributes(token, WSDLParserContext ctx) {
+    style = token.getAttributeValue(null, 'style')
+    transport = token.getAttributeValue(null, 'transport')
   }
-	
-	BindingStyle getBindingStyle() {
-		if(style == 'document') return new DocumentLiteralStyle()
-		if(style == 'rpc') return new RPCStyle()
-		/**If bindingStyle is not defined in SOAP Binding, 
-		 * it should be looked up in binding operation.
-		 * As default it should be 'document'
-		 */
-		def opStyle = binding.operations.operation.style.unique()
-		if(opStyle.contains('rpc') || 1 < opStyle.size()) return new RPCStyle()
-		return new DocumentLiteralStyle()
-	}
-	
-	public getStyle() {
-		getBindingStyle().value
-	}
-	
-	Map checkStyle() {
-		getBindingStyle().check(binding)
-	}
-  
+
+  BindingStyle getBindingStyle() {
+    if (style == 'document') return new DocumentLiteralStyle()
+    if (style == 'rpc') return new RPCStyle()
+    /**If bindingStyle is not defined in SOAP Binding,
+     * it should be looked up in binding operation.
+     * As default it should be 'document'
+     */
+    def opStyle = binding.operations.operation.style.unique()
+    if (opStyle.contains('rpc') || 1 < opStyle.size()) return new RPCStyle()
+    return new DocumentLiteralStyle()
+  }
+
+  public getStyle() {
+    getBindingStyle().value
+  }
+
+  Map checkStyle() {
+    getBindingStyle().check(binding)
+  }
+
   abstract String getContentType()
-  
+
   abstract String getProtocol()
-  
+
   void create(AbstractCreator creator, CreatorContext ctx) {
     creator.createSoapBinding(this, ctx)
   }

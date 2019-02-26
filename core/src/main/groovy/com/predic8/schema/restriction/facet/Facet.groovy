@@ -9,20 +9,20 @@
  See the License for the specific language governing permissions and
  limitations under the License. */
 
-package com.predic8.schema.restriction.facet;
+package com.predic8.schema.restriction.facet
 
-import com.predic8.schema.Annotation
+
 import com.predic8.schema.SchemaComponent
 
-abstract class Facet extends SchemaComponent{
+abstract class Facet extends SchemaComponent {
 
-	String value
+  String value
 
-	protected parseAttributes(token, ctx){
-		value = token.getAttributeValue( null, 'value')
-	}
-	
-	public boolean equals(obj) {
-		obj && getClass() == obj.getClass() && value == obj.value
-	}
+  protected parseAttributes(token, ctx) {
+    value = token.getAttributeValue(null, 'value')
+  }
+
+  public boolean equals(obj) {
+    obj && getClass() == obj.getClass() && value == obj.value
+  }
 }

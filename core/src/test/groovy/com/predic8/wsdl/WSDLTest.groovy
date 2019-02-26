@@ -14,10 +14,8 @@
 
 package com.predic8.wsdl
 
-import javax.xml.stream.*
-
 class WSDLTest extends AbstractWSDLTest {
-  
+
   def binding
   def static wsdl = '''<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
                                          xmlns="http://schemas.xmlsoap.org/wsdl/" 
@@ -32,23 +30,23 @@ class WSDLTest extends AbstractWSDLTest {
                                          targetNamespace="http://thomas-bayer.com/blz/">
                            <documentation>WSDL Docu</documentation>
                        </wsdl:definitions>'''
-  
+
   void testDefinitions() {
-    assertEquals('BLZService' , definitions.name)
-    assertEquals("http://thomas-bayer.com/blz/" , definitions.targetNamespace)
+    assertEquals('BLZService', definitions.name)
+    assertEquals("http://thomas-bayer.com/blz/", definitions.targetNamespace)
   }
-  
+
   void testGetMessage() {
-    def input = new Message(name : 'getBank')
+    def input = new Message(name: 'getBank')
     definitions.localMessages << input
-    assertEquals('getBank' , definitions.getMessage('getBank').name)
+    assertEquals('getBank', definitions.getMessage('getBank').name)
   }
-  
+
   void testNamespaces() {
-    assertEquals(9 , definitions.namespaceContext.size())
-    assertEquals("http://www.w3.org/2001/XMLSchema" , definitions.getNamespace('xsd'))
+    assertEquals(9, definitions.namespaceContext.size())
+    assertEquals("http://www.w3.org/2001/XMLSchema", definitions.getNamespace('xsd'))
   }
-  
+
   void testDocumentation() {
     assertEquals('WSDL Docu', definitions.documentation.toString())
   }

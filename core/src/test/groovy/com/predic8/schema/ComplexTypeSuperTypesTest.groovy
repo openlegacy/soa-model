@@ -14,26 +14,24 @@
 
 package com.predic8.schema
 
-import groovy.xml.QName
-import com.predic8.xml.util.*
-import com.predic8.schema.diff.SchemaDiffGenerator 
+import com.predic8.xml.util.ClasspathResolver
 
 class ComplexTypeSuperTypesTest extends GroovyTestCase {
-  
+
   Schema schema
-  
-  void setUp(){
+
+  void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/schema/ComplexTypeSuperType.xsd")
   }
-  
-	void testComplexTypeGetSuperTypes() {
-		assert schema.getComplexType('cyclingType').superTypes[0].toString() == '{http://www.predic8.com/complextype/}cyclingType'
-		assert schema.getType('loopingType').superTypes[0].toString() == '{http://www.predic8.com/complextype/}loopingType'
-		assert !schema.getComplexType('PersonType').superTypes
-		assert schema.getComplexType('EmployeeType').superTypes*.localPart == ['PersonType']
-		assert schema.getComplexType('ChefType').superTypes*.localPart == ['EmployeeType','PersonType']
-		assert schema.getComplexType('companyEmailType').superTypes*.toString() == ['{http://www.predic8.com/complextype/}emailType', '{http://www.w3.org/2001/XMLSchema}string']
-	}
+
+  void testComplexTypeGetSuperTypes() {
+    assert schema.getComplexType('cyclingType').superTypes[0].toString() == '{http://www.predic8.com/complextype/}cyclingType'
+    assert schema.getType('loopingType').superTypes[0].toString() == '{http://www.predic8.com/complextype/}loopingType'
+    assert !schema.getComplexType('PersonType').superTypes
+    assert schema.getComplexType('EmployeeType').superTypes*.localPart == ['PersonType']
+    assert schema.getComplexType('ChefType').superTypes*.localPart == ['EmployeeType', 'PersonType']
+    assert schema.getComplexType('companyEmailType').superTypes*.toString() == ['{http://www.predic8.com/complextype/}emailType', '{http://www.w3.org/2001/XMLSchema}string']
+  }
 }
 

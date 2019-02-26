@@ -14,43 +14,42 @@
 
 package com.predic8.schema
 
-import javax.xml.stream.XMLStreamReader
-
 import com.predic8.soamodel.AbstractParser
 import com.predic8.soamodel.WrongGrammarException
 
-class SchemaParser extends AbstractParser{
-  
-	Schema parse(String input){
-		super.parse(new SchemaParserContext(input: input))
-	}
-	
-	Schema parse(InputStream input){
-		super.parse(new SchemaParserContext(input: input))
-	}
-	
-	Schema parse(SchemaParserContext input){
-		super.parse(input)
-	}
-  
-  def parseLocal(XMLStreamReader token, ctx){
+import javax.xml.stream.XMLStreamReader
+
+class SchemaParser extends AbstractParser {
+
+  Schema parse(String input) {
+    super.parse(new SchemaParserContext(input: input))
+  }
+
+  Schema parse(InputStream input) {
+    super.parse(new SchemaParserContext(input: input))
+  }
+
+  Schema parse(SchemaParserContext input) {
+    super.parse(input)
+  }
+
+  def parseLocal(XMLStreamReader token, ctx) {
     def schema
-    while(token.hasNext()){
+    while (token.hasNext()) {
       if (token.startElement) {
-        if(token.name == Schema.ELEMENTNAME) {
+        if (token.name == Schema.ELEMENTNAME) {
           def schemaLocation = ctx.input.hasProperty('schemaLocation') ? ctx.input.schemaLocation : ctx.input
-          schema = new Schema(baseDir : ctx.newBaseDir ?: '', schemaLocation: schemaLocation ?: '', resourceResolver: ctx.resourceResolver)
+          schema = new Schema(baseDir: ctx.newBaseDir ?: '', schemaLocation: schemaLocation ?: '', resourceResolver: ctx.resourceResolver)
           schema.parse(token, ctx)
+        } else {
+          throw new WrongGrammarException("Expected root element '{http://www.w3.org/2001/XMLSchema}schema' for the schema document but was '${token.name}'.", token.name, token.location)
         }
-				else {
-					throw new WrongGrammarException("Expected root element '{http://www.w3.org/2001/XMLSchema}schema' for the schema document but was '${token.name}'.", token.name, token.location)
-				}
       }
-      if(token.hasNext()) token.next()
+      if (token.hasNext()) token.next()
     }
 
-    if(!schema) throw new RuntimeException("The parsed document ${ctx.input} is not a valid schema document.")
+    if (!schema) throw new RuntimeException("The parsed document ${ctx.input} is not a valid schema document.")
     schema
   }
-  
+
 }

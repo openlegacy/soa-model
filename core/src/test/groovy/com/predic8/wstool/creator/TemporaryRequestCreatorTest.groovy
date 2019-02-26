@@ -12,38 +12,38 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-   
+
 // Temporary test. Used for bug fixes. Can be changed or deleted later. 
 package com.predic8.wstool.creator
 
-import com.predic8.schema.*
-import com.predic8.wsdl.Definitions;
+
+import com.predic8.wsdl.Definitions
 import com.predic8.wsdl.WSDLParser
-import com.predic8.xml.util.*
-import groovy.xml.*
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-class TemporaryRequestCreatorTestTest extends GroovyTestCase{
+class TemporaryRequestCreatorTestTest extends GroovyTestCase {
 
-  Definitions wsdl 
+  Definitions wsdl
 
-  public void setUp(){
+  public void setUp() {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     wsdl = parser.parse("article/article.wsdl")
   }
-  
+
   void testCreatRequest() {
     def strWriter = new StringWriter()
-    HashMap <String, String> formParams = new HashMap <String,String>()
-    
-    formParams['xpath:/create/article[1]/name[1]']='foo1'
-    formParams['xpath:/create/article[1]/description']='bar1'
-    formParams['xpath:/create/article[1]/price[1]/amount']='10.00'
-    formParams['xpath:/create/article[1]/price[1]/currency']='USD'
-    formParams['xpath:/create/article[1]/id']='1'
-    
+    HashMap<String, String> formParams = new HashMap<String, String>()
+
+    formParams['xpath:/create/article[1]/name[1]'] = 'foo1'
+    formParams['xpath:/create/article[1]/description'] = 'bar1'
+    formParams['xpath:/create/article[1]/price[1]/amount'] = '10.00'
+    formParams['xpath:/create/article[1]/price[1]/currency'] = 'USD'
+    formParams['xpath:/create/article[1]/id'] = '1'
+
     SOARequestCreator creator = new SOARequestCreator(wsdl, new RequestCreator(), new MarkupBuilder(strWriter))
     creator.formParams = formParams
-    
+
     creator.createRequest('ArticleServicePT', 'create', 'ArticleServicePTBinding')
 //    println strWriter
   }

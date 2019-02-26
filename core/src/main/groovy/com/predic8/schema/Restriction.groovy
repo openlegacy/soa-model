@@ -14,7 +14,7 @@
 
 package com.predic8.schema
 
-import com.predic8.soamodel.CreatorContext 
+import com.predic8.soamodel.CreatorContext
 
 import javax.xml.namespace.QName as JQName
 
@@ -22,16 +22,16 @@ import static com.predic8.soamodel.Consts.SCHEMA_NS
 
 class Restriction extends Derivation {
 
-  protected getElementName(){
+  protected getElementName() {
     new JQName(SCHEMA_NS, 'restriction')
   }
 
-  def create(creator, CreatorContext ctx){
+  def create(creator, CreatorContext ctx) {
     creator.createComplexContentRestriction(this, ctx)
   }
-	
-	String toString() {
-		"Restriction{ name: $name, base: $basePN}"
-	}
+
+  String toString() {
+    "Restriction{ name: $name, base: $basePN}"
+  }
 }
 

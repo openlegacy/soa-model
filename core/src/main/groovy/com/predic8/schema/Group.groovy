@@ -12,15 +12,13 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.schema;
+package com.predic8.schema
 
-import groovy.xml.*
-import com.predic8.soamodel.CreatorContext 
-import com.predic8.wstool.creator.*
+import com.predic8.soamodel.CreatorContext
 import com.predic8.xml.util.PrefixedName
-import javax.xml.stream.*
+import groovy.xml.QName
 
-class Group extends SchemaComponent{
+class Group extends SchemaComponent {
 
   QName qname
   def model
@@ -28,73 +26,72 @@ class Group extends SchemaComponent{
   def maxOccurs
 
 
-  protected parseAttributes(token, ctx){
+  protected parseAttributes(token, ctx) {
     super.parseAttributes(token, ctx)
     if (name) {
       def preName = new PrefixedName(name)
       qname = new QName(schema.targetNamespace, preName.localName)
     }
-    minOccurs = token.getAttributeValue( null , 'minOccurs')
-    maxOccurs = token.getAttributeValue( null , 'maxOccurs')
+    minOccurs = token.getAttributeValue(null, 'minOccurs')
+    maxOccurs = token.getAttributeValue(null, 'maxOccurs')
   }
 
-  protected parseChildren(token, child, ctx){
-    switch (child ){
-      case 'annotation' :
-      annotation = new Annotation(schema: schema)
-      annotation.parse(token, ctx) ; break
-      case 'sequence' :
-      model = new Sequence(schema:schema)
-      //token.nextTag()
-      model.parse(token, ctx) ; break
-      case 'all' :
-      model = new All(schema:schema)
-      model.parse(token, ctx) ; break
-			case 'choice' :
-			model = new Choice(schema:schema)
-			model.parse(token, ctx) ; break
+  protected parseChildren(token, child, ctx) {
+    switch (child) {
+      case 'annotation':
+        annotation = new Annotation(schema: schema)
+        annotation.parse(token, ctx); break
+      case 'sequence':
+        model = new Sequence(schema: schema)
+        //token.nextTag()
+        model.parse(token, ctx); break
+      case 'all':
+        model = new All(schema: schema)
+        model.parse(token, ctx); break
+      case 'choice':
+        model = new Choice(schema: schema)
+        model.parse(token, ctx); break
     }
   }
 
-  protected getElementName(){
+  protected getElementName() {
     // If changed to QName, SchemaDiffGenerator has to be modified.
     'group'
   }
 
-  def create(creator, CreatorContext ctx){
+  def create(creator, CreatorContext ctx) {
     creator.createGroup(this, ctx.clone())
   }
 
-  def compare(generator, other){
+  def compare(generator, other) {
     generator.compareGroups(this, other)
   }
-  
-  String getPrefixedName(){
+
+  String getPrefixedName() {
     "${schema.getPrefix(qname.namespaceURI)}:${qname.localPart}"
   }
 
-  String toString(){
+  String toString() {
     "group[qname=$qname,model=$model]"
   }
 
   public boolean equals(Object obj) {
-    if(this.is(obj)) {
+    if (this.is(obj)) {
       return true
     }
-    if( !obj || (obj.getClass() != this.getClass())) {
+    if (!obj || (obj.getClass() != this.getClass())) {
       return false
     }
-    if(obj.schema.targetNamespace != schema.targetNamespace) {
+    if (obj.schema.targetNamespace != schema.targetNamespace) {
       return false
     }
-    if(obj.qname != qname) {
+    if (obj.qname != qname) {
       return false
     }
     true
   }
 
-  public int hashCode()
-  {
+  public int hashCode() {
     (qname ?: "abc").hashCode() + (schema ?: "xsd").hashCode()
   }
 }

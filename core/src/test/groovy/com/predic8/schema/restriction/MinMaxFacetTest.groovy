@@ -14,15 +14,13 @@
 
 package com.predic8.schema.restriction
 
-import junit.framework.TestCase
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.SchemaParser
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-import com.predic8.xml.util.*
-import com.predic8.schema.*
-import com.predic8.schema.creator.*
-
-class MinMaxFacetTest  extends GroovyTestCase{
+class MinMaxFacetTest extends GroovyTestCase {
 
   def schema
   def createdSchema
@@ -34,7 +32,7 @@ class MinMaxFacetTest  extends GroovyTestCase{
 
   void testMinInclusiveFacet() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     createdSchema = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('-P10675199DT2H48M5.4775808S', createdSchema.simpleType.restriction.minInclusive.@value.toString())

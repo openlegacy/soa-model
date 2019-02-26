@@ -17,17 +17,17 @@ package com.predic8.schema.restriction.facet;
 import com.predic8.soamodel.CreatorContext
 
 class TotalDigitsFacet extends Facet {
-  
-  protected parseAttributes(token, ctx){
-	value = token.getAttributeValue( null, 'value') as BigDecimal
+
+  protected parseAttributes(token, ctx) {
+    value = token.getAttributeValue(null, 'value') as BigDecimal
   }
-	
-  def create(creator, CreatorContext ctx){
+
+  def create(creator, CreatorContext ctx) {
     creator.createTotalDigitsFacet(this, ctx)
   }
-  
-  protected getElementName(){
+
+  protected getElementName() {
     'totalDigits'
   }
-  
+
 }

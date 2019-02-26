@@ -14,17 +14,17 @@
 
 package com.predic8.wstool.creator
 
-class RequestCreatorContextTest extends GroovyTestCase{
+class RequestCreatorContextTest extends GroovyTestCase {
 
   def rcc = new RequestCreatorContext()
-	def rcc2
+  def rcc2
 
   void setUp() {
     rcc.element = 'TestElement'
     rcc2 = rcc.clone()
   }
 
-  void testClone(){
+  void testClone() {
     assertEquals(rcc.path, rcc2.path)
     assertEquals('TestElement', rcc2.element)
   }

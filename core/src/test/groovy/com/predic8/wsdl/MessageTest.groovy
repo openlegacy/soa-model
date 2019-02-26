@@ -14,10 +14,8 @@
 
 package com.predic8.wsdl
 
-import javax.xml.stream.*
-
 class MessageTest extends AbstractWSDLTest {
-  
+
   def static wsdl = '''<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
                                          xmlns="http://schemas.xmlsoap.org/wsdl/" 
                                          xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" 
@@ -36,15 +34,15 @@ class MessageTest extends AbstractWSDLTest {
         <wsdl:part name="parameters" element="tns:getBankResponse"/>
     </wsdl:message>
   </wsdl:definitions>'''
-  
+
   void testMessage() {
     assert definitions.messages.size() == 2
-    assertEquals("getBank" , definitions.messages[0].name)
+    assertEquals("getBank", definitions.messages[0].name)
     assertEquals(definitions.getMessage('getBankResponse'), definitions.messages[1])
   }
-  
-  void testParts(){
+
+  void testParts() {
     assertNotNull(definitions.messages[0].parts[0])
-    assertEquals('parameters' , definitions.messages[1].parts[0].name)
+    assertEquals('parameters', definitions.messages[1].parts[0].name)
   }
 }

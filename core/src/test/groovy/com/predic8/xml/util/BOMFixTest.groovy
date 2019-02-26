@@ -14,20 +14,19 @@
 
 package com.predic8.xml.util
 
-import groovy.xml.MarkupBuilder
-
 import com.predic8.schema.SchemaParser
 import com.predic8.schema.creator.SchemaCreator
 import com.predic8.schema.creator.SchemaCreatorContext
+import groovy.xml.MarkupBuilder
 
 class BOMFixTest extends GroovyTestCase {
-  
+
   void testClasspathResolver() {
-		def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
+    def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     def schema = parser.parse("/aWithBom.xsd")
-		def strWriter = new StringWriter()
-		def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
-		schema.create(creator, new SchemaCreatorContext())
-		assert strWriter.toString().startsWith("<xsd:schema targetNamespace='schemaA' attributeFormDefault='unqualified' elementFormDefault='qualified' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>")
-	}
+    def strWriter = new StringWriter()
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
+    schema.create(creator, new SchemaCreatorContext())
+    assert strWriter.toString().startsWith("<xsd:schema targetNamespace='schemaA' attributeFormDefault='unqualified' elementFormDefault='qualified' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>")
+  }
 }

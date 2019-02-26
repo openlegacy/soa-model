@@ -16,19 +16,19 @@ package com.predic8.wsdl
 
 import com.predic8.soamodel.AbstractParserContext;
 
-class WSDLParserContext extends AbstractParserContext{
-	
-	Map<String, String> wsdlImports = [:]
-	Map<String, Definitions> importedWSDLs = [:]
-	
-	List<WSDLElement>	wsdlElementOrder = []
+class WSDLParserContext extends AbstractParserContext {
+
+  Map<String, String> wsdlImports = [:]
+  Map<String, Definitions> importedWSDLs = [:]
+
+  List<WSDLElement> wsdlElementOrder = []
 
   def createNewSubContext(args) {
-    new WSDLParserContext (
-        input: args?.input,
-        targetNamespace: args?.targetNamespace,
-        importedSchemaCache: importedSchemaCache,
-        errors: errors)
+    new WSDLParserContext(
+      input: args?.input,
+      targetNamespace: args?.targetNamespace,
+      importedSchemaCache: importedSchemaCache,
+      errors: errors)
   }
 
 }

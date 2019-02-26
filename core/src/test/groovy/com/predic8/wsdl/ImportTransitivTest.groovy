@@ -14,10 +14,8 @@
 
 package com.predic8.wsdl
 
-import groovy.xml.*
+class ImportTransitivTest extends AbstractWSDLTest {
 
-class ImportTransitivTest extends AbstractWSDLTest{
-  
   def schemaA
   def schemaB
   def schemaC
@@ -64,16 +62,16 @@ class ImportTransitivTest extends AbstractWSDLTest{
 
   void setUp() {
     super.setUp()
-    schemaA = definitions.localSchemas.find{ it.targetNamespace == 'urn:a'}
-    schemaB = definitions.localSchemas.find{ it.targetNamespace == 'urn:b'}
-    schemaC = definitions.localSchemas.find{ it.targetNamespace == 'urn:c'}
+    schemaA = definitions.localSchemas.find { it.targetNamespace == 'urn:a' }
+    schemaB = definitions.localSchemas.find { it.targetNamespace == 'urn:b' }
+    schemaC = definitions.localSchemas.find { it.targetNamespace == 'urn:c' }
   }
-  
+
   void testGetElement() {
 //    definitions.localSchemas.elements.each {
 //    }
   }
-  
+
   void testFindTypeInImportedSchemaFromAnImportedSchema() {
     assertEquals('AType', schemaC.getType(schemaC.getElement('aa').type).qname.getLocalPart())
     assertEquals('BType', schemaC.getType(schemaC.getElement('bb').type).qname.getLocalPart())

@@ -14,19 +14,20 @@
 
 package samples.schema;
 
-import java.util.List;
 import com.predic8.schema.Schema;
 import com.predic8.schema.SchemaParser;
 import com.predic8.schema.diff.SchemaDiffGenerator;
 import com.predic8.soamodel.Difference;
+
+import java.util.List;
 
 public class CompareSchema {
 
   public static void main(String[] args) {
     compare();
   }
-  
-  private static void compare(){
+
+  private static void compare() {
     SchemaParser parser = new SchemaParser();
 
     Schema schema1 = parser.parse("samples/diff/original/article.xsd");
@@ -36,8 +37,8 @@ public class CompareSchema {
     SchemaDiffGenerator diffGen = new SchemaDiffGenerator(schema1, schema2);
     List<Difference> lst = diffGen.compare();
     for (Difference diff : lst) {
-    	System.out.println(diff.dump());
+      System.out.println(diff.dump());
     }
   }
-  
+
 }

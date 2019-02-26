@@ -14,13 +14,10 @@
 
 package com.predic8.schema.diff
 
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.SchemaParser
+import com.predic8.xml.util.ClasspathResolver
 
-import com.predic8.xml.util.*
-import com.predic8.schema.*
-
-class ChoiceDiffGeneratorTest extends GroovyTestCase{
+class ChoiceDiffGeneratorTest extends GroovyTestCase {
 
   def schema
   def a, b, c, d, e, f, g
@@ -37,51 +34,51 @@ class ChoiceDiffGeneratorTest extends GroovyTestCase{
     g = schema.getType('Ref2').model
   }
 
-  void testEqual(){
-    def diffGen = new ChoiceDiffGenerator(a: a, b: b, generator : new SchemaDiffGenerator())
+  void testEqual() {
+    def diffGen = new ChoiceDiffGenerator(a: a, b: b, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(0, diffs.size())
   }
 
-  void testElementremoved(){
-    def diffGen = new ChoiceDiffGenerator(a: a , b: c, generator : new SchemaDiffGenerator())
+  void testElementremoved() {
+    def diffGen = new ChoiceDiffGenerator(a: a, b: c, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assertEquals(1, diffs[0].diffs.size())
     assert diffs.diffs.description.toString().contains('removed')
   }
 
-  void testElementAdded(){
-    def diffGen = new ChoiceDiffGenerator(a: a , b: d, generator : new SchemaDiffGenerator())
+  void testElementAdded() {
+    def diffGen = new ChoiceDiffGenerator(a: a, b: d, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assertEquals(1, diffs[0].diffs.size())
     assert diffs.diffs.description.toString().contains('added')
   }
 
-  void testSequenceAdded(){
-    def diffGen = new ChoiceDiffGenerator(a: a , b: e, generator : new SchemaDiffGenerator())
+  void testSequenceAdded() {
+    def diffGen = new ChoiceDiffGenerator(a: a, b: e, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assertEquals(1, diffs[0].diffs.size())
     assert diffs.diffs.description.toString().contains('added')
   }
 
-  void testSequenceRemoved(){
-    def diffGen = new ChoiceDiffGenerator(a: e , b: a, generator : new SchemaDiffGenerator())
+  void testSequenceRemoved() {
+    def diffGen = new ChoiceDiffGenerator(a: e, b: a, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assertEquals(1, diffs[0].diffs.size())
     assert diffs.diffs.description.toString().contains('removed')
   }
-	
-	void testElementRef(){
-		def diffGen = new ChoiceDiffGenerator(a: f , b: g, generator : new SchemaDiffGenerator())
-		def diffs = diffGen.compare()
-		assert diffs[0].diffs[0].description == 'Element ref to TEST1 with minOccurs 1 removed.'
-		assert diffs[0].diffs[1].description == 'Element ref to TEST2 with minOccurs 1 removed.'
-		assert diffs[0].diffs[2].description == 'Element ref to TEST4 with minOccurs 1 added.'
-		assert diffs[0].diffs[3].description == 'Element ref to TEST5 with minOccurs 1 added.'
-	}
+
+  void testElementRef() {
+    def diffGen = new ChoiceDiffGenerator(a: f, b: g, generator: new SchemaDiffGenerator())
+    def diffs = diffGen.compare()
+    assert diffs[0].diffs[0].description == 'Element ref to TEST1 with minOccurs 1 removed.'
+    assert diffs[0].diffs[1].description == 'Element ref to TEST2 with minOccurs 1 removed.'
+    assert diffs[0].diffs[2].description == 'Element ref to TEST4 with minOccurs 1 added.'
+    assert diffs[0].diffs[3].description == 'Element ref to TEST5 with minOccurs 1 added.'
+  }
 
 }

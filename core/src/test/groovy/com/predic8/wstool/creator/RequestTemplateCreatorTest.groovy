@@ -12,18 +12,16 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wstool.creator;
+package com.predic8.wstool.creator
 
-import groovy.xml.*
-
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
 import com.predic8.creator.*
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
 
 class RequestTemplateCreatorTest extends GroovyTestCase {
 
   def definitions
-  def operationName ='getBank'
+  def operationName = 'getBank'
   def portType = 'BLZServicePortType'
 
   void setUp() {
@@ -31,17 +29,17 @@ class RequestTemplateCreatorTest extends GroovyTestCase {
   }
 
   void testElementRequestTemplate() {
-		def element = definitions.getInputElementForOperation(portType, operationName)
-    def requestTemplate = new XmlSlurper().parseText(element.requestTemplate).declareNamespace('ns1':'http://thomas-bayer.com/blz/')
+    def element = definitions.getInputElementForOperation(portType, operationName)
+    def requestTemplate = new XmlSlurper().parseText(element.requestTemplate).declareNamespace('ns1': 'http://thomas-bayer.com/blz/')
     assertEquals('?XXX?', requestTemplate.blz.text())
     assertEquals('?999?', requestTemplate.'@ns1:testAttribute'.toString())
   }
-	
-	void testRequestTemplateForElementWithDefaultAndFixet() {
+
+  void testRequestTemplateForElementWithDefaultAndFixet() {
 /**
  * see RequestCreatorTest.groovy.	
  */
-	}
+  }
 
   private def getDefinitions() {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())

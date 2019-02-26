@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class Base64BinaryRestriction extends BaseRestriction{
-  
+class Base64BinaryRestriction extends BaseRestriction {
+
 }

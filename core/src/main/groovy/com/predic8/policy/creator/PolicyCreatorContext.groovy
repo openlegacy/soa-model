@@ -11,12 +11,8 @@
 
 package com.predic8.policy.creator
 
-import com.predic8.policy.Policy
-import com.predic8.policy.PolicyReference
-import com.predic8.schema.creator.SchemaCreatorContext
-import com.predic8.soamodel.CreatorContext;
-import com.predic8.wsdl.WSDLElement
-import com.predic8.wsdl.creator.WSDLCreatorContext;
+
+import com.predic8.wsdl.creator.WSDLCreatorContext
 
 class PolicyCreatorContext extends WSDLCreatorContext {
 

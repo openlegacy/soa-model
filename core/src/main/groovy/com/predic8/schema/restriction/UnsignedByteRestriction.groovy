@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class UnsignedByteRestriction extends UnsignedShortRestriction{
-  
+class UnsignedByteRestriction extends UnsignedShortRestriction {
+
 }

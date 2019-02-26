@@ -14,16 +14,17 @@
 
 package com.predic8.wstool.creator
 
-import com.predic8.schema.creator.*
 
-class FormCreatorContext extends SchemaCreatorContext implements Cloneable{
+import com.predic8.schema.creator.SchemaCreatorContext
+
+class FormCreatorContext extends SchemaCreatorContext implements Cloneable {
 
   def path = "xpath:/"
   def formParams = [:]
   def element
   def attrs
-  
+
   public Object clone() {
-    new FormCreatorContext(error:error,declNS:copyDeclNS(),createLinks:createLinks,getSchemaId:getSchemaId, path:path, formParams: formParams, element: element,attrs: attrs)
+    new FormCreatorContext(error: error, declNS: copyDeclNS(), createLinks: createLinks, getSchemaId: getSchemaId, path: path, formParams: formParams, element: element, attrs: attrs)
   }
 }

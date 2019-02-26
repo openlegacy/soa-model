@@ -12,17 +12,18 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl;
+package com.predic8.wsdl
 
-import javax.xml.namespace.QName as JQName
-
-import com.predic8.soamodel.*
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
 import com.predic8.wsdl.http.HTTPOperation
 import com.predic8.wsdl.soap11.SOAPOperation as SOAP11Operation
 import com.predic8.wsdl.soap12.SOAPOperation as SOAP12Operation
 
+import javax.xml.namespace.QName as JQName
 
-class BindingOperation extends WSDLElement{
+class BindingOperation extends WSDLElement {
 
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL11_NS, 'operation')
   ExtensibilityOperation operation
@@ -31,60 +32,60 @@ class BindingOperation extends WSDLElement{
   List<BindingFault> faults = []
   Binding binding
 
-  protected parseAttributes(token, WSDLParserContext ctx){
-    name = token.getAttributeValue(null , 'name')
+  protected parseAttributes(token, WSDLParserContext ctx) {
+    name = token.getAttributeValue(null, 'name')
   }
 
-  protected parseChildren(token, child, WSDLParserContext ctx){
+  protected parseChildren(token, child, WSDLParserContext ctx) {
     super.parseChildren(token, child, ctx)
     switch (token.name) {
-      case HTTPOperation.ELEMENTNAME :
-      operation = new HTTPOperation(definitions : definitions)
-      operation.parse(token, ctx) ; break
-      case SOAP11Operation.ELEMENTNAME :
-      operation = new SOAP11Operation(definitions : definitions)
-      operation.parse(token, ctx) ; break
-      case SOAP12Operation.ELEMENTNAME :
-      operation = new SOAP12Operation(definitions : definitions)
-      operation.parse(token, ctx) ; break
-      case BindingInput.ELEMENTNAME :
-      input = new BindingInput(definitions : definitions, bindingOperation : this)
-      input.parse(token, ctx) ; break
-      case BindingOutput.ELEMENTNAME :
-      output = new BindingOutput(definitions : definitions, bindingOperation : this)
-      output.parse(token, ctx) ; break
-      case BindingFault.ELEMENTNAME :
-      def fault = new BindingFault(definitions : definitions, bindingOperation : this)
-      fault.parse(token, ctx)
-      faults << fault ; break
+      case HTTPOperation.ELEMENTNAME:
+        operation = new HTTPOperation(definitions: definitions)
+        operation.parse(token, ctx); break
+      case SOAP11Operation.ELEMENTNAME:
+        operation = new SOAP11Operation(definitions: definitions)
+        operation.parse(token, ctx); break
+      case SOAP12Operation.ELEMENTNAME:
+        operation = new SOAP12Operation(definitions: definitions)
+        operation.parse(token, ctx); break
+      case BindingInput.ELEMENTNAME:
+        input = new BindingInput(definitions: definitions, bindingOperation: this)
+        input.parse(token, ctx); break
+      case BindingOutput.ELEMENTNAME:
+        output = new BindingOutput(definitions: definitions, bindingOperation: this)
+        output.parse(token, ctx); break
+      case BindingFault.ELEMENTNAME:
+        def fault = new BindingFault(definitions: definitions, bindingOperation: this)
+        fault.parse(token, ctx)
+        faults << fault; break
     }
   }
-	
+
   void create(AbstractCreator creator, CreatorContext ctx) {
     creator.createBindingOperation(this, ctx)
   }
-  
-  SOAP11Operation newSOAP11Operation(){
-    operation = new SOAP11Operation(definitions:definitions, namespaces : ['soap':Consts.WSDL_SOAP11_NS], parent: this)
+
+  SOAP11Operation newSOAP11Operation() {
+    operation = new SOAP11Operation(definitions: definitions, namespaces: ['soap': Consts.WSDL_SOAP11_NS], parent: this)
   }
-  
-  SOAP12Operation newSOAP12Operation(){
-    operation = new SOAP12Operation(definitions:definitions, namespaces : ['soap12':Consts.WSDL_SOAP12_NS], parent: this)
+
+  SOAP12Operation newSOAP12Operation() {
+    operation = new SOAP12Operation(definitions: definitions, namespaces: ['soap12': Consts.WSDL_SOAP12_NS], parent: this)
   }
-  
-  HTTPOperation newHTTPOperation(){
-    operation = new HTTPOperation(definitions:definitions, namespaces : ['http':Consts.WSDL_HTTP_NS], parent: this)
+
+  HTTPOperation newHTTPOperation() {
+    operation = new HTTPOperation(definitions: definitions, namespaces: ['http': Consts.WSDL_HTTP_NS], parent: this)
   }
-  
-  BindingInput newInput(){
-    input = new BindingInput(definitions:definitions, bindingOperation : this, parent: this)
+
+  BindingInput newInput() {
+    input = new BindingInput(definitions: definitions, bindingOperation: this, parent: this)
   }
-  
-  BindingOutput newOutput(){
-    output = new BindingOutput(definitions:definitions, bindingOperation : this, parent: this)
+
+  BindingOutput newOutput() {
+    output = new BindingOutput(definitions: definitions, bindingOperation: this, parent: this)
   }
-  
-  
+
+
   String toString() {
     "bindingOperation[name=$name, operation=$operation, inputUse=${input?.bindingElements?.use.unique()},outputUse=${output?.bindingElements?.use}]"
   }

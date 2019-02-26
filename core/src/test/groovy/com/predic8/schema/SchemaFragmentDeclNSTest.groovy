@@ -14,25 +14,23 @@
 
 package com.predic8.schema
 
-import com.predic8.schema.creator.*
-import junit.framework.TestCase
-import javax.xml.stream.*
-import com.predic8.xml.util.*
 
-import groovy.xml.*
-class SchemaFragmentDeclNSTest extends GroovyTestCase{
-  
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+
+class SchemaFragmentDeclNSTest extends GroovyTestCase {
+
   def schema
 
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/qualified-locals.xsd")
   }
-  
+
   void testWithdeclNS() {
     def element = new XmlSlurper().parseText(schema.getElement('address').getSchemaFragment(new SchemaCreatorContext()))
-    assertEquals('http://www.w3.org/2001/XMLSchema',element.lookupNamespace('xsd'))
-    assertEquals('qualified',element.complexType.sequence.element[1].lookupNamespace('tns'))
-  }  
+    assertEquals('http://www.w3.org/2001/XMLSchema', element.lookupNamespace('xsd'))
+    assertEquals('qualified', element.complexType.sequence.element[1].lookupNamespace('tns'))
+  }
 
 }

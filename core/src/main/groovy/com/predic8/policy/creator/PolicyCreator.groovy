@@ -11,62 +11,69 @@
 
 package com.predic8.policy.creator
 
-import com.predic8.policy.*
-import com.predic8.soamodel.*
-import com.predic8.wsdl.*
+
+import com.predic8.policy.Header
+import com.predic8.policy.Policy
+import com.predic8.policy.PolicyOperator
+import com.predic8.policy.PolicyReference
+import com.predic8.policy.UsernameToken
+import com.predic8.policy.X509Token
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
 
 class PolicyCreator extends AbstractCreator {
 
-	void createPolicy(Policy policy, CreatorContext ctx){
-		def attrs = [:]
-		if(policy.id) attrs["${policy.getPrefix(Consts.WSU_NS)}:Id"] = policy.id
-		builder."${policy.prefix}:Policy"(attrs + getNamespaceAttributes(policy)) {
-			policy.policyItems.each {
-				it.create(this, ctx)
-			}
-		}
-	}
+  void createPolicy(Policy policy, CreatorContext ctx) {
+    def attrs = [:]
+    if (policy.id) attrs["${policy.getPrefix(Consts.WSU_NS)}:Id"] = policy.id
+    builder."${policy.prefix}:Policy"(attrs + getNamespaceAttributes(policy)) {
+      policy.policyItems.each {
+        it.create(this, ctx)
+      }
+    }
+  }
 
-	void createPolicyReference(PolicyReference policyRef, CreatorContext ctx){
-		builder."${policyRef.prefix}:PolicyReference"(URI:policyRef.uri)
-	}
+  void createPolicyReference(PolicyReference policyRef, CreatorContext ctx) {
+    builder."${policyRef.prefix}:PolicyReference"(URI: policyRef.uri)
+  }
 
-	void createHeader(Header header, CreatorContext ctx){
-		def attrs = [:]
-		if(header.name) attrs['Name'] = header.name
-		if(header.namespace) attrs['Namespace'] = header.namespace
-		builder."${header.prefix}:Header"(attrs + getNamespaceAttributes(header)) {
-			header.policyItems.each {
-				it.create(this, ctx)
-			}
-		}
-	}
+  void createHeader(Header header, CreatorContext ctx) {
+    def attrs = [:]
+    if (header.name) attrs['Name'] = header.name
+    if (header.namespace) attrs['Namespace'] = header.namespace
+    builder."${header.prefix}:Header"(attrs + getNamespaceAttributes(header)) {
+      header.policyItems.each {
+        it.create(this, ctx)
+      }
+    }
+  }
 
-	void createX509Token(X509Token token, CreatorContext ctx){
-		def attrs = [:]
-		if(token.includeToken) attrs["${token.prefix}:IncludeToken"] = token.includeToken
-		builder."${token.prefix}:X509Token"(attrs + getNamespaceAttributes(token)) {
-			token.policyItems.each {
-				it.create(this, ctx)
-			}
-		}
-	}
-	
-	void createUsernameToken(UsernameToken token, CreatorContext ctx){
-		def attrs = [:]
-		if(token.includeToken) attrs["${token.prefix}:IncludeToken"] = token.includeToken
-		builder."${token.prefix}:UsernameToken"(attrs + getNamespaceAttributes(token)) {
-			token.policyItems.each {
-				it.create(this, ctx)
-			}
-		}
-	}
+  void createX509Token(X509Token token, CreatorContext ctx) {
+    def attrs = [:]
+    if (token.includeToken) attrs["${token.prefix}:IncludeToken"] = token.includeToken
+    builder."${token.prefix}:X509Token"(attrs + getNamespaceAttributes(token)) {
+      token.policyItems.each {
+        it.create(this, ctx)
+      }
+    }
+  }
 
-	void createPolicyItem(PolicyOperator pi, CreatorContext ctx){
-		builder."${pi.prefix}:${pi.ELEMENTNAME.localPart}"(getNamespaceAttributes(pi)) {
-			pi.policyItems.each {
-				it.create(this, ctx)
-			}
-		}
-	}
+  void createUsernameToken(UsernameToken token, CreatorContext ctx) {
+    def attrs = [:]
+    if (token.includeToken) attrs["${token.prefix}:IncludeToken"] = token.includeToken
+    builder."${token.prefix}:UsernameToken"(attrs + getNamespaceAttributes(token)) {
+      token.policyItems.each {
+        it.create(this, ctx)
+      }
+    }
+  }
+
+  void createPolicyItem(PolicyOperator pi, CreatorContext ctx) {
+    builder."${pi.prefix}:${pi.ELEMENTNAME.localPart}"(getNamespaceAttributes(pi)) {
+      pi.policyItems.each {
+        it.create(this, ctx)
+      }
+    }
+  }
 }

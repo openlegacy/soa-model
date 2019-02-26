@@ -14,17 +14,16 @@
 
 package com.predic8.wstool.creator
 
-import groovy.xml.*
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
 import com.predic8.soamodel.Consts
-import com.predic8.soamodel.CreatorContext;
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder;
 
-class SOARequestCreatorSOAP12Test extends GroovyTestCase{
+class SOARequestCreatorSOAP12Test extends GroovyTestCase {
 
   def request
 
-  void testRequestTemplateCreatorWithDocLit(){
+  void testRequestTemplateCreatorWithDocLit() {
     def strWriter = new StringWriter()
     def creator = new SOARequestCreator(getDefinitions("BLZService.wsdl"), new RequestTemplateCreator(), new MarkupBuilder(strWriter))
     creator.createRequest('BLZServicePortType', 'getBank', 'BLZServiceSOAP12Binding')
@@ -33,10 +32,10 @@ class SOARequestCreatorSOAP12Test extends GroovyTestCase{
     assertEquals('?XXX?', request.Body.getBank.blz.text())
   }
 
-  void testRequestCreatorWithDocLit(){
+  void testRequestCreatorWithDocLit() {
     def strWriter = new StringWriter()
     def formParams = [:]
-    formParams['xpath:/getBank/blz']='37050198'
+    formParams['xpath:/getBank/blz'] = '37050198'
     def creator = new SOARequestCreator(getDefinitions("BLZService.wsdl"), new RequestCreator(), new MarkupBuilder(strWriter))
     creator.formParams = formParams
     creator.createRequest('BLZServicePortType', 'getBank', 'BLZServiceSOAP12Binding')

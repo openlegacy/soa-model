@@ -15,9 +15,9 @@
 package com.predic8.wsi
 
 class WSIResult {
-    def rule
+  def rule
 
-  String toString(){
+  String toString() {
     rule
   }
 }

@@ -14,25 +14,23 @@
 
 package com.predic8.soamodel
 
-import groovy.xml.QName
-
 class ValidationError {
-	
-	/**Gives the targetNamespace of the validated document.
-	 * Either wsdl or schema is set. The other one is null. 
-	 */
-	String wsdlTNS
-	String schemaTNS
-	Exception cause
 
-	def invalidElement
-	
-	//Parent is necessary e.g. to find the right part if the part name is not unique.
-	def parent
-	
-	String message
-	
-	String toString(){
-		"ValidationError[message:'$message', cause: ${cause?.class?.simpleName}]"
-	}
+  /**Gives the targetNamespace of the validated document.
+   * Either wsdl or schema is set. The other one is null.
+   */
+  String wsdlTNS
+  String schemaTNS
+  Exception cause
+
+  def invalidElement
+
+  //Parent is necessary e.g. to find the right part if the part name is not unique.
+  def parent
+
+  String message
+
+  String toString() {
+    "ValidationError[message:'$message', cause: ${cause?.class?.simpleName}]"
+  }
 }

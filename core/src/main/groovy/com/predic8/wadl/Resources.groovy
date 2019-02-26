@@ -11,39 +11,39 @@
 
 package com.predic8.wadl
 
-import javax.xml.namespace.QName
-
 import com.predic8.soamodel.Consts
+
+import javax.xml.namespace.QName
 
 class Resources extends WADLElement {
 
-	public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'resources')
-	
-	String base
-	
-	List<Resource>	resources = []
-	
-	protected parseAttributes(token, ctx){
-		base = token.getAttributeValue( null , 'base')
-	}
+  public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'resources')
+
+  String base
+
+  List<Resource> resources = []
+
+  protected parseAttributes(token, ctx) {
+    base = token.getAttributeValue(null, 'base')
+  }
 
 
-	protected parseChildren(token, child, ctx) {
-		super.parseChildren(token, child, ctx)
-		switch (token.name) {
-			case Resource.ELEMENTNAME :
-				def rsc = new Resource(application: application, parent: this)
-				rsc.parse(token, ctx)
-				resources << rsc
-				break
-		}
-	}
-	
-	public String getFullPath() {
-		base
-	}
-	
-	String toString() {
-		"resources[base: $base , resources: $resources]"
-	}
+  protected parseChildren(token, child, ctx) {
+    super.parseChildren(token, child, ctx)
+    switch (token.name) {
+      case Resource.ELEMENTNAME:
+        def rsc = new Resource(application: application, parent: this)
+        rsc.parse(token, ctx)
+        resources << rsc
+        break
+    }
+  }
+
+  public String getFullPath() {
+    base
+  }
+
+  String toString() {
+    "resources[base: $base , resources: $resources]"
+  }
 }

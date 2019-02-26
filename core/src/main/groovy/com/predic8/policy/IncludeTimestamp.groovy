@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class IncludeTimestamp extends PolicyOperator{
+class IncludeTimestamp extends PolicyOperator {
 
 }
 

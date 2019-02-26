@@ -16,22 +16,22 @@ package com.predic8.schema.restriction.facet;
 
 import com.predic8.soamodel.CreatorContext
 
-class LengthFacet extends Facet{
-  
-  protected parseAttributes(token, ctx){
-	value = token.getAttributeValue( null, 'value').toInteger()
+class LengthFacet extends Facet {
+
+  protected parseAttributes(token, ctx) {
+    value = token.getAttributeValue(null, 'value').toInteger()
   }
-	
-  def create(creator, CreatorContext ctx){
+
+  def create(creator, CreatorContext ctx) {
     creator.createLengthFacet(this, ctx)
   }
-  
-  protected getElementName(){
+
+  protected getElementName() {
     'length'
   }
 
   public boolean equals(obj) {
     obj && getClass() == obj.getClass() && value == obj.value
   }
-  
+
 }

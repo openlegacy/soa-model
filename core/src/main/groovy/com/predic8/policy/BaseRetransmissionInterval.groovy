@@ -11,7 +11,7 @@
 
 package com.predic8.policy
 
-class BaseRetransmissionInterval extends PolicyOperator{
+class BaseRetransmissionInterval extends PolicyOperator {
 
 }
 

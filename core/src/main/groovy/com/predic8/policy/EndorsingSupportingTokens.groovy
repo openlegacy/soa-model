@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class EndorsingSupportingTokens extends PolicyOperator{
+class EndorsingSupportingTokens extends PolicyOperator {
 
 }
 

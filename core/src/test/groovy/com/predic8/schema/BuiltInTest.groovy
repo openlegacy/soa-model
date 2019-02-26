@@ -14,71 +14,73 @@
 
 package com.predic8.schema
 
-import groovy.xml.*
-import com.predic8.wstool.creator.*
+import com.predic8.wstool.creator.RequestTemplateCreator
+import com.predic8.wstool.creator.RequestTemplateCreatorContext
 import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
+import groovy.xml.QName
 
-class BuiltInTest extends GroovyTestCase{
-  
+class BuiltInTest extends GroovyTestCase {
+
   def schema
-  def static final compTypeName = new QName("http://predic8.com" , "compType")
-  
+  def static final compTypeName = new QName("http://predic8.com", "compType")
+
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/schema/BuiltInTest.xsd")
   }
-  
+
   void testCreateXmlString() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('Country').create(creator, new RequestTemplateCreatorContext())
     def Country = new XmlSlurper().parseText(strWriter.toString())
-    assertEquals('Country' , Country.name())
-    assertEquals('?XXX?' , Country.text())
+    assertEquals('Country', Country.name())
+    assertEquals('?XXX?', Country.text())
   }
-  
+
   void testCreateXmlInteger() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('Population').create(creator, new RequestTemplateCreatorContext())
     def Population = new XmlSlurper().parseText(strWriter.toString())
-    assertEquals('Population' , Population.name())
-    assertEquals('?999?' , Population.text())
+    assertEquals('Population', Population.name())
+    assertEquals('?999?', Population.text())
   }
-  
+
   void testCreateXmlShort() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('States').create(creator, new RequestTemplateCreatorContext())
     def States = new XmlSlurper().parseText(strWriter.toString())
-    assertEquals('States' , States.name())
-    assertEquals('?999?' , States.text())
+    assertEquals('States', States.name())
+    assertEquals('?999?', States.text())
   }
-  
+
   void testCreateXmlDouble() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('Area').create(creator, new RequestTemplateCreatorContext())
     def Area = new XmlSlurper().parseText(strWriter.toString())
-    assertEquals('Area' , Area.name())
-    assertEquals('?999.99?' , Area.text())
+    assertEquals('Area', Area.name())
+    assertEquals('?999.99?', Area.text())
   }
-  
+
   void testCreateXmlFloat() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('Border').create(creator, new RequestTemplateCreatorContext())
     def Border = new XmlSlurper().parseText(strWriter.toString())
-    assertEquals('Border' , Border.name())
-    assertEquals('?999.99?' , Border.text())
+    assertEquals('Border', Border.name())
+    assertEquals('?999.99?', Border.text())
   }
-  
+
   void testCreateXmlBoolean() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('NatoMember').create(creator, new RequestTemplateCreatorContext())
     def NatoMember = new XmlSlurper().parseText(strWriter.toString())
-    assertEquals('NatoMember' , NatoMember.name())
-    assertEquals('?true?' , NatoMember.text())
+    assertEquals('NatoMember', NatoMember.name())
+    assertEquals('?true?', NatoMember.text())
   }
 }

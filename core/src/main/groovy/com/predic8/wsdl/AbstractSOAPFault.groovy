@@ -14,7 +14,9 @@
 
 package com.predic8.wsdl
 
-import com.predic8.soamodel.*
+
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.CreatorContext
 
 abstract class AbstractSOAPFault extends BindingElement {
 

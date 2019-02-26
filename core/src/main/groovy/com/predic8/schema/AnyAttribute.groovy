@@ -12,43 +12,41 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.schema;
+package com.predic8.schema
 
-import com.predic8.soamodel.CreatorContext 
-import com.predic8.wstool.creator.*
-import javax.xml.namespace.QName as JQName
+import com.predic8.soamodel.CreatorContext
 
 class AnyAttribute extends SchemaComponent {
-  
+
   def namespace
   def id
   def processContents
   String content = ''
-  
-  protected parseAttributes(token, params){
-    namespace = token.getAttributeValue( null , 'namespace')
-    id = token.getAttributeValue( null , 'id')
-    processContents = token.getAttributeValue( null, 'processContents')
+
+  protected parseAttributes(token, params) {
+    namespace = token.getAttributeValue(null, 'namespace')
+    id = token.getAttributeValue(null, 'id')
+    processContents = token.getAttributeValue(null, 'processContents')
   }
 
   protected parseText(text) {
     content += text
   }
 
-  def getElementName(){
+  def getElementName() {
     // If changed to QName, SchemaDiffGenerator has to be modified.
     'anyAttribute'
   }
 
-  def create(creator, CreatorContext ctx){
+  def create(creator, CreatorContext ctx) {
     creator.createAnyAttribute(this, ctx.clone())
   }
 
-  def compare(generator, other){
+  def compare(generator, other) {
     generator.compareAnyAttribute(this, other)
   }
 
-  String toString(){
+  String toString() {
     "anyAttribute[namespace=$namespace]"
   }
 }

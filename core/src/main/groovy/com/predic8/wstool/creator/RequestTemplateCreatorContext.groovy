@@ -14,18 +14,17 @@
 
 package com.predic8.wstool.creator
 
-import com.predic8.schema.creator.SchemaCreatorContext;
-import com.predic8.soamodel.*
+import com.predic8.schema.creator.SchemaCreatorContext
 
-class RequestTemplateCreatorContext extends SchemaCreatorContext implements Cloneable{
+class RequestTemplateCreatorContext extends SchemaCreatorContext implements Cloneable {
 
   def path = ''
   def element
   def elements = []
   int maxRecursionDepth = 2
-  
+
   public Object clone() {
-    new RequestTemplateCreatorContext(error:error,declNS:copyDeclNS(),createLinks:createLinks,getSchemaId:getSchemaId, path:path, element: element, elements : elements.clone(), maxRecursionDepth: maxRecursionDepth)
+    new RequestTemplateCreatorContext(error: error, declNS: copyDeclNS(), createLinks: createLinks, getSchemaId: getSchemaId, path: path, element: element, elements: elements.clone(), maxRecursionDepth: maxRecursionDepth)
   }
 }
 

@@ -15,42 +15,42 @@ import com.predic8.wsdl.Binding
 
 class RPCStyle extends BindingStyle {
 
-	String value = 'rpc'
+  String value = 'rpc'
 
-	Map check(Binding binding) {
-		def operations = binding.operations
-		operations.operation.style.each {
-			if(it && it != value) {
-				value = 'mixed'
-				return
-			}
-		}
-		def value = value.capitalize()
-		def usages = (([operations.input]+ [operations.output]).bindingElements.use).flatten().unique()
-		def err = [:]
-		if(usages.size() > 1) {
-			//Error! More than one use in operation
-			err['message'] = "The value of the 'use' attribute is mixed."
-			err['type'] = "MixedUseInOperation"
-			return [result : "$value/Mixed", errors : [err]]
-		}
-		
-		if(usages[0] == 'encoded') {
-			return [result : "$value/Encoded"]
-		}
-		
-		if(usages[0] == 'literal') {
-			if(value == 'Mixed') {
-				err['message'] = "The style in binding ${binding.name} has mixed values."
-				err['type'] = "MixedStyle"
-				return [result : "$value/Literal", errors : [err]]
-			}
-			return [result : "$value/Literal", errors : []]
-		}
-		
-		err['message'] = "Could not detect the 'use' for the operations of binding ${binding.name}"
-		err['type'] = "UnknownUse"
-		return [result : 'Unknown!', errors : [err]]
-	}
-	
+  Map check(Binding binding) {
+    def operations = binding.operations
+    operations.operation.style.each {
+      if (it && it != value) {
+        value = 'mixed'
+        return
+      }
+    }
+    def value = value.capitalize()
+    def usages = (([operations.input] + [operations.output]).bindingElements.use).flatten().unique()
+    def err = [:]
+    if (usages.size() > 1) {
+      //Error! More than one use in operation
+      err['message'] = "The value of the 'use' attribute is mixed."
+      err['type'] = "MixedUseInOperation"
+      return [result: "$value/Mixed", errors: [err]]
+    }
+
+    if (usages[0] == 'encoded') {
+      return [result: "$value/Encoded"]
+    }
+
+    if (usages[0] == 'literal') {
+      if (value == 'Mixed') {
+        err['message'] = "The style in binding ${binding.name} has mixed values."
+        err['type'] = "MixedStyle"
+        return [result: "$value/Literal", errors: [err]]
+      }
+      return [result: "$value/Literal", errors: []]
+    }
+
+    err['message'] = "Could not detect the 'use' for the operations of binding ${binding.name}"
+    err['type'] = "UnknownUse"
+    return [result: 'Unknown!', errors: [err]]
+  }
+
 }

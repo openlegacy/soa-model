@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class ByteRestriction extends ShortRestriction{
-  
+class ByteRestriction extends ShortRestriction {
+
 }

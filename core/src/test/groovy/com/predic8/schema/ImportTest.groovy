@@ -14,29 +14,26 @@
 
 package com.predic8.schema
 
-import junit.framework.TestCase
-import javax.xml.stream.*
-import com.predic8.xml.util.*
+import com.predic8.xml.util.ClasspathResolver
 
-import groovy.xml.*
-class ImportTest extends GroovyTestCase{
-  
+class ImportTest extends GroovyTestCase {
+
   def schema
 
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/basedir-a.xsd")
   }
-  
+
   void testBaseDir() {
-    assertEquals('/', schema.importedSchemas.find{it.targetNamespace == 'basedir-b'}.baseDir)
-    assertEquals('/x/u/', schema.importedSchemas.find{it.targetNamespace == 'basedir-d'}.baseDir)
-    assertEquals('/x/u/v/w/', schema.importedSchemas.find{it.targetNamespace == 'basedir-g'}.baseDir)
-    assertEquals('/x/', schema.importedSchemas.find{it.targetNamespace == 'basedir-c'}.baseDir)
-    assertEquals('/x/', schema.importedSchemas.find{it.targetNamespace == 'basedir-e'}.baseDir)
-    assertEquals('/x/y/', schema.importedSchemas.find{it.targetNamespace == 'basedir-f'}.baseDir)
-    assertEquals('/x/y/z/', schema.importedSchemas.find{it.targetNamespace == 'basedir-h'}.baseDir)
-    assertEquals('/x/', schema.importedSchemas.find{it.targetNamespace == 'basedir-i'}.baseDir)
-  }  
+    assertEquals('/', schema.importedSchemas.find { it.targetNamespace == 'basedir-b' }.baseDir)
+    assertEquals('/x/u/', schema.importedSchemas.find { it.targetNamespace == 'basedir-d' }.baseDir)
+    assertEquals('/x/u/v/w/', schema.importedSchemas.find { it.targetNamespace == 'basedir-g' }.baseDir)
+    assertEquals('/x/', schema.importedSchemas.find { it.targetNamespace == 'basedir-c' }.baseDir)
+    assertEquals('/x/', schema.importedSchemas.find { it.targetNamespace == 'basedir-e' }.baseDir)
+    assertEquals('/x/y/', schema.importedSchemas.find { it.targetNamespace == 'basedir-f' }.baseDir)
+    assertEquals('/x/y/z/', schema.importedSchemas.find { it.targetNamespace == 'basedir-h' }.baseDir)
+    assertEquals('/x/', schema.importedSchemas.find { it.targetNamespace == 'basedir-i' }.baseDir)
+  }
 
 }

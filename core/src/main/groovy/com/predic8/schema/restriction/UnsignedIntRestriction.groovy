@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class UnsignedIntRestriction extends UnsignedLongRestriction{
-  
+class UnsignedIntRestriction extends UnsignedLongRestriction {
+
 }

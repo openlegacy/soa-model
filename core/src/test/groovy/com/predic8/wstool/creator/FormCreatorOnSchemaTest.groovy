@@ -14,26 +14,24 @@
 
 package com.predic8.wstool.creator
 
-import com.predic8.schema.SchemaParser;
-import junit.framework.TestCase
-import groovy.xml.*
-import com.predic8.xml.util.*
+import com.predic8.schema.SchemaParser
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
+class FormCreatorOnSchemaTest extends GroovyTestCase {
 
-class FormCreatorOnSchemaTest extends GroovyTestCase{
-  
   def schema
-  
-  public void setUp(){
+
+  public void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/formCreator/schema1.xsd")
   }
-  
+
 //@TODO: write a better test that make sense!  
   void testFormCreater() {
     def strWriter = new StringWriter()
-    def creator = new FormCreator(builder : new MarkupBuilder(strWriter))
-    schema.getElement('test').create(creator, new FormCreatorContext(formParams:'',path:"xpath:/"))
+    def creator = new FormCreator(builder: new MarkupBuilder(strWriter))
+    schema.getElement('test').create(creator, new FormCreatorContext(formParams: '', path: "xpath:/"))
     /*new File('C:/temp/FormCreatorTest/schemaFormCreator.html').write("""
     <html>
       <head>

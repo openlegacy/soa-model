@@ -14,79 +14,81 @@
 
 package com.predic8.soamodel
 
+import com.predic8.schema.ComplexType
+import com.predic8.schema.Element
+import com.predic8.schema.Import
+import com.predic8.schema.SimpleType
+import com.predic8.schema.restriction.facet.EnumerationFacet
 import groovy.xml.QName
 
-import com.predic8.schema.*
-import com.predic8.schema.restriction.facet.*
-
 abstract class AbstractDiffGenerator {
-  
- public ResourceBundle bundle = ResourceBundle.getBundle("LabelsBundle", new Locale("en", "US"), this.class.classLoader)
-  
+
+  public ResourceBundle bundle = ResourceBundle.getBundle("LabelsBundle", new Locale("en", "US"), this.class.classLoader)
+
   def generator
-  def a,b
-	DiffGeneratorContext ctx = new DiffGeneratorContext()
-  
+  def a, b
+  DiffGeneratorContext ctx = new DiffGeneratorContext()
+
   def abstract compare()
-  
-  protected List<Difference> compare(aObjs, bObjs, rm, add){
+
+  protected List<Difference> compare(aObjs, bObjs, rm, add) {
     aObjs = aObjs ?: []
     bObjs = bObjs ?: []
-    if ( aObjs.isEmpty() && bObjs.isEmpty() ) return []
-    
+    if (aObjs.isEmpty() && bObjs.isEmpty()) return []
+
     doCompare(aObjs, bObjs, rm, add, getIDClosure(getSampleObject(aObjs, bObjs)))
   }
 
-  private getSampleObject(aObjs, bObjs){
+  private getSampleObject(aObjs, bObjs) {
     aObjs.isEmpty() ? bObjs[0] : aObjs[0]
   }
 
-  private getIDClosure(obj){
-    switch(obj){
-      case Import: return {it.namespace}
-      case ComplexType: return {getFQN(it)}
-      case SimpleType: return {getFQN(it)}
-      case EnumerationFacet: return {it.value}
-			case Element: return {it.name ?: it.ref}
+  private getIDClosure(obj) {
+    switch (obj) {
+      case Import: return { it.namespace }
+      case ComplexType: return { getFQN(it) }
+      case SimpleType: return { getFQN(it) }
+      case EnumerationFacet: return { it.value }
+      case Element: return { it.name ?: it.ref }
     }
-    return {it.name}
-  }
-  
-  protected String getFQN(obj){
-    '{' + obj.qname.namespaceURI +'}'+ obj.qname.localPart
+    return { it.name }
   }
 
-  def doCompare(aObjs, bObjs, rm, add, getID){
-    def aNames = aObjs.collect{getID(it)}
-    def bNames = bObjs.collect{getID(it)}
+  protected String getFQN(obj) {
+    '{' + obj.qname.namespaceURI + '}' + obj.qname.localPart
+  }
+
+  def doCompare(aObjs, bObjs, rm, add, getID) {
+    def aNames = aObjs.collect { getID(it) }
+    def bNames = bObjs.collect { getID(it) }
     def diffs = []
-    if(aNames){
-      def removed  = aNames - bNames
-      removed.each{ name ->
-        diffs << rm(aObjs.find{getID(it) == name})
+    if (aNames) {
+      def removed = aNames - bNames
+      removed.each { name ->
+        diffs << rm(aObjs.find { getID(it) == name })
       }
     }
-    if(bNames){
+    if (bNames) {
       def added = bNames - aNames
-      added.each{ name ->
-        diffs << add(bObjs.find{getID(it) == name})
+      added.each { name ->
+        diffs << add(bObjs.find { getID(it) == name })
       }
     }
     diffs
   }
 
-  def findA(QName qname){
-    a.find{it.qname == qname}
+  def findA(QName qname) {
+    a.find { it.qname == qname }
   }
 
-  def findB(QName qname){
-    b.find{it.qname == qname}
+  def findB(QName qname) {
+    b.find { it.qname == qname }
   }
-  
-  def changeLocale(Locale locale){
+
+  def changeLocale(Locale locale) {
     bundle = ResourceBundle.getBundle("LabelsBundle", locale)
     updateLabels()
   }
-  
+
   abstract protected updateLabels()
 }

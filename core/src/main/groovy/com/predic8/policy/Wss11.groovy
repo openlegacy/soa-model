@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class Wss11 extends PolicyOperator{
+class Wss11 extends PolicyOperator {
 
 }
 

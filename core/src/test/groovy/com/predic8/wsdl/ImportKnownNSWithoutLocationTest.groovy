@@ -11,28 +11,23 @@
 
 package com.predic8.wsdl
 
-import com.predic8.wsdl.creator.WSDLCreator
-import com.predic8.wsdl.creator.WSDLCreatorContext
-import groovy.xml.MarkupBuilder
-import com.predic8.xml.util.*
+class ImportKnownNSWithoutLocationTest extends GroovyTestCase {
 
-class ImportKnownNSWithoutLocationTest extends GroovyTestCase{
+  Definitions wsdl
 
-	Definitions wsdl
+  void setUp() {
+    def parser = new WSDLParser()
+    wsdl = parser.parse("src/test/resources/ImportingKnownSchemas.wsdl")
+  }
 
-	void setUp(){
-		def parser = new WSDLParser()
-		wsdl = parser.parse("src/test/resources/ImportingKnownSchemas.wsdl")
-	}
-
-	void testParse(){
-		assert wsdl.localSchemas[0].imports.size()
-		wsdl.localSchemas[0].imports.each {
-			//Schema location is not given but
-			assert it.schemaLocation == null
-			//Schema documents can be parsed from class path!
-			assert it.importSchema
-		}
-	}
+  void testParse() {
+    assert wsdl.localSchemas[0].imports.size()
+    wsdl.localSchemas[0].imports.each {
+      //Schema location is not given but
+      assert it.schemaLocation == null
+      //Schema documents can be parsed from class path!
+      assert it.importSchema
+    }
+  }
 
 }

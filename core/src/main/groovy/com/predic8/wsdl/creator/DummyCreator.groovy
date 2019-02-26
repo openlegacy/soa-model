@@ -12,58 +12,70 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl.creator;
+package com.predic8.wsdl.creator
 
-import com.predic8.wsdl.*
 
-class DummyCreator extends AbstractWSDLCreator{  
-  
-  def createDefinitions(Definitions definitions, WSDLCreatorContext ctx){
+import com.predic8.wsdl.AbstractSOAPBinding
+import com.predic8.wsdl.Binding
+import com.predic8.wsdl.BindingOperation
+import com.predic8.wsdl.Definitions
+import com.predic8.wsdl.Import
+import com.predic8.wsdl.Message
+import com.predic8.wsdl.Operation
+import com.predic8.wsdl.Part
+import com.predic8.wsdl.Port
+import com.predic8.wsdl.PortType
+import com.predic8.wsdl.Service
+import com.predic8.wsdl.Types
+
+class DummyCreator extends AbstractWSDLCreator {
+
+  def createDefinitions(Definitions definitions, WSDLCreatorContext ctx) {
     println "createDefinitions"
   }
 
-	def createImport(Import imp, WSDLCreatorContext context){
-		println "createImport"
-	}
-	
-	
+  def createImport(Import imp, WSDLCreatorContext context) {
+    println "createImport"
+  }
+
+
   def createTypes(Types types, WSDLCreatorContext context) {
-		println "createTypes"
-	}
-  
-  def createMessage(Message message, WSDLCreatorContext ctx){
+    println "createTypes"
+  }
+
+  def createMessage(Message message, WSDLCreatorContext ctx) {
     println "createMessage"
   }
-  
-  def createPart(Part part, WSDLCreatorContext ctx){
+
+  def createPart(Part part, WSDLCreatorContext ctx) {
     println "createPart"
   }
-  
-  def createPortType(PortType portType, WSDLCreatorContext ctx){
+
+  def createPortType(PortType portType, WSDLCreatorContext ctx) {
     println "createPortType"
   }
-  
-  def createOperation(Operation operation, WSDLCreatorContext ctx){
+
+  def createOperation(Operation operation, WSDLCreatorContext ctx) {
     println "createOperation"
   }
-  
-  def createBinding(Binding binding, WSDLCreatorContext ctx){
+
+  def createBinding(Binding binding, WSDLCreatorContext ctx) {
     println "createBinding"
   }
-  
-  def createSoapBinding(AbstractSOAPBinding binding, WSDLCreatorContext ctx){
+
+  def createSoapBinding(AbstractSOAPBinding binding, WSDLCreatorContext ctx) {
     println "createSoapBinding"
   }
-  
-  def createBindingOperation(BindingOperation operation, WSDLCreatorContext ctx){
+
+  def createBindingOperation(BindingOperation operation, WSDLCreatorContext ctx) {
     println "createBindingOperation"
   }
-  
-  def createService(Service service, WSDLCreatorContext ctx){
+
+  def createService(Service service, WSDLCreatorContext ctx) {
     println "createService"
   }
-  
-  def createPort(Port port, WSDLCreatorContext ctx){
+
+  def createPort(Port port, WSDLCreatorContext ctx) {
     println "createPort"
   }
 }

@@ -15,11 +15,11 @@ import com.predic8.wsdl.Binding
 
 abstract class BindingStyle {
 
-	Binding binding
-	String value 
+  Binding binding
+  String value
 
-	Map check(Binding binding){
+  Map check(Binding binding) {
 //		println "checking style for " + binding.name
-	}
+  }
 
 }

@@ -14,53 +14,52 @@
 
 package com.predic8.schema
 
-import javax.xml.stream.*
-import com.predic8.soamodel.*
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
 
 class Documentation extends SchemaComponent {
-  
-	def source
+
+  def source
   def id
   def lang
   String content = ''
 
-  protected parseAttributes(token, params){
-    source = token.getAttributeValue( null , 'source')
-    id = token.getAttributeValue( null , 'id')
-    lang = token.getAttributeValue( Consts.XML_NS, 'lang')
+  protected parseAttributes(token, params) {
+    source = token.getAttributeValue(null, 'source')
+    id = token.getAttributeValue(null, 'id')
+    lang = token.getAttributeValue(Consts.XML_NS, 'lang')
   }
 
   protected parseText(text) {
     content += text
   }
-	
-	def getNormalizedContent(){
-		content.replaceAll("\\s+", " ").trim()
-	}
 
-  def create(creator, CreatorContext ctx){
+  def getNormalizedContent() {
+    content.replaceAll("\\s+", " ").trim()
+  }
+
+  def create(creator, CreatorContext ctx) {
     creator.createDocumentation(this, ctx)
   }
 
-  protected getElementName(){
+  protected getElementName() {
     'documentation'
   }
 
-  public boolean equals(obj){
-    if(this.is(obj)) {
+  public boolean equals(obj) {
+    if (this.is(obj)) {
       return true
     }
-    if( !obj || (obj.getClass() != this.getClass())) {
+    if (!obj || (obj.getClass() != this.getClass())) {
       return false
     }
-    if(id != obj.id) return false
-    if(lang != obj.lang) return false
-    if(source != obj.source) return false
+    if (id != obj.id) return false
+    if (lang != obj.lang) return false
+    if (source != obj.source) return false
     content == obj.content
   }
 
-  public int hashCode()
-  {
+  public int hashCode() {
     1360 + content.hashCode()
   }
 

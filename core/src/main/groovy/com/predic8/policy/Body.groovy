@@ -11,6 +11,6 @@
 
 package com.predic8.policy
 
-class Body extends PolicyOperator{
+class Body extends PolicyOperator {
 }
 

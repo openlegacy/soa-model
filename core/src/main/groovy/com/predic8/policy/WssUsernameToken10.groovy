@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class WssUsernameToken10 extends PolicyOperator{
+class WssUsernameToken10 extends PolicyOperator {
 
 }
 

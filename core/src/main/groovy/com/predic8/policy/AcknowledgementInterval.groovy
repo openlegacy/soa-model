@@ -11,7 +11,7 @@
 
 package com.predic8.policy
 
-class AcknowledgementInterval extends PolicyOperator{
+class AcknowledgementInterval extends PolicyOperator {
 
 }
 

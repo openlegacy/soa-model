@@ -14,37 +14,43 @@
 
 package com.predic8.schema.diff
 
-import com.predic8.soamodel.*
-import com.predic8.schema.*
+
+import com.predic8.soamodel.Difference
 
 class SimpleTypesDiffGenerator extends ListDiffGenerator {
-	
-	public SimpleTypesDiffGenerator() {
-		updateLabels()
-	}
 
-	def labelRemoved, labelAdded, labelSimpleType	
-	
+  public SimpleTypesDiffGenerator() {
+    updateLabels()
+  }
+
+  def labelRemoved, labelAdded, labelSimpleType
+
   def generator
 
-  def removed = { new Difference(description:"${labelSimpleType} ${it.qname.toString()} ${labelRemoved}.", type: 'simpleType', breaks:ctx.exchange ? true: null, exchange: a.exchange)}
-
-  def added = {new Difference(description:"${labelSimpleType} ${it.qname.toString()} ${labelAdded}.", type: 'simpleType', exchange: b.exchange)}
-
-  protected getIntersection(){
-      def bQnames = b*.qname
-      if (bQnames.isEmpty()) { return [] }
-      a.qname.findAll { bQnames.contains(it) }
+  def removed = {
+    new Difference(description: "${labelSimpleType} ${it.qname.toString()} ${labelRemoved}.", type: 'simpleType', breaks: ctx.exchange ? true : null, exchange: a.exchange)
   }
 
-  List<Difference> compareUnit(qname){
+  def added = {
+    new Difference(description: "${labelSimpleType} ${it.qname.toString()} ${labelAdded}.", type: 'simpleType', exchange: b.exchange)
+  }
+
+  protected getIntersection() {
+    def bQnames = b*.qname
+    if (bQnames.isEmpty()) {
+      return []
+    }
+    a.qname.findAll { bQnames.contains(it) }
+  }
+
+  List<Difference> compareUnit(qname) {
     findA(qname).compare(generator, findB(qname))
   }
-  
-  protected def updateLabels(){
-	  labelSimpleType = bundle.getString("com.predic8.schema.diff.labelSimpleType")
-	  labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
-	  labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
+
+  protected def updateLabels() {
+    labelSimpleType = bundle.getString("com.predic8.schema.diff.labelSimpleType")
+    labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
+    labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
 
   }
 }

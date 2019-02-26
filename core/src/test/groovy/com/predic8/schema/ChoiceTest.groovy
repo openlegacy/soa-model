@@ -14,49 +14,49 @@
 
 package com.predic8.schema
 
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.wstool.creator.RequestCreator
+import com.predic8.wstool.creator.RequestCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
+import groovy.xml.QName
 
-import com.predic8.xml.util.*
-import com.predic8.schema.diff.*
-import com.predic8.schema.creator.*
-import com.predic8.wstool.creator.*
+class ChoiceTest extends GroovyTestCase {
 
-class ChoiceTest extends GroovyTestCase{
-	
   public static HR_NS = "http://predic8.com/human-resources/"
-  public static CONT_INF = new QName(HR_NS,"ContactInfoType")
+  public static CONT_INF = new QName(HR_NS, "ContactInfoType")
 
   def schema
-  
+
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/schema/choice/choice.xsd")
   }
 
-  void testChoiceInComplexType(){
+  void testChoiceInComplexType() {
     def choice = schema.getType(CONT_INF).model//.elements.find{ it.name == 'person'}.embeddedType.model
     assertNotNull(choice)
   }
 
-  void testSchemaCreator(){
+  void testSchemaCreator() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     def testSchema = new XmlSlurper().parseText(strWriter.toString())
     assertEquals(2, testSchema.complexType.choice.sequence.element.size())
     assertEquals(3, testSchema.complexType.choice.element.size())
     assertEquals(1, testSchema.complexType.choice.sequence.size())
-    
+
     assertEquals('fax', testSchema.complexType.choice.element[2].@name.toString())
   }
 
   void testRequestCreator() {
-  def strWriter = new StringWriter()
-  def creator = new RequestCreator(builder : new MarkupBuilder(strWriter))
-  schema.getElement('contactInfo').create(creator, new RequestCreatorContext(formParams: ["xpath:/contactInfo/phone":"+49 228 2402099", "xpath:/contactInfo/city":"Bonn"]))
-  def inf = new XmlSlurper().parseText(strWriter.toString())
-  assertEquals('+49 228 2402099', inf.phone.toString())
+    def strWriter = new StringWriter()
+    def creator = new RequestCreator(builder: new MarkupBuilder(strWriter))
+    schema.getElement('contactInfo').create(creator, new RequestCreatorContext(formParams: ["xpath:/contactInfo/phone": "+49 228 2402099", "xpath:/contactInfo/city": "Bonn"]))
+    def inf = new XmlSlurper().parseText(strWriter.toString())
+    assertEquals('+49 228 2402099', inf.phone.toString())
   }
 
   /*void testRequestTemplateCreator() {

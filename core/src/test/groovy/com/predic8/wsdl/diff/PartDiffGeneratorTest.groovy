@@ -11,27 +11,29 @@
 
 package com.predic8.wsdl.diff
 
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
+
+import com.predic8.wsdl.Definitions
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
 
 class PartDiffGeneratorTest extends GroovyTestCase {
 
-	Definitions wsdl1
-	Definitions wsdl2
+  Definitions wsdl1
+  Definitions wsdl2
 
-	void setUp() {
-		def parser = new WSDLParser(resourceResolver : new ClasspathResolver())
-		wsdl1 = parser.parse('diff/message-parts/BLZService1.wsdl')
-		wsdl2 = parser.parse('diff/message-parts/BLZService2.wsdl')
-	}
+  void setUp() {
+    def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
+    wsdl1 = parser.parse('diff/message-parts/BLZService1.wsdl')
+    wsdl2 = parser.parse('diff/message-parts/BLZService2.wsdl')
+  }
 
-	void testDocumentationInDefinitions() {
-		def diffs = new WsdlDiffGenerator(a: wsdl2,b: wsdl1).comparePortTypes()
-		assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].description == 
-		"Could not find the referenced element 'getBank' in namespace 'http://schemas.xmlsoap.org/wsdl/'."
-	}
-	
-	private def compare(a, b) {
-		new WsdlDiffGenerator(a: a, b: b).compare()
-	}
+  void testDocumentationInDefinitions() {
+    def diffs = new WsdlDiffGenerator(a: wsdl2, b: wsdl1).comparePortTypes()
+    assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].description ==
+      "Could not find the referenced element 'getBank' in namespace 'http://schemas.xmlsoap.org/wsdl/'."
+  }
+
+  private def compare(a, b) {
+    new WsdlDiffGenerator(a: a, b: b).compare()
+  }
 }

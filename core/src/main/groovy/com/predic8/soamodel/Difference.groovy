@@ -14,67 +14,64 @@
 
 package com.predic8.soamodel
 
-import java.util.List;
-import java.util.concurrent.Exchanger;
-
 class Difference {
-  
+
   String description
   List<Difference> diffs = []
   String type
-	XMLElement original, modified
+  XMLElement original, modified
   private def safe
-	//Don't type breaks and safe to boolean. The value may also be null.
+  //Don't type breaks and safe to boolean. The value may also be null.
   private def breaks
-	private def warning
-	def exchange = [] as Set //For WSDL message direction.
-	
+  private def warning
+  def exchange = [] as Set //For WSDL message direction.
+
   String dump(level = 0) {
-    def str = description +'\n'
+    def str = description + '\n'
     level++
-    diffs.each{
-      str += ' '*level+it.dump(level)
+    diffs.each {
+      str += ' ' * level + it.dump(level)
     }
     str
   }
-  
-  public String toString(){    
-		description
+
+  public String toString() {
+    description
   }
-  
-  def breaks(){
-  	if(breaks) return true
-		if(safe) return false
-		def res
-		if(breaks == false) res = false
-		diffs.each{
-  		if(it.breaks()) return res = true
-  	}
-  	res
-  }
-  
-  def safe(){
-		if(safe || (breaks() == false)) return true
-    if(breaks || warning) return false
+
+  def breaks() {
+    if (breaks) return true
+    if (safe) return false
     def res
-    diffs.each{
-    	if(it.breaks()) res = false
-      if(it.safe()) res = true
+    if (breaks == false) res = false
+    diffs.each {
+      if (it.breaks()) return res = true
     }
     res
   }
-	
-	def getWarning() {
-		if(warning) return warning
-		def res
-		diffs.each {
-			if(it.getWarning()) return res = true
-		}
-		res
-	}
-	
-	def exchange(){
-		this.exchange.join('')
-	}
-	
+
+  def safe() {
+    if (safe || (breaks() == false)) return true
+    if (breaks || warning) return false
+    def res
+    diffs.each {
+      if (it.breaks()) res = false
+      if (it.safe()) res = true
+    }
+    res
+  }
+
+  def getWarning() {
+    if (warning) return warning
+    def res
+    diffs.each {
+      if (it.getWarning()) return res = true
+    }
+    res
+  }
+
+  def exchange() {
+    this.exchange.join('')
+  }
+
 }

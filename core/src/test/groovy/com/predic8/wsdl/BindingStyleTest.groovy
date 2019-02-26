@@ -14,13 +14,11 @@
 
 package com.predic8.wsdl
 
-import javax.xml.stream.*
-
 class BindingStyleTest extends AbstractWSDLTest {
-  
+
   Binding binding
-  def static wsdl = 
-  '''<?xml version="1.0" encoding="UTF-8"?>
+  def static wsdl =
+    '''<?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
@@ -151,11 +149,11 @@ class BindingStyleTest extends AbstractWSDLTest {
   </wsdl:service>
 </wsdl:definitions>
 '''
-	
+
   void testBinding() {
-  	assert definitions.bindings.styleErrors
-		assert definitions.bindings[3].styleErrors == []
-		assert definitions.getBinding('DocumentLiteralBinding').binding.checkStyle()['result'] == 'Document/Literal'
-		assert definitions.bindings.styleErrors.flatten().size() == 6
+    assert definitions.bindings.styleErrors
+    assert definitions.bindings[3].styleErrors == []
+    assert definitions.getBinding('DocumentLiteralBinding').binding.checkStyle()['result'] == 'Document/Literal'
+    assert definitions.bindings.styleErrors.flatten().size() == 6
   }
 }

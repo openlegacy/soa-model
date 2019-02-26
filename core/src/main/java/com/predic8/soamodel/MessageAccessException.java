@@ -18,50 +18,50 @@ import com.predic8.wsdl.WSDLElement;
 
 public class MessageAccessException extends ModelAccessException {
 
-	private static final long serialVersionUID = -4189699847233028273L;
-	
-	private String messageName;
+  private static final long serialVersionUID = -4189699847233028273L;
 
-	public String getMessageName() {
-		return messageName;
-	}
+  private String messageName;
 
-	public void setMessageName(String messageName) {
-		this.messageName = messageName;
-	}
+  public String getMessageName() {
+    return messageName;
+  }
 
-	public MessageAccessException() {
-		super();
-	}
+  public void setMessageName(String messageName) {
+    this.messageName = messageName;
+  }
 
-	public MessageAccessException(String message, Throwable cause,
-	    boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
+  public MessageAccessException() {
+    super();
+  }
 
-	public MessageAccessException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  public MessageAccessException(String message, Throwable cause,
+                                boolean enableSuppression, boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 
-	public MessageAccessException(Throwable cause) {
-		super(cause);
-	}
+  public MessageAccessException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	public MessageAccessException(String message) {
-		super(message);
-	}
-	
-	public MessageAccessException(String message, Throwable cause,
-			WSDLElement wsdlElement, String messageName) {
-		super(message, cause);
-		this.wsdlElement = wsdlElement;
-		this.messageName = messageName;
-	}
-	
-	public MessageAccessException(String message, WSDLElement wsdlElement, String messageName) {
-		super(message);
-		this.wsdlElement = wsdlElement;
-		this.messageName = messageName;
-	}
+  public MessageAccessException(Throwable cause) {
+    super(cause);
+  }
+
+  public MessageAccessException(String message) {
+    super(message);
+  }
+
+  public MessageAccessException(String message, Throwable cause,
+                                WSDLElement wsdlElement, String messageName) {
+    super(message, cause);
+    this.wsdlElement = wsdlElement;
+    this.messageName = messageName;
+  }
+
+  public MessageAccessException(String message, WSDLElement wsdlElement, String messageName) {
+    super(message);
+    this.wsdlElement = wsdlElement;
+    this.messageName = messageName;
+  }
 
 }

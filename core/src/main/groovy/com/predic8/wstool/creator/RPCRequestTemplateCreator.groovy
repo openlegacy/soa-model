@@ -12,28 +12,26 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wstool.creator;
+package com.predic8.wstool.creator
 
-import com.predic8.schema.BuiltInSchemaType;
-
-import groovy.xml.*
+import com.predic8.schema.BuiltInSchemaType
 
 class RPCRequestTemplateCreator {
-  
+
   def builder
   def definitions
-  
+
   def createRequest(portTypeName, operationName) {
     def operation = definitions.getPortType(portTypeName).getOperation(operationName)
-    def attrs = ['xmlns:ns0':definitions.targetNamespace]
+    def attrs = ['xmlns:ns0': definitions.targetNamespace]
     attrs['xmlns:xsi'] = "http://www.w3.org/2001/XMLSchema-instance"
-    builder."ns0:${operation.input.name}"(attrs){
+    builder."ns0:${operation.input.name}"(attrs) {
       operation.input.message.parts.each {
         def elemAttrs = ['xmlns:soapenv': "http://schemas.xmlsoap.org/soap/envelope/"]
         elemAttrs['soapenv:encodingStyle'] = "http://schemas.xmlsoap.org/soap/encoding/"
         elemAttrs['xsi:type'] = "xsd:string"
-				if(it.type instanceof BuiltInSchemaType) builder."${it.name}"(elemAttrs, TemplateUtil.getTemplateValue(it.type.type))
-				else  builder."${it.name}"(elemAttrs, TemplateUtil.getTemplateValue(it.type))
+        if (it.type instanceof BuiltInSchemaType) builder."${it.name}"(elemAttrs, TemplateUtil.getTemplateValue(it.type.type))
+        else builder."${it.name}"(elemAttrs, TemplateUtil.getTemplateValue(it.type))
       }
     }
   }

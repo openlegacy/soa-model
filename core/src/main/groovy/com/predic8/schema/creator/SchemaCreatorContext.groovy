@@ -15,24 +15,24 @@
 package com.predic8.schema.creator
 
 import com.predic8.schema.Schema
-import com.predic8.soamodel.*
+import com.predic8.soamodel.CreatorContext
 
 class SchemaCreatorContext extends CreatorContext implements Cloneable {
 
-  SchemaCreatorContext(){}
-  
-  SchemaCreatorContext(CreatorContext ctx){
+  SchemaCreatorContext() {}
+
+  SchemaCreatorContext(CreatorContext ctx) {
     this.declNS = ctx.declNS
     this.createLinks = ctx.createLinks
     this.error = ctx.error
   }
-  
-  def getSchemaId = {1}
-	
-	Schema subSchema
-	
+
+  def getSchemaId = { 1 }
+
+  Schema subSchema
+
   public Object clone() {
-    new SchemaCreatorContext(error:error,declNS:copyDeclNS(),createLinks:createLinks,getSchemaId:getSchemaId,subSchema:subSchema)
+    new SchemaCreatorContext(error: error, declNS: copyDeclNS(), createLinks: createLinks, getSchemaId: getSchemaId, subSchema: subSchema)
   }
 }
 

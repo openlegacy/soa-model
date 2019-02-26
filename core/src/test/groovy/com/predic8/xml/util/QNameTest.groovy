@@ -14,29 +14,27 @@
 
 package com.predic8.xml.util
 
-import junit.framework.TestCase
-
 class QNameTest extends GroovyTestCase {
-  
+
   def static pn1 = new PrefixedName("tns:BLZServiceSOAP11Binding")
   def static pn2 = new PrefixedName("tns", "BLZServiceSOAP11Binding")
   def static pn3 = new PrefixedName('onlyLocal')
-  
-  void testQName1(){
-    assertEquals('tns' , pn1.prefix)
-    assertEquals('BLZServiceSOAP11Binding' , pn1.localName)
+
+  void testQName1() {
+    assertEquals('tns', pn1.prefix)
+    assertEquals('BLZServiceSOAP11Binding', pn1.localName)
   }
-  
-  void testQName2(){
-    assertEquals('tns' , pn2.prefix)
-    assertEquals('BLZServiceSOAP11Binding' , pn2.localName)
+
+  void testQName2() {
+    assertEquals('tns', pn2.prefix)
+    assertEquals('BLZServiceSOAP11Binding', pn2.localName)
   }
-  
+
   void testInitialllized() {
     assertNotNull(pn3.prefix)
   }
-  
-  void testOnlyLocal(){
-    assertEquals(pn3.localName , 'onlyLocal')
+
+  void testOnlyLocal() {
+    assertEquals(pn3.localName, 'onlyLocal')
   }
 }

@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class TransportBinding extends PolicyOperator{
+class TransportBinding extends PolicyOperator {
 
 }
 

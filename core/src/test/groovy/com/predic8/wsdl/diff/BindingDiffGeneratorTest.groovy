@@ -11,32 +11,32 @@
 
 package com.predic8.wsdl.diff
 
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
 
-import org.junit.Assume
+import com.predic8.wsdl.Definitions
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
 import org.junit.Before
 import org.junit.Test
 
 class BindingDiffGeneratorTest {
 
-	Definitions original
-	Definitions modified
+  Definitions original
+  Definitions modified
 
-    @Before
-	void setUp() {
-		def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
-		original = parser.parse('diff/ArticleService-Original/ArticleService.wsdl')
-		modified = parser.parse('diff/ArticleService-Modified/ArticleService.wsdl')
-	}
+  @Before
+  void setUp() {
+    def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
+    original = parser.parse('diff/ArticleService-Original/ArticleService.wsdl')
+    modified = parser.parse('diff/ArticleService-Modified/ArticleService.wsdl')
+  }
 
-    @Test
-	void testBindingDiffs() {
-		def diffs = new WsdlDiffGenerator(a: original, b: modified).compareBindings()
-		assert diffs.size() == 2
-		assert diffs[0].description == 'Binding TestBinding added.'
-		assert diffs[1].description == 'Binding ArticleServicePTBinding changed:'
-		assert diffs[1].diffs[0].description == "Style changed from 'Document/Literal-Wrapped' to 'Rpc/Literal'"
-	}
+  @Test
+  void testBindingDiffs() {
+    def diffs = new WsdlDiffGenerator(a: original, b: modified).compareBindings()
+    assert diffs.size() == 2
+    assert diffs[0].description == 'Binding TestBinding added.'
+    assert diffs[1].description == 'Binding ArticleServicePTBinding changed:'
+    assert diffs[1].diffs[0].description == "Style changed from 'Document/Literal-Wrapped' to 'Rpc/Literal'"
+  }
 
 }

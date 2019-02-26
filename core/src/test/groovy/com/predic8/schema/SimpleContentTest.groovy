@@ -14,38 +14,38 @@
 
 package com.predic8.schema
 
+import com.predic8.schema.diff.SchemaDiffGenerator
+import com.predic8.xml.util.ClasspathResolver
 import groovy.xml.QName
-import com.predic8.xml.util.*
-import com.predic8.schema.diff.SchemaDiffGenerator 
 
 class SimpleContentTest extends GroovyTestCase {
-  
+
   Schema schema
   Element element
-  
-  void setUp(){
+
+  void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/schema/simplecontent/attributeWithSimpleType.xsd")
     element = schema.getElement('shoeSize')
   }
-  
+
   void testParsing() {
-    assertEquals(new QName('http://www.w3.org/2001/XMLSchema','decimal'), element.embeddedType.model.extension.base)
+    assertEquals(new QName('http://www.w3.org/2001/XMLSchema', 'decimal'), element.embeddedType.model.extension.base)
     assertEquals('sizing', element.embeddedType.model.extension.attributes[0].name)
     assertEquals('string', element.embeddedType.model.extension.attributes[0].simpleType.restriction.base.localPart)
     assertEquals('optional', element.embeddedType.model.extension.attributes[0].use)
   }
-  
-  void testRequestTemplateCreator(){
+
+  void testRequestTemplateCreator() {
     def requestTemplate = new XmlSlurper().parseText(element.requestTemplate)
     assertEquals('?999.99?', requestTemplate.text())
   }
-  
-  void testSchemaDiffGenerator(){
+
+  void testSchemaDiffGenerator() {
     def diffGen = new SchemaDiffGenerator()
     SimpleContent a = element.embeddedType.model
     def b = new SimpleContent(extension: new Extension())
-    b.extension.base = new QName('http://www.w3.org/2001/XMLSchema','int')
+    b.extension.base = new QName('http://www.w3.org/2001/XMLSchema', 'int')
     def diffs = a.compare(diffGen, b)
     assertEquals(1, diffs.size())
     assertTrue(diffs.toString().contains("SimpleContent:"))

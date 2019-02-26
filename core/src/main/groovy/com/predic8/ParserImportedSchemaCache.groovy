@@ -15,34 +15,36 @@ class ParserImportedSchemaCache {
   final Map<String, Schema> importedSchemas = [:]
 
   @Synchronized('importedSchemasLock')
-  Schema addSchema (Schema schema, String schemaKey = null) {
+  Schema addSchema(Schema schema, String schemaKey = null) {
     String key = schemaKey ?: schema?.targetNamespace
 
     // Do not try to cache schema's without a meaningful key
-    if (!key) { return schema }
+    if (!key) {
+      return schema
+    }
 
     if (!importedSchemas[key]) {
-        importedSchemas[key] = schema
+      importedSchemas[key] = schema
     }
     importedSchemas[key]
   }
 
   @Synchronized('importedSchemasLock')
-  Schema addSchema (Closure lazySchema, String schemaKey = null) {
+  Schema addSchema(Closure lazySchema, String schemaKey = null) {
     String key = schemaKey
     if (!schemaKey) {
       // Schema needs to be parsed to determine the cache key
-      return addSchema((Schema)lazySchema.call())
+      return addSchema((Schema) lazySchema.call())
     }
 
     if (!importedSchemas[key]) {
-        importedSchemas[key] = (Schema) lazySchema.call()
+      importedSchemas[key] = (Schema) lazySchema.call()
     }
     importedSchemas[key]
   }
 
   @Synchronized('importedSchemasLock')
-  synchronized Schema getSchema (String key) {
+  synchronized Schema getSchema(String key) {
     importedSchemas[key]
   }
 

@@ -14,57 +14,62 @@
 
 package com.predic8.schema.diff
 
-import com.predic8.soamodel.*
 
-class ComplexTypeDiffGenerator extends UnitDiffGenerator{
-	
+import com.predic8.soamodel.Difference
+
+class ComplexTypeDiffGenerator extends UnitDiffGenerator {
+
   public ComplexTypeDiffGenerator() {
-	  updateLabels()
+    updateLabels()
   }
 
-	private def labelModelGroupChange, labelHasChanged, labelTo, labelRemoved, labelAdded, labelComplexType
-  
-  def removed = {new Difference(description:"${labelComplexType} ${labelRemoved}.", type: 'complexType', breaks: ctx.exchange ? true: null, exchange: a.exchange)}
+  private def labelModelGroupChange, labelHasChanged, labelTo, labelRemoved, labelAdded, labelComplexType
 
-  def added = { new Difference(description:"${labelComplexType} ${labelAdded}.", type: 'complexType', breaks: ctx.exchange ? true: null, exchange: b.exchange)}
+  def removed = {
+    new Difference(description: "${labelComplexType} ${labelRemoved}.", type: 'complexType', breaks: ctx.exchange ? true : null, exchange: a.exchange)
+  }
+
+  def added = {
+    new Difference(description: "${labelComplexType} ${labelAdded}.", type: 'complexType', breaks: ctx.exchange ? true : null, exchange: b.exchange)
+  }
 
   def changed = { diffs ->
-    new Difference(description:"${labelComplexType} ${a.qname?.localPart ?: ''}:" , type: 'complexType' ,  diffs : diffs, exchange: a.exchange)
+    new Difference(description: "${labelComplexType} ${a.qname?.localPart ?: ''}:", type: 'complexType', diffs: diffs, exchange: a.exchange)
   }
 
-  List<Difference> compareUnit(){
-		def lDiffs = new AnnotationDiffGenerator(a: a.annotation, b: b.annotation, generator: generator).compare()
-    lDiffs.addAll( compareModel())
+  List<Difference> compareUnit() {
+    def lDiffs = new AnnotationDiffGenerator(a: a.annotation, b: b.annotation, generator: generator).compare()
+    lDiffs.addAll(compareModel())
     lDiffs
   }
-  
-  private compareModel(){
+
+  private compareModel() {
     def lDiffs = []
-    if(a.model && b.model && a.model?.class != b.model?.class){
-      lDiffs << new Difference(description:"${labelModelGroupChange} ${a.model?.class?.simpleName} ${labelTo} ${b.model?.class?.simpleName}." , type: 'model', breaks:ctx.exchange ? true: null, exchange: a.exchange)
-    } else if(a.model && b.model) {
+    if (a.model && b.model && a.model?.class != b.model?.class) {
+      lDiffs << new Difference(description: "${labelModelGroupChange} ${a.model?.class?.simpleName} ${labelTo} ${b.model?.class?.simpleName}.", type: 'model', breaks: ctx.exchange ? true : null, exchange: a.exchange)
+    } else if (a.model && b.model) {
       a.model.exchange = a.exchange
-	  b.model.exchange = b.exchange
+      b.model.exchange = b.exchange
       lDiffs.addAll(a.model.compare(generator, b.model, ctx.clone()))
-    } else if(a.model){ //b has no model
-      lDiffs << new Difference(description:"${a.model.elementName} ${labelRemoved}." , type: 'model', breaks:true, exchange: a.exchange)
-    } else if(b.model){ //a has no model
-	  lDiffs << new Difference(description:"${b.model.elementName} ${labelAdded}." , type: 'model', breaks:true, exchange: b.exchange)
+    } else if (a.model) { //b has no model
+      lDiffs << new Difference(description: "${a.model.elementName} ${labelRemoved}.", type: 'model', breaks: true, exchange: a.exchange)
+    } else if (b.model) { //a has no model
+      lDiffs << new Difference(description: "${b.model.elementName} ${labelAdded}.", type: 'model', breaks: true, exchange: b.exchange)
     }
-    
+
     lDiffs.addAll(generator.compareAttributes(a, b))
-		//TODO  compareAttributeGroups not implemented yet!
+    //TODO  compareAttributeGroups not implemented yet!
 //    lDiffs.addAll(generator.compareAttributeGroups(a, b))
     lDiffs
   }
-  
-  protected def updateLabels(){
-	  labelModelGroupChange = bundle.getString("com.predic8.schema.diff.labelModelGroupChange")
-	  labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
-	  labelTo = bundle.getString("com.predic8.schema.diff.labelTo")
-	  labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
-	  labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
-	  labelComplexType = bundle.getString("com.predic8.schema.diff.labelComplexType")
+
+  protected def updateLabels() {
+    labelModelGroupChange = bundle.getString("com.predic8.schema.diff.labelModelGroupChange")
+    labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
+    labelTo = bundle.getString("com.predic8.schema.diff.labelTo")
+    labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
+    labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
+    labelComplexType = bundle.getString("com.predic8.schema.diff.labelComplexType")
 
   }
 }

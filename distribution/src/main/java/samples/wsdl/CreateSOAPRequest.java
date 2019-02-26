@@ -14,69 +14,68 @@
 
 package samples.wsdl;
 
+import com.predic8.wsdl.Definitions;
+import com.predic8.wsdl.WSDLParser;
+import com.predic8.wstool.creator.RequestCreator;
+import com.predic8.wstool.creator.SOARequestCreator;
 import groovy.xml.MarkupBuilder;
 
 import java.io.StringWriter;
 import java.util.HashMap;
 
-import com.predic8.wsdl.Definitions;
-import com.predic8.wsdl.WSDLParser;
-import com.predic8.wstool.creator.RequestCreator;
-import com.predic8.wstool.creator.SOARequestCreator;
-
 public class CreateSOAPRequest {
 
-	public static void main(String[] args) {
+  public static void main(String[] args) {
 
-		WSDLParser parser = new WSDLParser();
+    WSDLParser parser = new WSDLParser();
 
-		Definitions wsdl = parser.parse("samples/wsdl/article-service/article.wsdl");
+    Definitions wsdl = parser.parse("samples/wsdl/article-service/article.wsdl");
 
-		StringWriter writer = new StringWriter();
+    StringWriter writer = new StringWriter();
 
-		HashMap<String, String> formParams = new HashMap<String, String>();
+    HashMap<String, String> formParams = new HashMap<String, String>();
 
-		formParams.put("xpath:/create/article[1]/name", "foo1");
+    formParams.put("xpath:/create/article[1]/name", "foo1");
 
-		formParams.put("xpath:/create/article[1]/description", "bar1");
+    formParams.put("xpath:/create/article[1]/description", "bar1");
 
-		formParams.put("xpath:/create/article[1]/price[1]/amount", "10.00");
-		formParams.put("xpath:/create/article[1]/price[1]/currency", "EUR");
+    formParams.put("xpath:/create/article[1]/price[1]/amount", "10.00");
+    formParams.put("xpath:/create/article[1]/price[1]/currency", "EUR");
 
-		formParams.put("xpath:/create/article[1]/price[2]/amount", "20.00");
-		formParams.put("xpath:/create/article[1]/price[2]/currency", "USD");
+    formParams.put("xpath:/create/article[1]/price[2]/amount", "20.00");
+    formParams.put("xpath:/create/article[1]/price[2]/currency", "USD");
 
-		formParams.put("xpath:/create/article[1]/id", "1");
+    formParams.put("xpath:/create/article[1]/id", "1");
 
-		formParams.put("xpath:/create/article[2]/name", "foo2");
+    formParams.put("xpath:/create/article[2]/name", "foo2");
 
-		formParams.put("xpath:/create/article[2]/description", "bar2");
+    formParams.put("xpath:/create/article[2]/description", "bar2");
 
-		formParams.put("xpath:/create/article[2]/price[1]/amount", "20.00");
-		formParams.put("xpath:/create/article[2]/price[1]/currency", "EUR");
+    formParams.put("xpath:/create/article[2]/price[1]/amount", "20.00");
+    formParams.put("xpath:/create/article[2]/price[1]/currency", "EUR");
 
-		formParams.put("xpath:/create/article[2]/price[2]/amount", "30.00");
-		formParams.put("xpath:/create/article[2]/price[2]/currency", "USD");
+    formParams.put("xpath:/create/article[2]/price[2]/amount", "30.00");
+    formParams.put("xpath:/create/article[2]/price[2]/currency", "USD");
 
-		formParams.put("xpath:/create/article[2]/id", "2");
+    formParams.put("xpath:/create/article[2]/id", "2");
 
-		// SOARequestCreator creator = new SOARequestCreator();
-		SOARequestCreator creator = new SOARequestCreator(wsdl,
-		    new RequestCreator(), new MarkupBuilder(writer));
+    // SOARequestCreator creator = new SOARequestCreator();
+    SOARequestCreator creator = new SOARequestCreator(wsdl,
+      new RequestCreator(), new MarkupBuilder(writer));
 
-		creator.setBuilder(new MarkupBuilder(writer));
+    creator.setBuilder(new MarkupBuilder(writer));
 
-		creator.setDefinitions(wsdl);
+    creator.setDefinitions(wsdl);
 
-		creator.setFormParams(formParams);
+    creator.setFormParams(formParams);
 
-		creator.setCreator(new RequestCreator());
+    creator.setCreator(new RequestCreator());
 
-		// creator.createRequest(PortType name, Operation name, Binding name);
-		creator.createRequest("ArticleServicePT", "create",
-		    "ArticleServicePTBinding");
+    // creator.createRequest(PortType name, Operation name, Binding name);
+    creator.createRequest("ArticleServicePT", "create",
+      "ArticleServicePTBinding");
 
-		System.out.println(writer);
+    System.out.println(writer);
 
-	}
+  }
 }

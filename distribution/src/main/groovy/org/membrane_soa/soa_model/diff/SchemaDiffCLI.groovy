@@ -14,53 +14,50 @@
 
 package org.membrane_soa.soa_model.diff
 
-import javax.xml.transform.*
-import javax.xml.transform.stream.StreamResult
-import javax.xml.transform.stream.StreamSource
+import com.predic8.schema.SchemaParser
+import com.predic8.schema.diff.SchemaDiffGenerator
+import com.predic8.soamodel.Difference
 import groovy.xml.MarkupBuilder
-import com.predic8.soamodel.Difference;
-import com.predic8.schema.SchemaParser;
-import com.predic8.schema.diff.SchemaDiffGenerator;
 
-class SchemaDiffCLI extends AbstractDiffCLI{
+class SchemaDiffCLI extends AbstractDiffCLI {
 
   public static void main(String[] args) {
     SchemaDiffCLI diffCLI = new SchemaDiffCLI().start(args)
   }
 
-  void Diff2Xml(List<Difference> diffs){
+  void Diff2Xml(List<Difference> diffs) {
     def writer = new ByteArrayOutputStream()
     builder = new MarkupBuilder(new PrintWriter(writer))
-    builder.SchemaDiff{
-      "Original"{
+    builder.SchemaDiff {
+      "Original" {
         URL(fixURL(url1))
         TargetNamespace(doc1.targetNamespace)
-        Imports{
+        Imports {
           doc1.imports.each { imp ->
             Import(imp.namespace)
           }
         }
       }
-      "Modified"{
+      "Modified" {
         URL(fixURL(url1))
         TargetNamespace(doc2.targetNamespace)
-        Imports{
+        Imports {
           doc2.imports.each { imp ->
             Import(imp.namespace)
           }
         }
       }
-      Diffs{
-        diffs.each{ diff -> dump(diff) }
+      Diffs {
+        diffs.each { diff -> dump(diff) }
       }
     }
 //    def input = new ByteArrayInputStream(writer.toByteArray())
 //    transform(input, 'html')
-		new File(reportFolder).mkdir()
-		File xml = new File("$reportFolder/diff-report.xml")
-		OutputStream outputStream = new FileOutputStream (xml);
-		writer.writeTo(outputStream);
-		transform(new ByteArrayInputStream(writer.toByteArray()), 'html')
+    new File(reportFolder).mkdir()
+    File xml = new File("$reportFolder/diff-report.xml")
+    OutputStream outputStream = new FileOutputStream(xml);
+    writer.writeTo(outputStream);
+    transform(new ByteArrayInputStream(writer.toByteArray()), 'html')
   }
 
   public String getCliUsage() {
@@ -70,9 +67,9 @@ class SchemaDiffCLI extends AbstractDiffCLI{
   public getParser() {
     new SchemaParser()
   }
-  
+
   public getStylesheet(format) {
-    "${System.getenv('SOA_MODEL_HOME')}/src/main/style/schema2"+format+".xsl"
+    "${System.getenv('SOA_MODEL_HOME')}/src/main/style/schema2" + format + ".xsl"
   }
 
   public getDiffGenerator(doc1, doc2) {

@@ -14,38 +14,37 @@
 
 package com.predic8.schema.diff
 
-import java.util.List;
+import com.predic8.soamodel.AbstractDiffGenerator
+import com.predic8.soamodel.Difference
 
-import com.predic8.soamodel.*
+class AnnotationDiffGenerator extends AbstractDiffGenerator {
 
-class AnnotationDiffGenerator extends AbstractDiffGenerator{
-	
-   def labelAnnotation, labelRemoved, labelAdded, labelContentAnnotation
-	
+  def labelAnnotation, labelRemoved, labelAdded, labelContentAnnotation
+
   List<Difference> compare() {
     def diffs = []
-    if(a && !b) return [new Difference(description:"${labelAnnotation} ${labelRemoved}.", type: 'annotation', safe:true)]
-    if(!a && b) return [new Difference(description:"${labelAnnotation} ${labelAdded}.", type: 'annotation', safe:true)]
-    if(a && b && compareContents()) return [new Difference(description:"${labelContentAnnotation}.", type: 'annotation', safe:true)]
+    if (a && !b) return [new Difference(description: "${labelAnnotation} ${labelRemoved}.", type: 'annotation', safe: true)]
+    if (!a && b) return [new Difference(description: "${labelAnnotation} ${labelAdded}.", type: 'annotation', safe: true)]
+    if (a && b && compareContents()) return [new Difference(description: "${labelContentAnnotation}.", type: 'annotation', safe: true)]
     []
   }
-  
-  boolean  compareContents() {
-    if(a.documentations.normalizedContent != b.documentations.normalizedContent ) return true
-    if(a.appinfos.normalizedContent != b.appinfos.normalizedContent ) return true
+
+  boolean compareContents() {
+    if (a.documentations.normalizedContent != b.documentations.normalizedContent) return true
+    if (a.appinfos.normalizedContent != b.appinfos.normalizedContent) return true
     false
   }
-  
-  public AnnotationDiffGenerator(){
-	  updateLabels()
+
+  public AnnotationDiffGenerator() {
+    updateLabels()
   }
-  
-  protected def updateLabels(){
-	 
-	  labelContentAnnotation = bundle.getString("com.predic8.schema.diff.labelContentAnnotation")
-	  labelAnnotation = bundle.getString("com.predic8.schema.diff.labelAnnotation")
-	  labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
-	  labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
+
+  protected def updateLabels() {
+
+    labelContentAnnotation = bundle.getString("com.predic8.schema.diff.labelContentAnnotation")
+    labelAnnotation = bundle.getString("com.predic8.schema.diff.labelAnnotation")
+    labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
+    labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
   }
 
 }

@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class All extends PolicyOperator{
+class All extends PolicyOperator {
 
 }
 

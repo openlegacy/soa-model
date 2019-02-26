@@ -18,31 +18,31 @@ import groovy.xml.QName;
 
 public class ElementRefAccessException extends ModelAccessException {
 
-	private static final long serialVersionUID = 5405085246506357279L;
+  private static final long serialVersionUID = 5405085246506357279L;
 
-	private QName ref;
-	private String prefix;
+  private QName ref;
+  private String prefix;
 
-	public ElementRefAccessException(String message, QName ref, String prefix) {
-	  super(message);
-	  this.setRef(ref);
-	  this.setPrefix(prefix);
+  public ElementRefAccessException(String message, QName ref, String prefix) {
+    super(message);
+    this.setRef(ref);
+    this.setPrefix(prefix);
   }
 
-	public QName getRef() {
-	  return ref;
+  public QName getRef() {
+    return ref;
   }
 
-	public void setRef(QName ref) {
-	  this.ref = ref;
+  public void setRef(QName ref) {
+    this.ref = ref;
   }
 
-	public String getPrefix() {
-	  return prefix;
+  public String getPrefix() {
+    return prefix;
   }
 
-	public void setPrefix(String prefix) {
-	  this.prefix = prefix;
+  public void setPrefix(String prefix) {
+    this.prefix = prefix;
   }
 
 }

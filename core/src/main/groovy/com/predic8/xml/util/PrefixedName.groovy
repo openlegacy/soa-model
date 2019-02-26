@@ -15,29 +15,28 @@
 package com.predic8.xml.util
 
 class PrefixedName {
-  
+
   String prefix = ''
   String localName
-  
-  def PrefixedName(prefix, localName){
+
+  def PrefixedName(prefix, localName) {
     this.prefix = prefix
     this.localName = localName
   }
-  
+
   def PrefixedName(name) {
-		if(!name) return
+    if (!name) return
     def tempName = name.split(':')
-    if(tempName.size() > 1) {
+    if (tempName.size() > 1) {
       this.prefix = tempName.head()
       this.localName = tempName.tail().join(':')
-    }
-    else if(tempName.size() == 1) {
+    } else if (tempName.size() == 1) {
       this.localName = name
     }
   }
-  
-  String toString(){
-    if(prefix) return "${prefix?prefix+':':''}$localName" 
+
+  String toString() {
+    if (prefix) return "${prefix ? prefix + ':' : ''}$localName"
     localName
   }
 }

@@ -12,23 +12,22 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.schema.restriction.facet;
+package com.predic8.schema.restriction.facet
 
 import com.predic8.soamodel.CreatorContext
-import com.predic8.wstool.creator.*
 
 class EnumerationFacet extends Facet {
-  
-  def create(creator, CreatorContext ctx){
+
+  def create(creator, CreatorContext ctx) {
     creator.createEnumerationFacet(this, ctx)
   }
-  
-  protected getElementName(){
-	'enumeration'
+
+  protected getElementName() {
+    'enumeration'
   }
 
   public boolean equals(obj) {
     obj && getClass() == obj.getClass() && value == obj.value
   }
-  
+
 }

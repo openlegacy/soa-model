@@ -14,13 +14,10 @@
 
 package com.predic8.wsdl
 
-import com.predic8.soamodel.*
-import com.predic8.wsdl.style.*
-
 class NoneSOAPBinding {
-  
-	String namespace
-	
+
+  String namespace
+
 //  void create(AbstractCreator creator, CreatorContext ctx) {
 //    creator.createNoneSoapBinding(this, ctx)
 //  }

@@ -13,18 +13,18 @@ package com.predic8.soamodel
 
 class KnownSchemas {
 
-	/*Do not use Consts.* as GString for keys because 
-	 * the comparison with string does not work.
-	 */ 
-	static HashMap<String, String> docs = [
-		/* Key is the targetNamespace of the document - Value is the relativ file path to the class path.*/
-		'http://schemas.xmlsoap.org/wsdl/' : 'wsdl11.xsd',
-		'http://schemas.xmlsoap.org/soap/encoding/' : 'encoding.xsd',
-		'http://www.w3.org/2003/05/soap-encoding' : 'soap-encoding.xsd',
-		'http://www.w3.org/2005/05/xmlmime' : 'xmlmime2005.xsd',
-		'http://www.w3.org/2004/06/xmlmime' : 'xmlmime2004.xsd',
-		'http://schemas.microsoft.com/2003/10/Serialization/' : 'serialization.xsd',
-		'http://schemas.microsoft.com/2003/10/Serialization/Arrays' : 'arrays.xsd',
-		'http://www.w3.org/2005/08/addressing' : 'ws-addr.xsd'
-	]
+  /*Do not use Consts.* as GString for keys because
+     * the comparison with string does not work.
+     */
+  static HashMap<String, String> docs = [
+    /* Key is the targetNamespace of the document - Value is the relativ file path to the class path.*/
+    'http://schemas.xmlsoap.org/wsdl/'                         : 'wsdl11.xsd',
+    'http://schemas.xmlsoap.org/soap/encoding/'                : 'encoding.xsd',
+    'http://www.w3.org/2003/05/soap-encoding'                  : 'soap-encoding.xsd',
+    'http://www.w3.org/2005/05/xmlmime'                        : 'xmlmime2005.xsd',
+    'http://www.w3.org/2004/06/xmlmime'                        : 'xmlmime2004.xsd',
+    'http://schemas.microsoft.com/2003/10/Serialization/'      : 'serialization.xsd',
+    'http://schemas.microsoft.com/2003/10/Serialization/Arrays': 'arrays.xsd',
+    'http://www.w3.org/2005/08/addressing'                     : 'ws-addr.xsd'
+  ]
 }

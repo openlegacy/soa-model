@@ -14,9 +14,10 @@
 
 package com.predic8.schema
 
+import com.predic8.soamodel.CreatorContext
+
 import javax.xml.namespace.QName as JQName
 
-import com.predic8.soamodel.CreatorContext
 import static com.predic8.soamodel.Consts.SCHEMA_NS
 
 class Annotation extends SchemaComponent {
@@ -24,41 +25,41 @@ class Annotation extends SchemaComponent {
   def id
   def contents = []
 
-  protected parseAttributes(token, params){
-    id = token.getAttributeValue( null , 'id')
+  protected parseAttributes(token, params) {
+    id = token.getAttributeValue(null, 'id')
   }
 
-  protected parseChildren(token, child, params){
-    switch (child ){
-      case 'documentation' :
-	      def documentation = new Documentation(schema : schema)
-	      documentation.parse(token, params)
-	      contents << documentation ; break
-      case 'appinfo' :
-	      def appinfo = new Appinfo(schema : schema)
-	      appinfo.parse(token, params)
-	      contents << appinfo ; break
+  protected parseChildren(token, child, params) {
+    switch (child) {
+      case 'documentation':
+        def documentation = new Documentation(schema: schema)
+        documentation.parse(token, params)
+        contents << documentation; break
+      case 'appinfo':
+        def appinfo = new Appinfo(schema: schema)
+        appinfo.parse(token, params)
+        contents << appinfo; break
     }
   }
 
-  protected getElementName(){
+  protected getElementName() {
     new JQName(SCHEMA_NS, 'annotation')
   }
 
-  List<Documentation> getDocumentations(){
-    contents.findAll{
+  List<Documentation> getDocumentations() {
+    contents.findAll {
       it instanceof Documentation
     }
   }
 
-  Documentation getDocumentation(id){
-    documentations.find{
+  Documentation getDocumentation(id) {
+    documentations.find {
       it?.id == id
     }
   }
 
-  List<Appinfo> getAppinfos(){
-    contents.findAll{
+  List<Appinfo> getAppinfos() {
+    contents.findAll {
       it instanceof Appinfo
     }
   }
@@ -67,22 +68,21 @@ class Annotation extends SchemaComponent {
     creator.createAnnotation(this, ctx)
   }
 
-  def compare(generator, other){
+  def compare(generator, other) {
     generator.compareAnnotation(this, other)
   }
 
-  public boolean equals(obj){
-    if(this.is(obj)) {
+  public boolean equals(obj) {
+    if (this.is(obj)) {
       return true
     }
-    if( !obj || (obj.getClass() != this.getClass())) {
+    if (!obj || (obj.getClass() != this.getClass())) {
       return false
     }
     contents.equals(obj.contents)
   }
 
-  public int hashCode()
-  {
+  public int hashCode() {
     1360 + contents.hashCode()
   }
 

@@ -14,22 +14,20 @@
 
 package com.predic8.soamodel
 
-import java.util.Map;
-
 class CreatorContext implements Cloneable {
-  
-  def declNS = [:]	
+
+  def declNS = [:]
   def error
   def createLinks = false
-  
+
   protected Map<String, String> copyDeclNS() {
     def mapCopy = [:]
     declNS.each {
-      mapCopy[it.key]=it.value.clone()
+      mapCopy[it.key] = it.value.clone()
     }
     mapCopy
   }
-  
+
   Object clone() {
     super.clone();
   }

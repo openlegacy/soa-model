@@ -19,37 +19,37 @@ import com.predic8.wsdl.WSDLElement;
 public class PortTypeAccessException extends ModelAccessException {
 
   private static final long serialVersionUID = -5049330036052285461L;
-  
-	public PortTypeAccessException() {
-		super();
-	}
 
-	public PortTypeAccessException(String message, Throwable cause,
-	    boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
+  public PortTypeAccessException() {
+    super();
+  }
 
-	public PortTypeAccessException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  public PortTypeAccessException(String message, Throwable cause,
+                                 boolean enableSuppression, boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 
-	public PortTypeAccessException(Throwable cause) {
-		super(cause);
-	}
+  public PortTypeAccessException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	public PortTypeAccessException(String message) {
-		super(message);
-	}
-	
-	public PortTypeAccessException(String message, Throwable cause,
-			WSDLElement wsdlElement) {
-		super(message, cause);
-		this.wsdlElement = wsdlElement;
-	}
-	
-	public PortTypeAccessException(String message, WSDLElement wsdlElement) {
-		super(message);
-		this.wsdlElement = wsdlElement;
-	}
+  public PortTypeAccessException(Throwable cause) {
+    super(cause);
+  }
+
+  public PortTypeAccessException(String message) {
+    super(message);
+  }
+
+  public PortTypeAccessException(String message, Throwable cause,
+                                 WSDLElement wsdlElement) {
+    super(message, cause);
+    this.wsdlElement = wsdlElement;
+  }
+
+  public PortTypeAccessException(String message, WSDLElement wsdlElement) {
+    super(message);
+    this.wsdlElement = wsdlElement;
+  }
 
 }

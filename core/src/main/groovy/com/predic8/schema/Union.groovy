@@ -12,48 +12,47 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.schema;
+package com.predic8.schema
 
-import com.predic8.soamodel.CreatorContext 
+import com.predic8.soamodel.CreatorContext
 import groovy.xml.QName
-import com.predic8.wstool.creator.*
 
-class Union extends SchemaComponent{
-  
+class Union extends SchemaComponent {
+
   def simpleTypes = []
   List<QName> memberTypes = []
 
-  protected parseAttributes(token, params){
-    token.getAttributeValue( null , 'memberTypes')?.split(' ').each{
+  protected parseAttributes(token, params) {
+    token.getAttributeValue(null, 'memberTypes')?.split(' ').each {
       if (it)
         memberTypes << getTypeQName(it)
     }
   }
 
-  protected parseChildren(token, child, params){
-    switch (child ){
-      case 'simpleType' :
-      def simpleType = new SimpleType(schema:schema)
-      simpleType.parse(token, params)
-      simpleTypes << simpleType ; break
+  protected parseChildren(token, child, params) {
+    switch (child) {
+      case 'simpleType':
+        def simpleType = new SimpleType(schema: schema)
+        simpleType.parse(token, params)
+        simpleTypes << simpleType; break
     }
   }
 
   public boolean equals(obj) {
-    obj && ( this.is(obj) ||
-             getClass() == obj.class &&
-             simpleTypes == obj.simpleTypes )
+    obj && (this.is(obj) ||
+      getClass() == obj.class &&
+      simpleTypes == obj.simpleTypes)
   }
-  
-  protected getElementName(){
+
+  protected getElementName() {
     'union'
   }
-  
-  def create(creator, CreatorContext ctx){
+
+  def create(creator, CreatorContext ctx) {
     creator.createUnion(this, ctx)
   }
-  
-  String toString(){
+
+  String toString() {
     "union[simpleTypes=$simpleTypes]"
   }
 }

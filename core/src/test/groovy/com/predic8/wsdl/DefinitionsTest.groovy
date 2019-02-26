@@ -14,17 +14,18 @@
 
 package com.predic8.wsdl
 
-import com.predic8.xml.util.*
+
+import com.predic8.xml.util.ClasspathResolver
 
 class DefinitionsTest extends GroovyTestCase {
 
   def wsdl
 
-  void setUp(){
+  void setUp() {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     wsdl = parser.parse("/BLZService.wsdl")
   }
-  
+
   void testSOAP11Bindings() {
     assertEquals(1, wsdl.getBindings('SOAP11').size())
     assert 'BLZServiceSOAP11Binding' in wsdl.getBindings('SOAP11').name

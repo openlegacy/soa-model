@@ -14,26 +14,24 @@
 
 package com.predic8.schema
 
-import junit.framework.TestCase
-import javax.xml.stream.*
-import com.predic8.xml.util.*
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.QName
 
-import groovy.xml.*
-class CyclicImportTest extends GroovyTestCase{
-  
+class CyclicImportTest extends GroovyTestCase {
+
   def schema
 
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/a.xsd")
   }
-  
+
   void testFromAtoB() {
-      assertNotNull(schema.getElement(new QName('schemaB','dataType')))
-  }  
+    assertNotNull(schema.getElement(new QName('schemaB', 'dataType')))
+  }
 
   void testFromAtoC() {
-      assertNotNull(schema.getElement(new QName('schemaC','dataType')))
-  }  
+    assertNotNull(schema.getElement(new QName('schemaC', 'dataType')))
+  }
 
 }

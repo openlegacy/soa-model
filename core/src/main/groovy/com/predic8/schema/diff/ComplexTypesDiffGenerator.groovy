@@ -14,36 +14,41 @@
 
 package com.predic8.schema.diff
 
-import com.predic8.soamodel.*
-import com.predic8.schema.*
-import groovy.xml.QName
+
+import com.predic8.soamodel.Difference
 
 class ComplexTypesDiffGenerator extends ListDiffGenerator {
-	
-	public ComplexTypesDiffGenerator() {
-		updateLabels()
-	}
 
-	def labelRemoved, labelAdded, labelComplexType
-	
-  def removed = { new Difference(description:"${labelComplexType} ${it.qname.localPart.toString()} ${labelRemoved}.", type: 'complexType', breaks:ctx.exchange ? true: null, exchange: it.exchange)}
+  public ComplexTypesDiffGenerator() {
+    updateLabels()
+  }
 
-  def added = {new Difference(description:"${labelComplexType} ${it.qname.localPart.toString()} ${labelAdded}.", type: 'complexType', breaks:ctx.exchange ? true: null, exchange: it.exchange)}
+  def labelRemoved, labelAdded, labelComplexType
 
-  List<Difference> compareUnit(qname){
+  def removed = {
+    new Difference(description: "${labelComplexType} ${it.qname.localPart.toString()} ${labelRemoved}.", type: 'complexType', breaks: ctx.exchange ? true : null, exchange: it.exchange)
+  }
+
+  def added = {
+    new Difference(description: "${labelComplexType} ${it.qname.localPart.toString()} ${labelAdded}.", type: 'complexType', breaks: ctx.exchange ? true : null, exchange: it.exchange)
+  }
+
+  List<Difference> compareUnit(qname) {
     findA(qname).compare(generator, findB(qname))
   }
-  
-  protected getIntersection(){
-      def bQnames = b*.qname
-      if (bQnames.isEmpty()) { return [] }
-      a.qname.findAll { bQnames.contains(it) }
+
+  protected getIntersection() {
+    def bQnames = b*.qname
+    if (bQnames.isEmpty()) {
+      return []
+    }
+    a.qname.findAll { bQnames.contains(it) }
   }
-  
-  protected def updateLabels(){
-	  labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
-	  labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
-	  labelComplexType = bundle.getString("com.predic8.schema.diff.labelComplexType")
+
+  protected def updateLabels() {
+    labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
+    labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
+    labelComplexType = bundle.getString("com.predic8.schema.diff.labelComplexType")
 
   }
 

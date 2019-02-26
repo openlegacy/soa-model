@@ -14,11 +14,12 @@
 
 package com.predic8.wsdl.soap11
 
-import javax.xml.namespace.QName as JQName
 import com.predic8.soamodel.Consts
-import com.predic8.wsdl.*
+import com.predic8.wsdl.ExtensibilityOperation
 
-class SOAPOperation extends ExtensibilityOperation{
+import javax.xml.namespace.QName as JQName
+
+class SOAPOperation extends ExtensibilityOperation {
 
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL_SOAP11_NS, 'operation')
 

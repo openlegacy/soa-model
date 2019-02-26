@@ -12,13 +12,8 @@
 		See the License for the specific language governing permissions and
 		limitations under the License. */
 
-		
+
 package com.predic8.policy
-
-import javax.xml.namespace.QName as JQName
-
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 import com.predic8.policy.creator.PolicyCreator
 import com.predic8.soamodel.AbstractParserContext
@@ -26,62 +21,66 @@ import com.predic8.soamodel.Consts
 import com.predic8.soamodel.CreatorContext
 import com.predic8.soamodel.XMLElement
 import com.predic8.wsdl.WSDLElement
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
+import javax.xml.namespace.QName as JQName
 
 abstract class PolicyOperator extends XMLElement {
 
-	private static final Logger log = LoggerFactory.getLogger(PolicyOperator.class)
+  private static final Logger log = LoggerFactory.getLogger(PolicyOperator.class)
 
-	static final String NAMESPACE = Consts.WSP15_NS
-	
-	/**
-	 * ELEMENTNAME will be set at runtime. Depending on the used version,
-	 * it should be the one from the XML document cause it will be used
-	 * to find the end tag of the XML element.
-	 */
-	JQName ELEMENTNAME
+  static final String NAMESPACE = Consts.WSP15_NS
 
-	String name
-	WSDLElement wsdlElement
-	
-	List<PolicyOperator> policyItems = []
-	
-	protected parseChildren(token, child, AbstractParserContext ctx){
-		switch (token.name.namespaceURI){
-			case {it in Consts.POLICY_NAMESPACES} :
-				def pi = PolicyItemUtility.getPolicyItem(token.name)
-				if(pi) {
-					pi.parse(token, ctx) 
-					policyItems << pi 
-				}
-				break
-			default:
-				ctx.errors << "Parsing ${token.name} not supported yet!"
-				break
-		}
-	}
+  /**
+   * ELEMENTNAME will be set at runtime. Depending on the used version,
+   * it should be the one from the XML document cause it will be used
+   * to find the end tag of the XML element.
+   */
+  JQName ELEMENTNAME
 
-	def getAllPolicyItems() {
-		(policyItems + policyItems*.allPolicyItems).flatten()
-	}
-  
-	String getNamespaceUri() {
-		definitions.targetNamespace
-	}
-	
-	/**
-	 * Should return the prefix for the namespace of the element, like wsdl, soap, http & etc.
-	 * Used in WSDLCreator.
-	 */
-	String getPrefix(){
-		getPrefix(ELEMENTNAME.namespaceURI)
-	}
+  String name
+  WSDLElement wsdlElement
+
+  List<PolicyOperator> policyItems = []
+
+  protected parseChildren(token, child, AbstractParserContext ctx) {
+    switch (token.name.namespaceURI) {
+      case { it in Consts.POLICY_NAMESPACES }:
+        def pi = PolicyItemUtility.getPolicyItem(token.name)
+        if (pi) {
+          pi.parse(token, ctx)
+          policyItems << pi
+        }
+        break
+      default:
+        ctx.errors << "Parsing ${token.name} not supported yet!"
+        break
+    }
+  }
+
+  def getAllPolicyItems() {
+    (policyItems + policyItems*.allPolicyItems).flatten()
+  }
+
+  String getNamespaceUri() {
+    definitions.targetNamespace
+  }
+
+  /**
+   * Should return the prefix for the namespace of the element, like wsdl, soap, http & etc.
+   * Used in WSDLCreator.
+   */
+  String getPrefix() {
+    getPrefix(ELEMENTNAME.namespaceURI)
+  }
 
   JQName getElementName() {
     ELEMENTNAME
   }
-	
-	void create(PolicyCreator creator, CreatorContext ctx){
-		creator.createPolicyItem(this, ctx)
-	}
-	
+
+  void create(PolicyCreator creator, CreatorContext ctx) {
+    creator.createPolicyItem(this, ctx)
+  }
+
 }

@@ -14,126 +14,142 @@
 
 package com.predic8.xml.namespace
 
-import javax.xml.stream.*
-
-import com.predic8.soamodel.*
+import com.predic8.soamodel.XMLElement
 import com.predic8.wsdl.WSDLParserContext
+
+import javax.xml.stream.XMLInputFactory
 
 class A extends XMLElement {
   def b
   def c
-	static final String NAMESPACE = 'uri:a'
-  
+  static final String NAMESPACE = 'uri:a'
+
   protected parseChildren(token, child, params) {
-    switch ( child ) {
-      case 'b' :
-      b = new B()
-      b.parse(token,params)
-      break
+    switch (child) {
+      case 'b':
+        b = new B()
+        b.parse(token, params)
+        break
     }
-    switch ( child ) {
-      case 'c' :
-      c = new C()
-      c.parse(token,params)
-      break
+    switch (child) {
+      case 'c':
+        c = new C()
+        c.parse(token, params)
+        break
     }
-  }  
+  }
+
   def getElementName() {
     'a'
   }
+
   public String getNamespaceUri() {
-		'uri:a'
+    'uri:a'
   }
+
   public String getPrefix() { null }
 }
 
 class B extends XMLElement {
-	static final String NAMESPACE = 'uri:a'
+  static final String NAMESPACE = 'uri:a'
+
   def getElementName() {
     'b'
   }
+
   public String getNamespaceUri() {
-	 'uri:a'
+    'uri:a'
   }
+
   public String getPrefix() { null }
 }
 
 class C extends XMLElement {
-	static final String NAMESPACE = 'uri:a'
+  static final String NAMESPACE = 'uri:a'
   def d
   def e
-  
+
   protected parseChildren(token, child, params) {
-    switch ( child ) {
-      case 'd' :
-      d = new D()
-      d.parse(token,params)
-      break
-      case 'e' :
-      e = new E()
-      e.parse(token,params)
-      break
+    switch (child) {
+      case 'd':
+        d = new D()
+        d.parse(token, params)
+        break
+      case 'e':
+        e = new E()
+        e.parse(token, params)
+        break
     }
-  }  
+  }
+
   def getElementName() {
     'c'
   }
+
   public String getNamespaceUri() {
-	  'uri:a'
+    'uri:a'
   }
+
   public String getPrefix() { null }
 }
 
 class D extends XMLElement {
-	static final String NAMESPACE = 'uri:d'
+  static final String NAMESPACE = 'uri:d'
+
   def getElementName() {
     'd'
   }
+
   public String getNamespaceUri() {
-	 'uri:d'
+    'uri:d'
   }
+
   public String getPrefix() { null }
 }
 
 class E extends XMLElement {
-	static final String NAMESPACE = 'uri:e'
+  static final String NAMESPACE = 'uri:e'
+
   def getElementName() {
     'e'
   }
+
   public String getNamespaceUri() {
-		'uri:e'
+    'uri:e'
   }
+
   public String getPrefix() { null }
 }
 
 
 class NamespaceTest extends GroovyTestCase {
   def a
-  
+
   void setUp() {
-    def token = XMLInputFactory.newInstance().createXMLStreamReader(this.class.getResourceAsStream("/namespaces/a.xml"))    
+    def token = XMLInputFactory.newInstance().createXMLStreamReader(this.class.getResourceAsStream("/namespaces/a.xml"))
     a = new A()
     token.nextTag()
     a.parse(token, new WSDLParserContext())
   }
-  void testA(){    
-    assertEquals('ns1',a.getPrefix("uri:a"))
-    assertEquals('uri:a',a.getNamespace("ns1"))
-  }
-  
-  void testB() {    
-    assertEquals('ns1',a.b.getPrefix("uri:a"))
-    assertEquals('uri:a',a.b.getNamespace("ns1"))
+
+  void testA() {
+    assertEquals('ns1', a.getPrefix("uri:a"))
+    assertEquals('uri:a', a.getNamespace("ns1"))
   }
 
-  void testD() {  
-    assertEquals('ns2',a.c.d.getPrefix("uri:d"))
-    assertEquals('uri:d',a.c.d.getNamespace("ns2"))
+  void testB() {
+    assertEquals('ns1', a.b.getPrefix("uri:a"))
+    assertEquals('uri:a', a.b.getNamespace("ns1"))
   }
-  
+
+  void testD() {
+    assertEquals('ns2', a.c.d.getPrefix("uri:d"))
+    assertEquals('uri:d', a.c.d.getNamespace("ns2"))
+  }
+
   void testE() {
-    assertEquals('ns2',a.c.e.getPrefix("uri:e"))
-    assertEquals('uri:e',a.c.e.getNamespace("ns2"))
+    assertEquals('ns2', a.c.e.getPrefix("uri:e"))
+    assertEquals('uri:e', a.c.e.getNamespace("ns2"))
   }
-  
+
 }

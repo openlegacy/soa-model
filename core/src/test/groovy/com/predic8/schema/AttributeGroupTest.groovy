@@ -14,33 +14,36 @@
 
 package com.predic8.schema
 
-import groovy.xml.*
-import javax.xml.stream.*
 import com.predic8.schema.creator.SchemaCreator
 import com.predic8.schema.creator.SchemaCreatorContext
-import com.predic8.soamodel.Consts;
-import com.predic8.wstool.creator.*
-import com.predic8.xml.util.*
+import com.predic8.soamodel.Consts
+import com.predic8.wstool.creator.RequestCreator
+import com.predic8.wstool.creator.RequestCreatorContext
+import com.predic8.wstool.creator.RequestTemplateCreator
+import com.predic8.wstool.creator.RequestTemplateCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
+import groovy.xml.QName
 
-class AttributeGroupTest extends GroovyTestCase{
-  
+class AttributeGroupTest extends GroovyTestCase {
+
   def schema
-    
+
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/attributeGroup.xsd")
   }
-    
+
   void testParser() {
     assertEquals('Attr1', schema.attributeGroups[0].attributes[0].name)
     assertEquals(new QName(Consts.SCHEMA_NS, 'string'), schema.getAttributeGroup('AttrG1').getAttribute('Attr2').type)
     assertEquals('AttrG1', schema.getType('EmployeeType').attributeGroups[0].ref.localPart)
     assertEquals(new QName('http://predic8.com/human-resources/', 'AttrG2'), schema.getAttributeGroup('AttrG1').attributeGroups[0].ref)
   }
-  
+
   void testSchemaCreator() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     def parser = new SchemaParser()
     schema = parser.parse(new ByteArrayInputStream(strWriter.toString().bytes))
@@ -49,12 +52,12 @@ class AttributeGroupTest extends GroovyTestCase{
     assertEquals('AttrG1', schema.getType('EmployeeType').attributeGroups[0].ref.localPart)
     assertEquals(new QName('http://predic8.com/human-resources/', 'AttrG2'), schema.getAttributeGroup('AttrG1').attributeGroups[0].ref)
   }
-  
+
   void testRequestTemplateCreater() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('chef').create(creator, new RequestTemplateCreatorContext())
-    def request = new XmlSlurper().parseText(strWriter.toString()).declareNamespace(ns1:'http://predic8.com/human-resources/')
+    def request = new XmlSlurper().parseText(strWriter.toString()).declareNamespace(ns1: 'http://predic8.com/human-resources/')
     assertEquals('?XXX?', request.'@ns1:Attr1'.toString())
     assertEquals('?999?', request.'@ns1:Attr4'.toString())
     assertEquals('?XXX?', request.'@ns1:Attr5'.toString())
@@ -65,15 +68,15 @@ class AttributeGroupTest extends GroovyTestCase{
     assertEquals('?999?', request.person.'@ns1:Attr4'.toString())
 //    println strWriter
   }
-  
+
   void testRequestCreater() {
     def strWriter = new StringWriter()
-    def creator = new RequestCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestCreator(builder: new MarkupBuilder(strWriter))
     def formParams = [:]
-    formParams['xpath:/person/firstName']='Kaveh'
+    formParams['xpath:/person/firstName'] = 'Kaveh'
     //RequestCreator does not supported Attributes yet!
     //formParams['xpath:/person@Attr3']='Bla'
-    schema.getElement('chef').create(creator, new RequestCreatorContext(formParams:formParams))
+    schema.getElement('chef').create(creator, new RequestCreatorContext(formParams: formParams))
 //    println strWriter
   }
 }

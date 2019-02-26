@@ -11,34 +11,34 @@
 
 package com.predic8.wadl
 
-import javax.xml.namespace.QName
-
 import com.predic8.soamodel.Consts
+
+import javax.xml.namespace.QName
 
 class Request extends WADLElement {
 
-	public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'request')
-	
-	List<Param> params = []
-	List<Representation> representations = []
-	
-	protected parseChildren(token, child, ctx) {
-		super.parseChildren(token, child, ctx)
-		switch (token.name) {
-			case Param.ELEMENTNAME :
-				def param = new Param(application: application)
-				param.parse(token, ctx)
-				params << param
-				break
-			case Representation.ELEMENTNAME :
-				def representation = new Representation(application: application, parent: this)
-				representation.parse(token, ctx)
-				representations << representation
-				break
-		}
-	}
-	
-	String toString() {
-		"request[params: $params, representations: $representations]"
-	}
+  public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'request')
+
+  List<Param> params = []
+  List<Representation> representations = []
+
+  protected parseChildren(token, child, ctx) {
+    super.parseChildren(token, child, ctx)
+    switch (token.name) {
+      case Param.ELEMENTNAME:
+        def param = new Param(application: application)
+        param.parse(token, ctx)
+        params << param
+        break
+      case Representation.ELEMENTNAME:
+        def representation = new Representation(application: application, parent: this)
+        representation.parse(token, ctx)
+        representations << representation
+        break
+    }
+  }
+
+  String toString() {
+    "request[params: $params, representations: $representations]"
+  }
 }

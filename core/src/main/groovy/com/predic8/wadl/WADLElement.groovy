@@ -11,45 +11,43 @@
 
 package com.predic8.wadl
 
-import java.util.List;
+import com.predic8.soamodel.XMLElement
 
-import javax.xml.namespace.QName;
-
-import com.predic8.soamodel.XMLElement;
+import javax.xml.namespace.QName
 
 abstract class WADLElement extends XMLElement {
-	
-	Application application
-	List<Doc> docs = []
-	WADLElement parent
-	
-	protected parseChildren(token, child, ctx) {
-		switch (token.name) {
-			case Doc.ELEMENTNAME :
-				def doc = new Doc()
-				doc.parse(token, ctx)
-				docs << doc
-				break
-		}
-	}
 
-	public QName getElementName() {
-		ELEMENTNAME
-	}
-	
+  Application application
+  List<Doc> docs = []
+  WADLElement parent
+
+  protected parseChildren(token, child, ctx) {
+    switch (token.name) {
+      case Doc.ELEMENTNAME:
+        def doc = new Doc()
+        doc.parse(token, ctx)
+        docs << doc
+        break
+    }
+  }
+
+  public QName getElementName() {
+    ELEMENTNAME
+  }
+
   public String getNamespaceUri() {
-	  // TODO Auto-generated method stub
-	  return null;
+    // TODO Auto-generated method stub
+    return null;
   }
-	
-	public String getFullPath() {
-		parent.fullPath
-	}
 
-	@Override
-  public String getPrefix() {
-	  // TODO Auto-generated method stub
-	  return null;
+  public String getFullPath() {
+    parent.fullPath
   }
-	
+
+  @Override
+  public String getPrefix() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }

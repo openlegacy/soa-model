@@ -11,59 +11,58 @@
 
 package com.predic8.wadl
 
-import javax.xml.namespace.QName
-
-import com.predic8.soamodel.AbstractParserContext;
+import com.predic8.soamodel.AbstractParserContext
 import com.predic8.soamodel.Consts
 
-import javax.xml.stream.*
+import javax.xml.namespace.QName
+import javax.xml.stream.XMLStreamReader
 
 class Doc extends WADLElement {
 
-	public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'doc')
+  public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'doc')
 
-	def lang
-	String title
-	
-	String content = ''
-	
-	protected parseAttributes(token, ctx){
-		lang = token.getAttributeValue( null , 'lang')
-		title = token.getAttributeValue( null , 'title')
-	}
-	
-	def parse(token, AbstractParserContext ctx){
-		parseAttributes(token, ctx)
-		token.next()
-		while(token.hasNext()) {
-			if(token.startElement) {
-				content += getStartTag(token)
-			}
-			if(token.getEventType() in [XMLStreamReader.CHARACTERS,XMLStreamReader.CDATA,XMLStreamReader.SPACE]) {
-				content += token.getText()
-			}
-			if(token.endElement){
-				if(token.name == ELEMENTNAME){
-					break
-				}
-				content += (token.prefix)? "</${token.prefix}:${token.name.localPart}>" : "</${token.name.localPart}>"
-			}
-			if(token.hasNext()) token.next()
-		}
-	}
-	
-	private getStartTag(token){
-		String str = ''
-		str += (token.prefix)? "<${token.prefix}:${token.name.localPart} xmlns:${token.prefix}='${token.name.namespaceURI}'" : "<${token.name.localPart}"
-		(token.attributeCount).times{ i ->
-			def pre = (token.getAttributePrefix(i) != null)? " ${token.getAttributePrefix(i)}:" : ''
-			str += " $pre${token.getAttributeName(i).localPart}='${token.getAttributeValue(i)}'"
-		}
-		str +=">"
-	}
-	
-	
-	String toString() {
-		"doc[lang: $lang, title: $title, content: $content]"
-	}
+  def lang
+  String title
+
+  String content = ''
+
+  protected parseAttributes(token, ctx) {
+    lang = token.getAttributeValue(null, 'lang')
+    title = token.getAttributeValue(null, 'title')
+  }
+
+  def parse(token, AbstractParserContext ctx) {
+    parseAttributes(token, ctx)
+    token.next()
+    while (token.hasNext()) {
+      if (token.startElement) {
+        content += getStartTag(token)
+      }
+      if (token.getEventType() in [XMLStreamReader.CHARACTERS, XMLStreamReader.CDATA, XMLStreamReader.SPACE]) {
+        content += token.getText()
+      }
+      if (token.endElement) {
+        if (token.name == ELEMENTNAME) {
+          break
+        }
+        content += (token.prefix) ? "</${token.prefix}:${token.name.localPart}>" : "</${token.name.localPart}>"
+      }
+      if (token.hasNext()) token.next()
+    }
+  }
+
+  private getStartTag(token) {
+    String str = ''
+    str += (token.prefix) ? "<${token.prefix}:${token.name.localPart} xmlns:${token.prefix}='${token.name.namespaceURI}'" : "<${token.name.localPart}"
+    (token.attributeCount).times { i ->
+      def pre = (token.getAttributePrefix(i) != null) ? " ${token.getAttributePrefix(i)}:" : ''
+      str += " $pre${token.getAttributeName(i).localPart}='${token.getAttributeValue(i)}'"
+    }
+    str += ">"
+  }
+
+
+  String toString() {
+    "doc[lang: $lang, title: $title, content: $content]"
+  }
 }

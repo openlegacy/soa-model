@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class SignedSupportingTokens extends PolicyOperator{
+class SignedSupportingTokens extends PolicyOperator {
 
 }
 

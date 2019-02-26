@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class LanguageRestriction extends TokenRestriction{
-  
+class LanguageRestriction extends TokenRestriction {
+
 }

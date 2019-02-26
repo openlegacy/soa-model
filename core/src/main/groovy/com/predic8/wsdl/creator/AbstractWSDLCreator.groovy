@@ -12,35 +12,46 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl.creator;
+package com.predic8.wsdl.creator
 
 import com.predic8.soamodel.AbstractCreator
-import com.predic8.wsdl.*
+import com.predic8.wsdl.AbstractSOAPBinding
+import com.predic8.wsdl.Binding
+import com.predic8.wsdl.BindingOperation
+import com.predic8.wsdl.Definitions
+import com.predic8.wsdl.Import
+import com.predic8.wsdl.Message
+import com.predic8.wsdl.Operation
+import com.predic8.wsdl.Part
+import com.predic8.wsdl.Port
+import com.predic8.wsdl.PortType
+import com.predic8.wsdl.Service
+import com.predic8.wsdl.Types
 
-abstract class AbstractWSDLCreator extends AbstractCreator{
-  
+abstract class AbstractWSDLCreator extends AbstractCreator {
+
   def abstract createDefinitions(Definitions definitions, WSDLCreatorContext context)
-  
+
   def abstract createImport(Import imp, WSDLCreatorContext context)
-	
+
   def abstract createTypes(Types types, WSDLCreatorContext context)
-  
+
   def abstract createMessage(Message message, WSDLCreatorContext context)
-  
+
   def abstract createPart(Part part, WSDLCreatorContext context)
-  
+
   def abstract createPortType(PortType portType, WSDLCreatorContext context)
-  
+
   def abstract createOperation(Operation operation, WSDLCreatorContext context)
-  
+
   def abstract createBinding(Binding binding, WSDLCreatorContext context)
-  
+
   def abstract createSoapBinding(AbstractSOAPBinding binding, WSDLCreatorContext context)
-  
+
   def abstract createBindingOperation(BindingOperation operation, WSDLCreatorContext context)
-  
+
   def abstract createService(Service service, WSDLCreatorContext context)
-  
+
   def abstract createPort(Port port, WSDLCreatorContext context)
-  
+
 }

@@ -14,17 +14,17 @@
 
 package com.predic8.schema
 
-import javax.xml.stream.*
+import groovy.xml.QName
 
-import groovy.xml.*
+import javax.xml.stream.XMLInputFactory
 
-class SchemaTest extends GroovyTestCase{
-  
+class SchemaTest extends GroovyTestCase {
+
   def token
   def schema1
   def schema2
-  def static qname = new QName("http://thomas-bayer.com/blz/",'getBankType')
-    
+  def static qname = new QName("http://thomas-bayer.com/blz/", 'getBankType')
+
   def static xsdNonPrefixed = '''<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://thomas-bayer.com/blz/">
                                    <xsd:complexType name="getBankType">
                                      <xsd:sequence>
@@ -36,7 +36,7 @@ class SchemaTest extends GroovyTestCase{
                                      </xsd:sequence>
                                    </xsd:complexType>
                                  </xsd:schema>'''
-                          
+
   def static xsdPrefixed = '''<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://thomas-bayer.com/blz/" xmlns:tns="http://thomas-bayer.com/blz/">
                                 <xsd:complexType name="getBankType">
                                   <xsd:annotation>
@@ -48,55 +48,55 @@ class SchemaTest extends GroovyTestCase{
                                   <xsd:attribute name="country" type="xsd:string" />
                                 </xsd:complexType>
                               </xsd:schema>'''
-  
+
   void setUp() {
     token = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xsdNonPrefixed))
     while (token.hasNext()) {
-      if(token.startElement) {
-        if(token.name.getLocalPart() == 'schema') {
+      if (token.startElement) {
+        if (token.name.getLocalPart() == 'schema') {
           schema1 = new Schema()
           schema1.parse(token, new SchemaParserContext())
         }
       }
-      if(token.hasNext()) token.next()
+      if (token.hasNext()) token.next()
     }
     token = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xsdPrefixed))
     while (token.hasNext()) {
-      if(token.startElement) {
-        if(token.name.getLocalPart() == 'schema') {
+      if (token.startElement) {
+        if (token.name.getLocalPart() == 'schema') {
           schema2 = new Schema()
           schema2.parse(token, new SchemaParserContext())
         }
       }
-      if(token.hasNext()) token.next()
+      if (token.hasNext()) token.next()
     }
   }
-  
+
   void testSchema() {
-    assertEquals("http://thomas-bayer.com/blz/" , schema1.targetNamespace)
+    assertEquals("http://thomas-bayer.com/blz/", schema1.targetNamespace)
   }
-  
+
   void testElementDocumentation() {
-    assertEquals('test Document' , schema1.getType('getBankType').sequence.particles[0].annotation.documentations[0].content.toString())
+    assertEquals('test Document', schema1.getType('getBankType').sequence.particles[0].annotation.documentations[0].content.toString())
   }
-  
+
   void testComplexTypeDocumentation() {
     assertEquals('Comp Docu', schema2.getType('getBankType').annotation.documentations[0].content)
   }
-  
-  void testNotPrefixedComplexTypeName(){
+
+  void testNotPrefixedComplexTypeName() {
     assertEquals(qname, schema1.complexTypes[0].qname)
   }
-  
-  void testPrefixedComplexTypeName(){
+
+  void testPrefixedComplexTypeName() {
     assertEquals(qname, schema2.complexTypes[0].qname)
   }
-  
+
   void testComplesType() {
-    assertEquals(1 , schema1.complexTypes[0].sequence.particles.size())
-    assertEquals("blz" , schema1.complexTypes[0].sequence.particles[0].name)
+    assertEquals(1, schema1.complexTypes[0].sequence.particles.size())
+    assertEquals("blz", schema1.complexTypes[0].sequence.particles[0].name)
   }
-  
+
   void testAttributeInComplesType() {
     assertEquals('country', schema2.getType('getBankType').attributes[0].name)
   }

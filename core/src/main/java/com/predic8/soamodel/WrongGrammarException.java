@@ -15,35 +15,35 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.Location;
 
 public class WrongGrammarException extends RuntimeException {
-	
-	/**
-	 * 
-	 */
+
+  /**
+   *
+   */
   private static final long serialVersionUID = -2200072011898720523L;
 
-	public WrongGrammarException(String message, QName rootElement, Location location) { 
-		super(message);
-		this.rootElement = rootElement;
-		this.location = location;
-	}
+  public WrongGrammarException(String message, QName rootElement, Location location) {
+    super(message);
+    this.rootElement = rootElement;
+    this.location = location;
+  }
 
-	QName rootElement;
-	Location location;
+  QName rootElement;
+  Location location;
 
-	public Location getLocation() {
-		return location;
-	}
+  public Location getLocation() {
+    return location;
+  }
 
-	public void setLocation(Location location) {
-		this.location = location;
-	}
+  public void setLocation(Location location) {
+    this.location = location;
+  }
 
-	public QName getRootElement() {
-		return rootElement;
-	}
+  public QName getRootElement() {
+    return rootElement;
+  }
 
-	public void setRootElement(QName rootElement) {
-		this.rootElement = rootElement;
-	}
+  public void setRootElement(QName rootElement) {
+    this.rootElement = rootElement;
+  }
 
 }

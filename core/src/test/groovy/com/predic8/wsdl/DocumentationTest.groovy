@@ -14,36 +14,36 @@
 
 package com.predic8.wsdl
 
-import groovy.util.GroovyTestCase;
-import groovy.xml.*
-import com.predic8.wsdl.creator.*
-import com.predic8.xml.util.*
 import com.predic8.creator.*
+import com.predic8.wsdl.creator.WSDLCreator
+import com.predic8.wsdl.creator.WSDLCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
 class DocumentationTest extends GroovyTestCase {
-  
+
   def definitions
   def createdWSDL
-  
+
   void setUp() {
     definitions = getDefinitions()
     def strWriter = new StringWriter()
-    def creator = new WSDLCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new WSDLCreator(builder: new MarkupBuilder(strWriter))
     creator.createDefinitions(definitions, new WSDLCreatorContext())
     createdWSDL = new XmlSlurper().parseText(strWriter.toString())
   }
-  
+
   private def getDefinitions() {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     definitions = parser.parse("/DocumentationTestBLZService.wsdl")
   }
-  
+
   void testDocumentationInDefinitions() {
     assert createdWSDL.documentation.toString().contains('This documentation contains mixed content.')
     assert createdWSDL.documentation.test.toString().contains('mixed')
   }
-  
+
   void testDocumentationInTypes() {
-    assertEquals('com.predic8.test.bar/' , createdWSDL.types.foo.lookupNamespace('bar'))
+    assertEquals('com.predic8.test.bar/', createdWSDL.types.foo.lookupNamespace('bar'))
   }
 }

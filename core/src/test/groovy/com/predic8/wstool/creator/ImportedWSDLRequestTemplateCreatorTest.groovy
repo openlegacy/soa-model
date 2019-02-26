@@ -9,31 +9,33 @@
  See the License for the specific language governing permissions and
  limitations under the License. */
 
-package com.predic8.wstool.creator;
+package com.predic8.wstool.creator
 
-import groovy.xml.*
 import com.predic8.creator.*
 import com.predic8.schema.Element
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
+import com.predic8.wsdl.Definitions
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
+import com.predic8.xml.util.PrefixedName
+import groovy.xml.QName
 
 class ImportedWSDLRequestTemplateCreatorTest extends GroovyTestCase {
 
-	WSDLParser parser = new WSDLParser(resourceResolver: new ClasspathResolver())
-	Definitions definitions = parser.parse("import/stockquoteservice.wsdl")
-	
-	def portTypePrefixedName = new PrefixedName('defs:StockQuotePortType')
-	QName portType = new QName(definitions.getNamespace(portTypePrefixedName.prefix),portTypePrefixedName.localName)
-	def operationName ='GetLastTradePrice'
+  WSDLParser parser = new WSDLParser(resourceResolver: new ClasspathResolver())
+  Definitions definitions = parser.parse("import/stockquoteservice.wsdl")
 
-	void setUp() {
-		definitions = getDefinitions()
-	}
+  def portTypePrefixedName = new PrefixedName('defs:StockQuotePortType')
+  QName portType = new QName(definitions.getNamespace(portTypePrefixedName.prefix), portTypePrefixedName.localName)
+  def operationName = 'GetLastTradePrice'
 
-	void testElementRequestTemplate() {
-		Element element = definitions.getInputElementForOperation(portType.localPart, operationName)
-		def requestTemplate = new XmlSlurper().parseText(element.requestTemplate)
-		assert requestTemplate.text() == '?999?' 
-	}
-	
+  void setUp() {
+    definitions = getDefinitions()
+  }
+
+  void testElementRequestTemplate() {
+    Element element = definitions.getInputElementForOperation(portType.localPart, operationName)
+    def requestTemplate = new XmlSlurper().parseText(element.requestTemplate)
+    assert requestTemplate.text() == '?999?'
+  }
+
 }

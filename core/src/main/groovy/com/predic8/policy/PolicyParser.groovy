@@ -14,33 +14,33 @@
 
 package com.predic8.policy
 
-import com.predic8.soamodel.*
-import com.predic8.wsdl.Definitions;
-import com.predic8.wsi.*
 
-class PolicyParser extends AbstractParser{
-	
-	Policy parse(String input){
-		super.parse(new PolicyParserContext(input: input))
-	}
-	
-	Policy parse(PolicyParserContext ctx){
-		super.parse(ctx)
-	}
+import com.predic8.soamodel.AbstractParser
+import com.predic8.soamodel.Consts
 
-  def parseLocal(token, PolicyParserContext ctx){
-		
+class PolicyParser extends AbstractParser {
+
+  Policy parse(String input) {
+    super.parse(new PolicyParserContext(input: input))
+  }
+
+  Policy parse(PolicyParserContext ctx) {
+    super.parse(ctx)
+  }
+
+  def parseLocal(token, PolicyParserContext ctx) {
+
 //    def encoding = token.getCharacterEncodingScheme()
 //    if( !encoding || (encoding != 'UTF-8' && encoding != 'UTF-16')) ctx.wsiResults << new WSIResult(rule : 'R4003')
     def policy
-    while(token.hasNext()) {
+    while (token.hasNext()) {
       if (token.startElement) {
-      	if(token.name.namespaceURI in Consts.POLICY_NAMESPACES && token.name.localPart == 'Policy') {
+        if (token.name.namespaceURI in Consts.POLICY_NAMESPACES && token.name.localPart == 'Policy') {
           policy = new Policy(ELEMENTNAME: token.name)
           policy.parse(token, , ctx)
         }
       }
-      if(token.hasNext()) token.next()
+      if (token.hasNext()) token.next()
     }
     policy
   }

@@ -14,48 +14,48 @@
 
 package com.predic8.schema
 
-import junit.framework.TestCase
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.wstool.creator.RequestCreator
+import com.predic8.wstool.creator.RequestCreatorContext
+import com.predic8.wstool.creator.RequestTemplateCreator
+import com.predic8.wstool.creator.RequestTemplateCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-import com.predic8.xml.util.*
-import com.predic8.wstool.creator.*
+class UnqualifiedTest extends GroovyTestCase {
 
-class UnqualifiedTest extends GroovyTestCase{
-  
   def schema
-  
+
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/unqualified-locals.xsd")
-}
-  
+  }
+
   void testRequestCreatorUnqualified() {
     def strWriter = new StringWriter()
     def creator = new RequestCreator(builder: new MarkupBuilder(strWriter))
-    def formParams=["xpath:/address/name":'Alice', "xpath:/address/location/city":"Bonn", "xpath:/address/phone/numbers":"324"]
-    schema.getElement('address').create(creator, new RequestCreatorContext(formParams:formParams))
+    def formParams = ["xpath:/address/name": 'Alice', "xpath:/address/location/city": "Bonn", "xpath:/address/phone/numbers": "324"]
+    schema.getElement('address').create(creator, new RequestCreatorContext(formParams: formParams))
     def request = strWriter.toString()
     assert request =~ /<.*?:address/
     assert request =~ /<name/
     assert request =~ /<location/
     assert request =~ /<city/
-    assert request =~ /<phone/    
+    assert request =~ /<phone/
     assert request =~ /<numbers/
   }
-	
+
   void testRequestCreatorQualified() {
     def strWriter = new StringWriter()
     def creator = new RequestCreator(builder: new MarkupBuilder(strWriter))
-    def formParams=["xpath:/address/name":'Alice', "xpath:/address/location/city":"Bonn", "xpath:/address/phone/numbers":"324"]
+    def formParams = ["xpath:/address/name": 'Alice', "xpath:/address/location/city": "Bonn", "xpath:/address/phone/numbers": "324"]
     schema.elementFormDefault = "qualified"
-    schema.getElement('address').create(creator, new RequestCreatorContext(formParams:formParams))
+    schema.getElement('address').create(creator, new RequestCreatorContext(formParams: formParams))
     def request = strWriter.toString()
-    assert request =~ /<.*?:address/   
+    assert request =~ /<.*?:address/
     assert request =~ /<.*?:name/
     assert request =~ /<.*?:location/
     assert request =~ /<.*?:city/
-    assert request =~ /<.*?:phone/    
+    assert request =~ /<.*?:phone/
     assert request =~ /<.*?:numbers/
   }
 
@@ -65,12 +65,12 @@ class UnqualifiedTest extends GroovyTestCase{
     schema.elementFormDefault = "qualified"
     schema.getElement('address').create(creator, new RequestTemplateCreatorContext())
     def request = strWriter.toString()
-    assert request =~ /<.*?:address/   
+    assert request =~ /<.*?:address/
     assert request =~ /<.*?:name/
     assert request =~ /<.*?:location/
     assert request =~ /<.*?:city/
-    assert request =~ /<.*?:phone/    
-    assert request =~ /<.*?:numbers/    
+    assert request =~ /<.*?:phone/
+    assert request =~ /<.*?:numbers/
   }
 
   void testRequestTemplateCreatorUnqualified() {
@@ -78,12 +78,12 @@ class UnqualifiedTest extends GroovyTestCase{
     def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('address').create(creator, new RequestTemplateCreatorContext())
     def request = strWriter.toString()
-    assert request =~ /<.*?:address/   
+    assert request =~ /<.*?:address/
     assert request =~ /<name/
     assert request =~ /<location/
     assert request =~ /<city/
-    assert request =~ /<phone/    
-    assert request =~ /<numbers/    
+    assert request =~ /<phone/
+    assert request =~ /<numbers/
   }
-  
+
 }

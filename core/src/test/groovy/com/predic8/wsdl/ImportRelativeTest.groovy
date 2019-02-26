@@ -14,23 +14,18 @@
 
 package com.predic8.wsdl
 
-import com.predic8.wsdl.creator.WSDLCreator 
-import com.predic8.wsdl.creator.WSDLCreatorContext 
-import groovy.xml.MarkupBuilder 
-import com.predic8.xml.util.*
+class ImportRelativeTest extends GroovyTestCase {
 
-class ImportRelativeTest extends GroovyTestCase{
-  
   Definitions wsdl
-  
-  void setUp(){
+
+  void setUp() {
     def parser = new WSDLParser()
     wsdl = parser.parse("src/test/resources/article/article.wsdl")
   }
-  
-  void testParse(){
-		assert wsdl.schemas.includes.flatten().schemaLocation == ['money.xsd']
+
+  void testParse() {
+    assert wsdl.schemas.includes.flatten().schemaLocation == ['money.xsd']
   }
-  
+
 }
 

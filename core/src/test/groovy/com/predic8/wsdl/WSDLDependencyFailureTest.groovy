@@ -14,41 +14,39 @@
 
 package com.predic8.wsdl
 
-import org.junit.internal.runners.statements.Fail;
-import com.predic8.xml.util.ExternalResolver;
-import com.predic8.xml.util.*
-import com.predic8.wsdl.creator.*
+import com.predic8.xml.util.ExternalResolver
+import com.predic8.xml.util.ResourceDownloadException
 
-class WSDLDependencyFailureTest extends GroovyTestCase{
-  
-  def resourceResolver 
-  
+class WSDLDependencyFailureTest extends GroovyTestCase {
+
+  def resourceResolver
+
   void setUp() {
-   resourceResolver = new ExternalResolver()
+    resourceResolver = new ExternalResolver()
   }
-  
-  void testConnectException(){
-    try{
+
+  void testConnectException() {
+    try {
       resourceResolver.resolveAsString("http://localhost")
-      assert(false)
+      assert (false)
     } catch (ResourceDownloadException e) {
       assert e.rootCause instanceof Exception
       assertEquals('http://localhost', e.url)
     } catch (Exception e) {
 //      println "excepted [ResourceDownloadException] but was $e" 
-      assert(false)
+      assert (false)
     }
   }
-  
-  void trestResourceDownloadException(){
-    try{
+
+  void trestResourceDownloadException() {
+    try {
       resourceResolver.resolveAsString("http://www.kaveh-keshavarzi.com/axis2/services2/BLZService?wsdl")
     } catch (ResourceDownloadException e) {
       assertEquals('http://localhost', e.url)
     } catch (Exception e) {
 //      println "excepted [ResourceDownloadException] but was $e"
-      assert(false)
+      assert (false)
     }
   }
-  
+
 }

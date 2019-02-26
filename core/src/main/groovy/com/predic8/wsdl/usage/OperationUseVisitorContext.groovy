@@ -13,49 +13,48 @@ package com.predic8.wsdl.usage
 
 import com.predic8.schema.ComplexType
 import com.predic8.schema.Element
-import com.predic8.schema.SchemaComponent;
+import com.predic8.schema.SchemaComponent
 import com.predic8.schema.SimpleType
 import com.predic8.schema.creator.SchemaCreatorContext
 
 class OperationUseVisitorContext extends SchemaCreatorContext implements Cloneable {
 
-	OperationUsage opUsage
-	Map<Element, List<OperationUsage>> elementsInfo = [:]
-	Map<ComplexType, List<OperationUsage>> complexTypesInfo = [:]
-	Map<SimpleType, List<OperationUsage>> simpleTypesInfo = [:]
-	
-	//List of visited schema components to avoid cycling references.
-	List<SchemaComponent> visited = []
+  OperationUsage opUsage
+  Map<Element, List<OperationUsage>> elementsInfo = [:]
+  Map<ComplexType, List<OperationUsage>> complexTypesInfo = [:]
+  Map<SimpleType, List<OperationUsage>> simpleTypesInfo = [:]
 
-	public void updateCompexTypes(ComplexType ct) {
-		update(complexTypesInfo, ct)
-	}
+  //List of visited schema components to avoid cycling references.
+  List<SchemaComponent> visited = []
 
-	public void updateSimpleTypes(SimpleType st) {
-		update(simpleTypesInfo, st)
-	}
+  public void updateCompexTypes(ComplexType ct) {
+    update(complexTypesInfo, ct)
+  }
 
-	public void updateElements(Element e) {
-		update(elementsInfo, e)
-	}
+  public void updateSimpleTypes(SimpleType st) {
+    update(simpleTypesInfo, st)
+  }
 
-	//Update the list of the give schema component with the actual opUsage
-	private void update(info, sc) {
-		if(info[sc]) {
-			OperationUsage existingOpUsage = info[sc].find {it.operation == opUsage.operation}
-			if(existingOpUsage) {
-				existingOpUsage.input = (existingOpUsage.input || opUsage.input)
-				existingOpUsage.output = (existingOpUsage.output || opUsage.output)
-				existingOpUsage.output = (existingOpUsage.fault || opUsage.fault)
-			} else {
-				info[sc] << opUsage
-			}
-		} 
-		else info[sc] = [opUsage] 
-	}	
+  public void updateElements(Element e) {
+    update(elementsInfo, e)
+  }
 
-	public Object clone() {
-		new OperationUseVisitorContext(opUsage: opUsage, elementsInfo: elementsInfo, complexTypesInfo: complexTypesInfo, simpleTypesInfo: simpleTypesInfo, visited: visited)
-	}
+  //Update the list of the give schema component with the actual opUsage
+  private void update(info, sc) {
+    if (info[sc]) {
+      OperationUsage existingOpUsage = info[sc].find { it.operation == opUsage.operation }
+      if (existingOpUsage) {
+        existingOpUsage.input = (existingOpUsage.input || opUsage.input)
+        existingOpUsage.output = (existingOpUsage.output || opUsage.output)
+        existingOpUsage.output = (existingOpUsage.fault || opUsage.fault)
+      } else {
+        info[sc] << opUsage
+      }
+    } else info[sc] = [opUsage]
+  }
+
+  public Object clone() {
+    new OperationUseVisitorContext(opUsage: opUsage, elementsInfo: elementsInfo, complexTypesInfo: complexTypesInfo, simpleTypesInfo: simpleTypesInfo, visited: visited)
+  }
 }
 

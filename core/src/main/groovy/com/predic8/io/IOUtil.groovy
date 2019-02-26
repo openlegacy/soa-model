@@ -14,11 +14,11 @@
 
 package com.predic8.io
 
-class IOUtil{
+class IOUtil {
 
-  static String getBaseDir(url){
+  static String getBaseDir(url) {
     def temp = url.split('/')
-    url - temp[temp.length-1]
+    url - temp[temp.length - 1]
   }
-  
+
 }

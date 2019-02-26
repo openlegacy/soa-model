@@ -11,41 +11,40 @@
 
 package com.predic8.policy
 
-import groovy.xml.MarkupBuilder
-
-import javax.xml.namespace.QName
-
 import com.predic8.policy.creator.PolicyCreator
 import com.predic8.policy.creator.PolicyCreatorContext
-import com.predic8.soamodel.*
+import com.predic8.soamodel.AbstractParserContext
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
+import groovy.xml.MarkupBuilder
 
-class Policy extends PolicyOperator{
+class Policy extends PolicyOperator {
 
-	String id
-	
-	protected def parseAttributes( token,  AbstractParserContext ctx) {
-		name = token.getAttributeValue( null , 'Name')
-		//From ws-policy spec: /wsp:Policy/(@wsu:Id | @xml:id)
-		id = token.getAttributeValue( Consts.WSU_NS, 'Id') ?: token.getAttributeValue( null , 'Id')
-	}
-	
-	protected parseChildren(token, child, AbstractParserContext ctx){
-		super.parseChildren(token, child, ctx)
-	}
-	
-	List<String> getAssertions() {
-		allPolicyItems.ELEMENTNAME.localPart
-	}
-	
-	public String getAsString(){
-		StringWriter strWriter = new StringWriter()
-		new PolicyCreator(builder: new MarkupBuilder(strWriter)).createPolicy(this, new PolicyCreatorContext())
-		strWriter.toString()
-	}
-	
-	void create(PolicyCreator creator, CreatorContext ctx){
-		creator.createPolicy(this, ctx)
-	}
-	
+  String id
+
+  protected def parseAttributes(token, AbstractParserContext ctx) {
+    name = token.getAttributeValue(null, 'Name')
+    //From ws-policy spec: /wsp:Policy/(@wsu:Id | @xml:id)
+    id = token.getAttributeValue(Consts.WSU_NS, 'Id') ?: token.getAttributeValue(null, 'Id')
+  }
+
+  protected parseChildren(token, child, AbstractParserContext ctx) {
+    super.parseChildren(token, child, ctx)
+  }
+
+  List<String> getAssertions() {
+    allPolicyItems.ELEMENTNAME.localPart
+  }
+
+  public String getAsString() {
+    StringWriter strWriter = new StringWriter()
+    new PolicyCreator(builder: new MarkupBuilder(strWriter)).createPolicy(this, new PolicyCreatorContext())
+    strWriter.toString()
+  }
+
+  void create(PolicyCreator creator, CreatorContext ctx) {
+    creator.createPolicy(this, ctx)
+  }
+
 }
 

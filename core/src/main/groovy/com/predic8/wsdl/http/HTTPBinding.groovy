@@ -14,28 +14,31 @@
 
 package com.predic8.wsdl.http
 
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
+import com.predic8.wsdl.AbstractBinding
+import com.predic8.wsdl.WSDLParserContext
+
 import javax.xml.namespace.QName as JQName
 
-import com.predic8.soamodel.*
-import com.predic8.wsdl.*
+class HTTPBinding extends AbstractBinding {
 
-class HTTPBinding extends AbstractBinding{
-
-public static final JQName ELEMENTNAME = new JQName(Consts.WSDL_HTTP_NS, 'binding')
+  public static final JQName ELEMENTNAME = new JQName(Consts.WSDL_HTTP_NS, 'binding')
 
   def verb
-  
-  protected parseAttributes(token, WSDLParserContext ctx){
-    verb = token.getAttributeValue(null , 'verb')
+
+  protected parseAttributes(token, WSDLParserContext ctx) {
+    verb = token.getAttributeValue(null, 'verb')
   }
 
-  String getProtocol(){
+  String getProtocol() {
     "HTTP"
   }
-	
-	Map checkStyle() {
-		[result:'This binding uses the HTTP protocol and has no style information',errors:[]]
-	}
+
+  Map checkStyle() {
+    [result: 'This binding uses the HTTP protocol and has no style information', errors: []]
+  }
 
   void create(AbstractCreator creator, CreatorContext ctx) {
     creator.createHTTPBinding(this, ctx)

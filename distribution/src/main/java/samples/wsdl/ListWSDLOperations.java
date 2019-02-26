@@ -14,7 +14,10 @@
 
 package samples.wsdl;
 
-import com.predic8.wsdl.*;
+import com.predic8.wsdl.Definitions;
+import com.predic8.wsdl.Operation;
+import com.predic8.wsdl.PortType;
+import com.predic8.wsdl.WSDLParser;
 
 public class ListWSDLOperations {
 
@@ -22,7 +25,7 @@ public class ListWSDLOperations {
     WSDLParser parser = new WSDLParser();
 
     Definitions defs = parser
-        .parse("http://www.thomas-bayer.com/axis2/services/BLZService?wsdl");
+      .parse("http://www.thomas-bayer.com/axis2/services/BLZService?wsdl");
 
     for (PortType pt : defs.getPortTypes()) {
       System.out.println(pt.getName());

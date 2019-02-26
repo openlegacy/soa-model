@@ -14,20 +14,20 @@
 
 package com.predic8.policy
 
-import com.predic8.policy.creator.PolicyCreator;
-import com.predic8.soamodel.*
+import com.predic8.policy.creator.PolicyCreator
+import com.predic8.soamodel.CreatorContext
 
-class X509Token extends PolicyOperator{
+class X509Token extends PolicyOperator {
 
-	String includeToken
+  String includeToken
 
-	protected parseAttributes( token,  ctx) {
-		includeToken = token.getAttributeValue( null , 'IncludeToken')
-	}
-	
-	void create(PolicyCreator creator, CreatorContext ctx){
-		creator.createX509Token(this, ctx)
-	}
+  protected parseAttributes(token, ctx) {
+    includeToken = token.getAttributeValue(null, 'IncludeToken')
+  }
+
+  void create(PolicyCreator creator, CreatorContext ctx) {
+    creator.createX509Token(this, ctx)
+  }
 
 }
 

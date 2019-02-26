@@ -11,7 +11,7 @@
 
 package com.predic8.policy
 
-class SymmetricBinding extends PolicyOperator{
+class SymmetricBinding extends PolicyOperator {
 
 }
 

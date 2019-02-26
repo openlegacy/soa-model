@@ -12,10 +12,8 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.schema.restriction;
+package com.predic8.schema.restriction
 
-import com.predic8.wstool.creator.*
+class ENTITYRestriction extends NCNameRestriction {
 
-class ENTITYRestriction extends NCNameRestriction{
-  
 }

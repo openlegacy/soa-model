@@ -14,12 +14,13 @@
 
 package com.predic8.wsdl.soap11
 
-import javax.xml.namespace.QName as JQName
-import com.predic8.wsdl.AbstractAddress
 import com.predic8.soamodel.Consts
+import com.predic8.wsdl.AbstractAddress
+
+import javax.xml.namespace.QName as JQName
 
 class Address extends AbstractAddress {
-  
+
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL_SOAP11_NS, 'address')
-  
+
 }

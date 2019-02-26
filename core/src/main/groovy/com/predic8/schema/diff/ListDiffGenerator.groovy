@@ -14,14 +14,16 @@
 
 package com.predic8.schema.diff
 
-import com.predic8.soamodel.*
 
-abstract class ListDiffGenerator extends AbstractDiffGenerator{
+import com.predic8.soamodel.AbstractDiffGenerator
+import com.predic8.soamodel.Difference
 
-  final List<Difference> compare(){
+abstract class ListDiffGenerator extends AbstractDiffGenerator {
+
+  final List<Difference> compare() {
     def diffs = compare(a, b, removed, added)
 
-    intersection.each{
+    intersection.each {
       diffs.addAll(compareUnit(it))
     }
     diffs
@@ -30,7 +32,7 @@ abstract class ListDiffGenerator extends AbstractDiffGenerator{
   abstract protected getIntersection()
 
   abstract protected List<Difference> compareUnit(qname)
-  
+
   abstract protected updateLabels()
 }
 

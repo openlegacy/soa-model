@@ -12,14 +12,13 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl.creator;
+package com.predic8.wsdl.creator
 
-
-import groovy.xml.*
-
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
 import com.predic8.creator.*
+import com.predic8.wsdl.Definitions
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
 class BLZwith2servicesCreatorTest extends GroovyTestCase {
 
@@ -29,7 +28,7 @@ class BLZwith2servicesCreatorTest extends GroovyTestCase {
   void setUp() {
     definitions = getDefinitions()
     def strWriter = new StringWriter()
-    def creator = new WSDLCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new WSDLCreator(builder: new MarkupBuilder(strWriter))
     creator.createDefinitions(definitions, new WSDLCreatorContext())
     createdWSDL = new XmlSlurper().parseText(strWriter.toString())
   }
@@ -41,6 +40,6 @@ class BLZwith2servicesCreatorTest extends GroovyTestCase {
 
   void testCreator() {
     assertEquals('BLZService', createdWSDL.toString())
-		assert 'BLZServiceTestService' == createdWSDL.service.@name.toString()
+    assert 'BLZServiceTestService' == createdWSDL.service.@name.toString()
   }
 }

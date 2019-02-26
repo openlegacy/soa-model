@@ -14,35 +14,37 @@
 
 package com.predic8.wsi
 
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
+
+import com.predic8.wsdl.WSDLParser
+import com.predic8.wsdl.WSDLParserContext
+import com.predic8.xml.util.ClasspathResolver
 
 class WSITest extends GroovyTestCase {
 
   def wsdl
   def wsiResults
 
-  void setUp(){
+  void setUp() {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
-    def ctx = new WSDLParserContext(input:"/wsi/BLZService.wsdl")
+    def ctx = new WSDLParserContext(input: "/wsi/BLZService.wsdl")
     wsdl = parser.parse(ctx)
     wsiResults = ctx.wsiResults
   }
 
-  void testR2306(){
-    assertNotNull(wsiResults.find{it.rule == 'R2306'})
+  void testR2306() {
+    assertNotNull(wsiResults.find { it.rule == 'R2306' })
   }
 
-  void testR2701(){
+  void testR2701() {
     //will be tested by R2702
   }
 
-  void testR2702(){
-    assertNotNull(wsiResults.find{it.rule == 'R2702'})
+  void testR2702() {
+    assertNotNull(wsiResults.find { it.rule == 'R2702' })
   }
 
-  void testR2706(){
-    assertNotNull(wsiResults.find{it.rule == 'R2706'})
+  void testR2706() {
+    assertNotNull(wsiResults.find { it.rule == 'R2706' })
   }
 }
 

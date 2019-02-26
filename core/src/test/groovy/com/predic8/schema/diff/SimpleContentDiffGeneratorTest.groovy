@@ -14,32 +14,33 @@
 
 package com.predic8.schema.diff
 
-
-import com.predic8.soamodel.Consts;
-import javax.xml.stream.*
-import groovy.xml.*
-import com.predic8.xml.util.*
-import com.predic8.schema.*
+import com.predic8.schema.Extension
+import com.predic8.schema.SimpleContent
 import com.predic8.schema.restriction.BaseRestriction
-import com.predic8.schema.restriction.facet.*
+import com.predic8.schema.restriction.facet.EnumerationFacet
+import com.predic8.schema.restriction.facet.LengthFacet
+import com.predic8.schema.restriction.facet.MaxLengthFacet
+import com.predic8.schema.restriction.facet.MinLengthFacet
+import com.predic8.soamodel.Consts
+import groovy.xml.QName
 
-class SimpleContentDiffGeneratorTest extends GroovyTestCase{
+class SimpleContentDiffGeneratorTest extends GroovyTestCase {
 
   def a
   def b
 
-  void testRestrictionDiff(){
-    a = new SimpleContent(restriction: new BaseRestriction(base: new QName(Consts.SCHEMA_NS,'string')))
-    b = new SimpleContent(restriction: new BaseRestriction(base: new QName(Consts.SCHEMA_NS,'string')))
-    a.restriction.facets << new MaxLengthFacet(value : 10)
-    a.restriction.facets << new LengthFacet(value : 3)
-    b.restriction.facets << new LengthFacet(value : 9)
-    a.restriction.facets << new EnumerationFacet(value : 'red')
-    a.restriction.facets << new EnumerationFacet(value : 'green')
+  void testRestrictionDiff() {
+    a = new SimpleContent(restriction: new BaseRestriction(base: new QName(Consts.SCHEMA_NS, 'string')))
+    b = new SimpleContent(restriction: new BaseRestriction(base: new QName(Consts.SCHEMA_NS, 'string')))
+    a.restriction.facets << new MaxLengthFacet(value: 10)
+    a.restriction.facets << new LengthFacet(value: 3)
+    b.restriction.facets << new LengthFacet(value: 9)
+    a.restriction.facets << new EnumerationFacet(value: 'red')
+    a.restriction.facets << new EnumerationFacet(value: 'green')
     b.restriction.facets << new EnumerationFacet(value: 'green')
     b.restriction.facets << new EnumerationFacet(value: 'blue')
-    b.restriction.facets << new MinLengthFacet(value : 1)
-    def diffGen = new SimpleContentDiffGenerator(a: a, b: b, generator : new SchemaDiffGenerator())
+    b.restriction.facets << new MinLengthFacet(value: 1)
+    def diffGen = new SimpleContentDiffGenerator(a: a, b: b, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assert diffs.diffs.description.toString().contains('Enumerartion with value: red removed.')
     assert diffs.diffs.description.toString().contains('Enumerartion with value: blue added.')
@@ -48,10 +49,10 @@ class SimpleContentDiffGeneratorTest extends GroovyTestCase{
     assert diffs.diffs.description.toString().contains('Facet minLength added.')
   }
 
-  void testExtensionDiff(){
-    a = new SimpleContent(extension: new Extension(base: new QName(Consts.SCHEMA_NS,'string')))
-    b = new SimpleContent(extension: new Extension(base: new QName(Consts.SCHEMA_NS,'int')))
-    def diffGen = new SimpleContentDiffGenerator(a: a, b: b, generator : new SchemaDiffGenerator())
+  void testExtensionDiff() {
+    a = new SimpleContent(extension: new Extension(base: new QName(Consts.SCHEMA_NS, 'string')))
+    b = new SimpleContent(extension: new Extension(base: new QName(Consts.SCHEMA_NS, 'int')))
+    def diffGen = new SimpleContentDiffGenerator(a: a, b: b, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assert diffs.diffs.description.toString().contains('Extension base has changed from {http://www.w3.org/2001/XMLSchema}string to {http://www.w3.org/2001/XMLSchema}int.')
   }

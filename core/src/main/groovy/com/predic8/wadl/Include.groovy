@@ -11,43 +11,43 @@
 
 package com.predic8.wadl
 
-import javax.xml.namespace.QName
-
 import com.predic8.schema.Schema
 import com.predic8.schema.SchemaParser
 import com.predic8.schema.SchemaParserContext
 import com.predic8.soamodel.Consts
 
+import javax.xml.namespace.QName
+
 class Include extends WADLElement {
 
-	public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'include')
+  public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'include')
 
-	String href
-	Schema schema
-	def resourceResolver
-	def baseDir
-	
-	
-	protected parseAttributes(token, ctx){
-		href = token.getAttributeValue( null , 'href')
-		baseDir = ctx.newBaseDir
-		resourceResolver = ctx.resourceResolver
-	}
-	
-	Schema getSchema() {
-		if(schema) return schema
-		schema = parseIncludedSchema()
-	}
-	
-	private Schema parseIncludedSchema(){
-		try {
-			new SchemaParser(resourceResolver: resourceResolver).parse(new SchemaParserContext(baseDir : baseDir, input: href))
-		} catch (Exception e) {
-			e.printStackTrace()
-		}
-	}
-	
-	String toString() {
-		"include[docs: $docs, href: $href]"
-	}
+  String href
+  Schema schema
+  def resourceResolver
+  def baseDir
+
+
+  protected parseAttributes(token, ctx) {
+    href = token.getAttributeValue(null, 'href')
+    baseDir = ctx.newBaseDir
+    resourceResolver = ctx.resourceResolver
+  }
+
+  Schema getSchema() {
+    if (schema) return schema
+    schema = parseIncludedSchema()
+  }
+
+  private Schema parseIncludedSchema() {
+    try {
+      new SchemaParser(resourceResolver: resourceResolver).parse(new SchemaParserContext(baseDir: baseDir, input: href))
+    } catch (Exception e) {
+      e.printStackTrace()
+    }
+  }
+
+  String toString() {
+    "include[docs: $docs, href: $href]"
+  }
 }

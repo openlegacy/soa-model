@@ -14,53 +14,54 @@
 
 package com.predic8.schema
 
-import com.predic8.util.*
-import com.predic8.xml.util.*
-import javax.xml.stream.*
-import com.predic8.soamodel.*
+
+import com.predic8.util.HTTPUtil
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
 import javax.xml.namespace.QName as JQName
+import javax.xml.stream.XMLInputFactory
+
 import static com.predic8.soamodel.Consts.SCHEMA_NS
 
 class Include extends SchemaComponent {
-  
+
   private static final Logger log = LoggerFactory.getLogger(Include.class)
-  
+
   String schemaLocation
 
-   protected parseAttributes(token, ctx){
-    schemaLocation = token.getAttributeValue( null , 'schemaLocation')
-		if(schema.includedPaths.contains(HTTPUtil.getLocation(schema.baseDir,schemaLocation))) return
-		schema.includedPaths << HTTPUtil.getLocation(schema.baseDir,schemaLocation)
+  protected parseAttributes(token, ctx) {
+    schemaLocation = token.getAttributeValue(null, 'schemaLocation')
+    if (schema.includedPaths.contains(HTTPUtil.getLocation(schema.baseDir, schemaLocation))) return
+    schema.includedPaths << HTTPUtil.getLocation(schema.baseDir, schemaLocation)
     parseIncludedSchema(ctx)
   }
 
-  private parseIncludedSchema(ctx){
+  private parseIncludedSchema(ctx) {
     def resource = schema.resourceResolver.resolve(this, schema.baseDir)
-  	
+
     def incToken = XMLInputFactory.newInstance().createXMLStreamReader(resource)
-    while(incToken.hasNext()) {
-      if(incToken.startElement) {
-        if(incToken.name.getLocalPart() =='schema'){
+    while (incToken.hasNext()) {
+      if (incToken.startElement) {
+        if (incToken.name.getLocalPart() == 'schema') {
           break
         }
       }
-      if(incToken.hasNext()) incToken.next()
+      if (incToken.hasNext()) incToken.next()
     }
     def origBaseDir = schema.baseDir
-    schema.baseDir = HTTPUtil.updateBaseDir(schemaLocation , schema.baseDir)
+    schema.baseDir = HTTPUtil.updateBaseDir(schemaLocation, schema.baseDir)
     log.debug("includedSchema.baseDir ${schema.baseDir}")
     schema.parse(incToken, ctx.createNewSubContext([targetNamespace: schema.targetNamespace]))
     schema.baseDir = origBaseDir
   }
 
-  protected getElementName(){
+  protected getElementName() {
     new JQName(SCHEMA_NS, 'include')
   }
 
-  String toString(){
+  String toString() {
     "schemaLocation=$schemaLocation"
   }
-  
+
 }

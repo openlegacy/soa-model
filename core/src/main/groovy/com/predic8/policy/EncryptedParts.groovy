@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class EncryptedParts extends PolicyOperator{
+class EncryptedParts extends PolicyOperator {
 
 }
 

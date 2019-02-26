@@ -11,39 +11,41 @@
 
 package com.predic8.wsdl.usage
 
-import com.predic8.schema.*
+
+import com.predic8.schema.ComplexType
+import com.predic8.schema.Element
+import com.predic8.schema.SimpleType
 import com.predic8.wsdl.Definitions
-import com.predic8.wsdl.Operation
 
 class OperationUsageAnalyzer {
 
-	public static List<OperationUsage> getOperationUsageInfos(Element e, Definitions wsdl) {
-		analyzeOperationUsage(wsdl).elementsInfo[e]
-	}
+  public static List<OperationUsage> getOperationUsageInfos(Element e, Definitions wsdl) {
+    analyzeOperationUsage(wsdl).elementsInfo[e]
+  }
 
-	public static List<OperationUsage> getOperationUsageInfos(ComplexType ct, Definitions wsdl) {
-		analyzeOperationUsage(wsdl).complexTypesInfo[ct]
-	}
+  public static List<OperationUsage> getOperationUsageInfos(ComplexType ct, Definitions wsdl) {
+    analyzeOperationUsage(wsdl).complexTypesInfo[ct]
+  }
 
-	public static List<OperationUsage> getOperationUsageInfos(SimpleType st, Definitions wsdl) {
-			analyzeOperationUsage(wsdl).simpleTypesInfo[st]
-	}
-	
-	/**
-	 * Analyzes usage information for all operations in the WSDL, respective to the portTypes
-	 * and stores it in the context.
-	 * @param wsdl
-	 * @return OperationUseVisitorContext
-	 */
-	public static OperationUseVisitorContext analyzeOperationUsage(Definitions wsdl) {
-		OperationUseVisitorContext ctx = new OperationUseVisitorContext()
-		OperationUseVisitor visitor = new OperationUseVisitor()
-		wsdl.portTypes.each { pt ->
-			pt.operations.each { op->
-				visitor.visitSchema4Operation(op, pt, ctx)
-			}
-		}
-		ctx
-	}
-	
+  public static List<OperationUsage> getOperationUsageInfos(SimpleType st, Definitions wsdl) {
+    analyzeOperationUsage(wsdl).simpleTypesInfo[st]
+  }
+
+  /**
+   * Analyzes usage information for all operations in the WSDL, respective to the portTypes
+   * and stores it in the context.
+   * @param wsdl
+   * @return OperationUseVisitorContext
+   */
+  public static OperationUseVisitorContext analyzeOperationUsage(Definitions wsdl) {
+    OperationUseVisitorContext ctx = new OperationUseVisitorContext()
+    OperationUseVisitor visitor = new OperationUseVisitor()
+    wsdl.portTypes.each { pt ->
+      pt.operations.each { op ->
+        visitor.visitSchema4Operation(op, pt, ctx)
+      }
+    }
+    ctx
+  }
+
 }

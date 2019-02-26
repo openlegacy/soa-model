@@ -13,35 +13,36 @@ package com.predic8.wsdl.diff
 
 import com.predic8.schema.SchemaParser
 import com.predic8.schema.diff.SchemaDiffGenerator
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
+import com.predic8.wsdl.Definitions
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
 
 class CyclingElementRefDiffGeneratorTest extends GroovyTestCase {
 
-	Definitions wsdl1
-	Definitions wsdl2
+  Definitions wsdl1
+  Definitions wsdl2
 
-	void setUp() {
-		def parser = new WSDLParser(resourceResolver : new ClasspathResolver())
-		wsdl1 = parser.parse('diff/cycling-refs/old.wsdl')
-		wsdl2 = parser.parse('diff/cycling-refs/new.wsdl')
-	}
+  void setUp() {
+    def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
+    wsdl1 = parser.parse('diff/cycling-refs/old.wsdl')
+    wsdl2 = parser.parse('diff/cycling-refs/new.wsdl')
+  }
 
-	void testDocumentationInDefinitions() {
-		def diffs = compare(wsdl1, wsdl2)
-		assert diffs*.dump().toString().count('Element req') == 1
-	}
+  void testDocumentationInDefinitions() {
+    def diffs = compare(wsdl1, wsdl2)
+    assert diffs*.dump().toString().count('Element req') == 1
+  }
 
-	void testSchemaDiffAlternateRefTypeLoopConstruction () {
-		def parser = new SchemaParser(resourceResolver : new ClasspathResolver())
-		def schema1 = parser.parse('diff/endless-loop/RefTypeLoopMessages_v001.xsd')
-		def schema2 = parser.parse('diff/endless-loop/RefTypeLoopMessages_v001.xsd')
-		def diffs = new SchemaDiffGenerator(a:schema1, b:schema2, compare4WSDL: true).compare()
-		//In case of failure would get to stackoverflow! 
-		assert diffs == []
-	}
+  void testSchemaDiffAlternateRefTypeLoopConstruction() {
+    def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
+    def schema1 = parser.parse('diff/endless-loop/RefTypeLoopMessages_v001.xsd')
+    def schema2 = parser.parse('diff/endless-loop/RefTypeLoopMessages_v001.xsd')
+    def diffs = new SchemaDiffGenerator(a: schema1, b: schema2, compare4WSDL: true).compare()
+    //In case of failure would get to stackoverflow!
+    assert diffs == []
+  }
 
-	private def compare(a, b) {
-		new WsdlDiffGenerator(a: a, b: b).compare()
-	}
+  private def compare(a, b) {
+    new WsdlDiffGenerator(a: a, b: b).compare()
+  }
 }

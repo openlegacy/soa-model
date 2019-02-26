@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class TokenRestriction extends NormalizedStringRestriction{
-  
+class TokenRestriction extends NormalizedStringRestriction {
+
 }

@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class AnyURIRestriction extends BaseRestriction{
-  
+class AnyURIRestriction extends BaseRestriction {
+
 }

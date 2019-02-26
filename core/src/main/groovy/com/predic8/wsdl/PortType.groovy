@@ -12,53 +12,54 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl;
+package com.predic8.wsdl
+
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
 
 import javax.xml.namespace.QName as JQName
 
-import com.predic8.policy.*
-import com.predic8.soamodel.*
-
-class PortType extends WSDLElement{
+class PortType extends WSDLElement {
 
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL11_NS, 'portType')
 
   List<Operation> operations = []
   def ping = []
-  
-  protected parseAttributes(token, WSDLParserContext ctx){
-    name = token.getAttributeValue( null , 'name')
+
+  protected parseAttributes(token, WSDLParserContext ctx) {
+    name = token.getAttributeValue(null, 'name')
   }
 
-  protected parseChildren(token, child, WSDLParserContext ctx){
+  protected parseChildren(token, child, WSDLParserContext ctx) {
     super.parseChildren(token, child, ctx)
-    switch (token.name ){
+    switch (token.name) {
       case Operation.ELEMENTNAME:
-      def operation = new Operation(definitions : definitions)
-      operation.parse(token, ctx)
-      operations << operation ; break
+        def operation = new Operation(definitions: definitions)
+        operation.parse(token, ctx)
+        operations << operation; break
     }
   }
-  
-  void create(AbstractCreator creator, CreatorContext ctx){
+
+  void create(AbstractCreator creator, CreatorContext ctx) {
     creator.createPortType(this, ctx)
   }
-  
+
   Operation getOperation(String name) {
-    operations.find { it.name == name}
+    operations.find { it.name == name }
   }
-  
-  Operation newOperation(String name){
+
+  Operation newOperation(String name) {
     def op = new Operation(name, definitions)
     operations << op
     op
   }
-  
-  void addOperation(Operation op){
+
+  void addOperation(Operation op) {
     op.parent = this
     operations << op
   }
-  
+
   String toString() {
     "portType[name=$name,  operations=$operations, ping=$ping, documentation=$documentation ]"
   }

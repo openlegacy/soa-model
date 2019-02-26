@@ -14,18 +14,16 @@
 
 package com.predic8.schema.restriction
 
-import com.predic8.wstool.creator.FormCreatorContext;
-import junit.framework.TestCase
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.SchemaParser
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.wstool.creator.FormCreator
+import com.predic8.wstool.creator.FormCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-import com.predic8.xml.util.*
-import com.predic8.schema.*
-import com.predic8.schema.creator.*
-import com.predic8.wstool.creator.FormCreator;
+class StringRestrictionTest extends GroovyTestCase {
 
-class StringRestrictionTest extends GroovyTestCase{
-  
   def schema
   def createdSchema
 
@@ -33,30 +31,30 @@ class StringRestrictionTest extends GroovyTestCase{
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/string-restriction.xsd")
   }
-  
+
   void testSchemaCreator() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     createdSchema = new XmlSlurper().parseText(strWriter.toString())
-    assertEquals(schema.simpleTypes.size() , createdSchema.simpleType.size())
-    assertEquals('xsd:string' , createdSchema.simpleType.find{it.@name == 'name'}.restriction.@base.toString())
+    assertEquals(schema.simpleTypes.size(), createdSchema.simpleType.size())
+    assertEquals('xsd:string', createdSchema.simpleType.find { it.@name == 'name' }.restriction.@base.toString())
   }
-  
-  void testFormCreatorWithStringRestriction(){
+
+  void testFormCreatorWithStringRestriction() {
     def strWriter = new StringWriter()
-    def creator = new FormCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new FormCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('foo').htmlForm
-    schema.getElement('foo').create(creator, new FormCreatorContext(formParams:'',path:"xpath:/"))
+    schema.getElement('foo').create(creator, new FormCreatorContext(formParams: '', path: "xpath:/"))
 //    new File('C:/temp/minmax.html') << "<html><body><div>$strWriter</div></body></html>"
   }
-  
+
 //TODO: write a better test that make sense!
-  void testFormCreatorWithEnumerationFacet(){
+  void testFormCreatorWithEnumerationFacet() {
     def strWriter = new StringWriter()
-    def creator = new FormCreator(builder : new MarkupBuilder(strWriter))
-    schema.getElement('person').create(creator, new FormCreatorContext(formParams:'',path:"xpath:/"))
+    def creator = new FormCreator(builder: new MarkupBuilder(strWriter))
+    schema.getElement('person').create(creator, new FormCreatorContext(formParams: '', path: "xpath:/"))
 //    new File('C:/temp/enum.html') << "<html><body><div>$strWriter</div></body></html>"
   }
-  
+
 }

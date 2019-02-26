@@ -21,10 +21,10 @@ class SchemaParserContext extends AbstractParserContext {
 
   SchemaParserContext createNewSubContext(args) {
     new SchemaParserContext(
-        input: args?.input,
-        targetNamespace: args?.targetNamespace,
-        importedSchemaCache: importedSchemaCache,
-        errors: errors)
+      input: args?.input,
+      targetNamespace: args?.targetNamespace,
+      importedSchemaCache: importedSchemaCache,
+      errors: errors)
   }
 
 

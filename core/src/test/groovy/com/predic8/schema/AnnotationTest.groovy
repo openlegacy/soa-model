@@ -14,10 +14,11 @@
 
 package com.predic8.schema
 
-import groovy.xml.*
-import com.predic8.xml.util.*
-import com.predic8.schema.diff.*
-import com.predic8.schema.creator.*
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.schema.diff.SchemaDiffGenerator
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
 class AnnotationTest extends GroovyTestCase {
 
@@ -36,25 +37,25 @@ class AnnotationTest extends GroovyTestCase {
     assertEquals('de', schema2.getElement('employeeList').annotation.getDocumentation('ID2').lang)
     assertEquals('Note in CT', schema1.getType('EmployeeListType').annotation.appinfos[0].content)
     assertEquals('Documentation for ComplexType!', schema1.getType('EmployeeListType').annotation.documentations[0].content)
-	assertEquals(2, schema1.getElement('annotationInST').embeddedType.restriction.facets*.annotation.contents.content.size())
-	
+    assertEquals(2, schema1.getElement('annotationInST').embeddedType.restriction.facets*.annotation.contents.content.size())
+
   }
 
   void testCompareSchema12() {
     def diffs = compare(schema1, schema2)
-    assertNotNull(diffs.findAll{it.type == 'annotation'})
-    assertEquals('annotation', diffs.findAll{it.type == 'complexType'}.diffs.flatten()[0].type)
-    assertNotNull(diffs.findAll{it.type == 'complexType'}.diffs.flatten().find{it.type=='annotation'})
-    assertEquals('annotation', diffs.findAll{it.type == 'element'}.diffs.flatten()[0].type)
-    assertNotNull(diffs.findAll{it.type == 'element'}.diffs.flatten().find{it.type=='annotation'})
+    assertNotNull(diffs.findAll { it.type == 'annotation' })
+    assertEquals('annotation', diffs.findAll { it.type == 'complexType' }.diffs.flatten()[0].type)
+    assertNotNull(diffs.findAll { it.type == 'complexType' }.diffs.flatten().find { it.type == 'annotation' })
+    assertEquals('annotation', diffs.findAll { it.type == 'element' }.diffs.flatten()[0].type)
+    assertNotNull(diffs.findAll { it.type == 'element' }.diffs.flatten().find { it.type == 'annotation' })
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema2.create(creator, new SchemaCreatorContext())
   }
 
   private def compare(a, b) {
     new SchemaDiffGenerator(a: a, b: b).compare()
   }
-	
+
 }
 

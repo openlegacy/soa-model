@@ -11,37 +11,37 @@
 
 package com.predic8.schema.diff
 
-import java.util.List;
+import com.predic8.soamodel.AbstractDiffGenerator
+import com.predic8.soamodel.Difference
 
-import com.predic8.soamodel.*
-import com.predic8.schema.*
+class SimpleRestrictionDiffGenerator extends AbstractDiffGenerator {
 
-class SimpleRestrictionDiffGenerator extends AbstractDiffGenerator{
-	
-	public SimpleRestrictionDiffGenerator() {
-		updateLabels()
-	}
+  public SimpleRestrictionDiffGenerator() {
+    updateLabels()
+  }
 
-  List<Difference> compare(){
+  List<Difference> compare() {
     def diffs = compareBase()
     diffs << compareFacets()
 
     diffs.flatten()
-   
+
   }
 
-  List<Difference> compareBase(){
-    if(a.base != b.base) {
-      return [new Difference(description:"Restriction base has changed from ${a.base} to ${b.base}." , type: 'restriction', warning:ctx.exchange ? true: null)]
+  List<Difference> compareBase() {
+    if (a.base != b.base) {
+      return [new Difference(description: "Restriction base has changed from ${a.base} to ${b.base}.", type: 'restriction', warning: ctx.exchange ? true : null)]
     }
     []
   }
 
-  List<Difference> compareFacets(){
+  List<Difference> compareFacets() {
     def diffs = []
-    if ( a.facets.isEmpty() && b.facets.isEmpty() ) return []
-    diffs << compare(a.enumerationFacets, b.enumerationFacets, {new Difference(description:"Enumerartion with value: ${it.value} removed.", type: 'facet', warning: true)}, {new Difference(description:"Enumerartion with value: ${it.value} added.", type: 'facet', warning: true)})
-    
+    if (a.facets.isEmpty() && b.facets.isEmpty()) return []
+    diffs << compare(a.enumerationFacets, b.enumerationFacets, {
+      new Difference(description: "Enumerartion with value: ${it.value} removed.", type: 'facet', warning: true)
+    }, { new Difference(description: "Enumerartion with value: ${it.value} added.", type: 'facet', warning: true) })
+
 //    def aNotEnums = a.facets - a.enumerationFacets
     def aNotEnums = a.facets.findAll { f -> !a.enumerationFacets.find { ef -> f == ef } }
 //    def bNotEnums = b.facets - b.enumerationFacets
@@ -49,30 +49,30 @@ class SimpleRestrictionDiffGenerator extends AbstractDiffGenerator{
     diffs << compareNotEnumFacets(aNotEnums.elementName, bNotEnums.elementName)
     diffs
   }
-  
-  List<Difference> compareNotEnumFacets(aFs, bFs){
+
+  List<Difference> compareNotEnumFacets(aFs, bFs) {
     def diffs = []
 //    def removed  = aFs - bFs
     def removed = aFs.findAll { af -> !bFs.find { af == it } }
 //    def added = bFs - aFs
     def added = bFs.findAll { bf -> !aFs.find { bf == it } }
 
-    removed.each{
-      diffs << new Difference(description:"Facet $it removed.", type: 'facet', warning:ctx.exchange ? true: null)
+    removed.each {
+      diffs << new Difference(description: "Facet $it removed.", type: 'facet', warning: ctx.exchange ? true : null)
     }
-    added.each{
-      diffs << new Difference(description:"Facet $it added.", type: 'facet', warning:ctx.exchange ? true: null)
+    added.each {
+      diffs << new Difference(description: "Facet $it added.", type: 'facet', warning: ctx.exchange ? true : null)
     }
     (aFs).intersect(bFs).each { fName ->
-      def aFV = a.facets.find{it.elementName == fName}.value
-      def bFV = b.facets.find{it.elementName == fName}.value
-      if(aFV != bFV) diffs << new Difference(description:"Value of $fName changed from ${aFV} to ${bFV}.", type: 'facet', warning: true)
+      def aFV = a.facets.find { it.elementName == fName }.value
+      def bFV = b.facets.find { it.elementName == fName }.value
+      if (aFV != bFV) diffs << new Difference(description: "Value of $fName changed from ${aFV} to ${bFV}.", type: 'facet', warning: true)
     }
     diffs.flatten()
   }
-  
-  protected def updateLabels(){
+
+  protected def updateLabels() {
   }
-  
+
 }
 

@@ -15,44 +15,44 @@
 package com.predic8.xml.util;
 
 public class ResourceDownloadException extends RuntimeException {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	private int status;
-	private String url;
-	private Exception rootCause;
 
-	ResourceDownloadException() {
-	}
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
 
-	ResourceDownloadException(String message) {
-		super(message);
-	}
+  private int status;
+  private String url;
+  private Exception rootCause;
 
-	public Exception getRootCause() {
-		return rootCause;
-	}
+  ResourceDownloadException() {
+  }
 
-	public void setRootCause(Exception rootCause) {
-		this.rootCause = rootCause;
-	}
+  ResourceDownloadException(String message) {
+    super(message);
+  }
 
-	public int getStatus() {
-		return status;
-	}
+  public Exception getRootCause() {
+    return rootCause;
+  }
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
+  public void setRootCause(Exception rootCause) {
+    this.rootCause = rootCause;
+  }
 
-	public String getUrl() {
-		return url;
-	}
+  public int getStatus() {
+    return status;
+  }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+  public void setStatus(int status) {
+    this.status = status;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
 }

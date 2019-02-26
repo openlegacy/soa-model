@@ -12,77 +12,79 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.schema;
+package com.predic8.schema
 
-import groovy.xml.*
-
-import com.predic8.schema.creator.*
-import com.predic8.wstool.creator.*
-import com.predic8.soamodel.*
-
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
+import com.predic8.soamodel.XMLElement
+import com.predic8.wstool.creator.RequestTemplateCreator
+import com.predic8.wstool.creator.RequestTemplateCreatorContext
+import groovy.xml.MarkupBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-abstract class SchemaComponent extends XMLElement{
-  
-	private static final Logger log = LoggerFactory.getLogger(SchemaComponent.class)
-	
-	static final String NAMESPACE = Consts.SCHEMA_NS
-	
+abstract class SchemaComponent extends XMLElement {
+
+  private static final Logger log = LoggerFactory.getLogger(SchemaComponent.class)
+
+  static final String NAMESPACE = Consts.SCHEMA_NS
+
   Schema schema
   String name
   Annotation annotation
-	
-	def exchange = [] as Set //For WSDL message direction.
 
-  protected parseAttributes(token, params){
-    name = token.getAttributeValue( null , 'name')
+  def exchange = [] as Set //For WSDL message direction.
+
+  protected parseAttributes(token, params) {
+    name = token.getAttributeValue(null, 'name')
   }
 
-  protected parseChildren(token, child, params){
-    switch (child ){
-      case 'annotation' :
-	      annotation = new Annotation(schema: schema)
-	      annotation.parse(token, params) ; break
+  protected parseChildren(token, child, params) {
+    switch (child) {
+      case 'annotation':
+        annotation = new Annotation(schema: schema)
+        annotation.parse(token, params); break
     }
   }
-	
-	String getNamespaceUri() {
-		schema.targetNamespace
-	}
-	
+
+  String getNamespaceUri() {
+    schema.targetNamespace
+  }
+
 /**
  * Is used by RequestCreator and RequestTemplateCreator
  * to get the prefix of the targetNamespace of the created element, like p8, ns0, ns1.	
  * @return Prefix of the schema targetNamespace. 
  */
-	String getPrefix(){
-		getPrefix(schema.targetNamespace)
-	}
+  String getPrefix() {
+    getPrefix(schema.targetNamespace)
+  }
 
-  String getSchemaFragment(ctx){
-    if ( !ctx.declNS ) {
-      ctx.declNS=[:]
+  String getSchemaFragment(ctx) {
+    if (!ctx.declNS) {
+      ctx.declNS = [:]
     }
     def writer = new StringWriter()
-    create(new SchemaCreator(builder:new MarkupBuilder(writer)), ctx)
+    create(new SchemaCreator(builder: new MarkupBuilder(writer)), ctx)
     writer.toString()
   }
 
-  def create(creator,CreatorContext ctx){
+  def create(creator, CreatorContext ctx) {
     throw new RuntimeException("missing method create(creator,CreatorContext ctx) for class $elementName !")
   }
-  
-  String getAsString(){
+
+  String getAsString() {
     StringWriter writer = new StringWriter();
-    create(new SchemaCreator(builder:new MarkupBuilder(writer)), new SchemaCreatorContext());
+    create(new SchemaCreator(builder: new MarkupBuilder(writer)), new SchemaCreatorContext());
     writer.toString()
   }
-  
-  String getRequestTemplate(){
+
+  String getRequestTemplate() {
     def writer = new StringWriter()
-    create(new RequestTemplateCreator(builder:new MarkupBuilder(writer)),new RequestTemplateCreatorContext())
+    create(new RequestTemplateCreator(builder: new MarkupBuilder(writer)), new RequestTemplateCreatorContext())
     writer.toString()
   }
-  
+
 }

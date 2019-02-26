@@ -14,27 +14,27 @@
 
 package com.predic8.wsdl.usage
 
-import com.predic8.schema.*
-import com.predic8.wsdl.Definitions;
+
+import com.predic8.schema.SchemaComponent
+import com.predic8.wsdl.Definitions
 import com.predic8.wsdl.Operation
 
 class OperationUsageUtil {
-	
-	Definitions wsdl
-	List<OperationUseVisitorContext> usageList = []
-	
-	
-	
-	def summary(operations = wsld.operations) {
-		operations.each {
-			usageList << op.usedSchemaComponents
-		}
-		usageList
-	}
-	
-	List<Operation> findOperations4SchemaComponent(SchemaComponent sc) {
-		usageList.findAll{ ctx ->
-			(ctx.elements+ ctx.complexTypes + ctx.simpleTypes).contains(sc)
-		}.operation
-	}
+
+  Definitions wsdl
+  List<OperationUseVisitorContext> usageList = []
+
+
+  def summary(operations = wsld.operations) {
+    operations.each {
+      usageList << op.usedSchemaComponents
+    }
+    usageList
+  }
+
+  List<Operation> findOperations4SchemaComponent(SchemaComponent sc) {
+    usageList.findAll { ctx ->
+      (ctx.elements + ctx.complexTypes + ctx.simpleTypes).contains(sc)
+    }.operation
+  }
 }

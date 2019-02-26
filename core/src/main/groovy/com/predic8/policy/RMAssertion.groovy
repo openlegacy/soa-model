@@ -11,7 +11,7 @@
 
 package com.predic8.policy
 
-class RMAssertion extends PolicyOperator{
+class RMAssertion extends PolicyOperator {
 
 }
 

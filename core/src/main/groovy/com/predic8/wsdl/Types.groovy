@@ -14,32 +14,34 @@
 
 package com.predic8.wsdl
 
-import javax.xml.namespace.QName as JQName
-
+import com.predic8.schema.Schema
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import com.predic8.schema.*
-import com.predic8.soamodel.*
+import javax.xml.namespace.QName as JQName
 
 class Types extends WSDLElement {
 
   private static final Logger log = LoggerFactory.getLogger(Types.class)
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL11_NS, 'types')
-  
+
   List<Schema> schemas = []
 
-  @Lazy List<Schema> allSchemasCache = {schemas*.allSchemas.flatten().unique()}.call()
-  
-  protected parseChildren(token, child, WSDLParserContext ctx){
+  @Lazy
+  List<Schema> allSchemasCache = { schemas*.allSchemas.flatten().unique() }.call()
+
+  protected parseChildren(token, child, WSDLParserContext ctx) {
     super.parseChildren(token, child, ctx)
-    switch (token.name ){
-      case Schema.ELEMENTNAME :
-      log.debug("new schema")
-      log.debug("$definitions")
-      def schema = new Schema(baseDir: definitions.baseDir, definitions: definitions, resourceResolver : definitions.resourceResolver)
-      schema.parse(token, ctx)
-      schemas << schema ; break
+    switch (token.name) {
+      case Schema.ELEMENTNAME:
+        log.debug("new schema")
+        log.debug("$definitions")
+        def schema = new Schema(baseDir: definitions.baseDir, definitions: definitions, resourceResolver: definitions.resourceResolver)
+        schema.parse(token, ctx)
+        schemas << schema; break
     }
   }
 
@@ -47,9 +49,9 @@ class Types extends WSDLElement {
     allSchemasCache
   }
 
-  void create(AbstractCreator creator, CreatorContext ctx){
+  void create(AbstractCreator creator, CreatorContext ctx) {
     creator.createTypes(this, ctx)
   }
-	
+
 }
 

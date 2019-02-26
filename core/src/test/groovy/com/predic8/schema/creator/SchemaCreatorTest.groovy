@@ -14,46 +14,41 @@
 
 package com.predic8.schema.creator
 
-import junit.framework.TestCase
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.SchemaParser
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-import com.predic8.schema.* 
-import com.predic8.wstool.creator.*
-import com.predic8.xml.util.*
+class SchemaCreatorTest extends GroovyTestCase {
 
-
-class SchemaCreatorTest extends GroovyTestCase{
-  
   def schema
   def schemaDefaultNamespace
-    
+
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/human-resources.xsd")
     schemaDefaultNamespace = parser.parse("/human-resources-default-namespace.xsd")
   }
-    
+
   void testCreatorOutput() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse(new ByteArrayInputStream(strWriter.toString().bytes))
     assertNotNull(schema.getNamespace('ct'))
   }
-  
+
   void testDefaultNamespace() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
-    schemaDefaultNamespace.create(creator, new SchemaCreatorContext())    
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
+    schemaDefaultNamespace.create(creator, new SchemaCreatorContext())
     def testSchema = new XmlSlurper().parseText(strWriter.toString())
-    assertEquals('xsd:string',testSchema.complexType[0].sequence.element[1].@type.toString()) 
+    assertEquals('xsd:string', testSchema.complexType[0].sequence.element[1].@type.toString())
   }
-  
+
   void testMinMaxOccurs() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse(new ByteArrayInputStream(strWriter.toString().bytes))

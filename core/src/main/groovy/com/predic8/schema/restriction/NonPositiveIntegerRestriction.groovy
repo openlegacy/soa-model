@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class NonPositiveIntegerRestriction extends IntegerRestriction{
-  
+class NonPositiveIntegerRestriction extends IntegerRestriction {
+
 }

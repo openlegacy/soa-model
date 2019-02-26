@@ -9,87 +9,86 @@
  See the License for the specific language governing permissions and
  limitations under the License. */
 
-package com.predic8.schema;
-
-import static com.predic8.soamodel.Consts.SCHEMA_NS
-import groovy.xml.*
+package com.predic8.schema
 
 import com.predic8.schema.restriction.BaseRestriction
-import com.predic8.schema.restriction.RestrictionUtil
 import com.predic8.schema.restriction.Restriction as SimpleTypeRestriction
+import com.predic8.schema.restriction.RestrictionUtil
 import com.predic8.soamodel.AbstractDiffGenerator
 import com.predic8.soamodel.CreatorContext
 import com.predic8.soamodel.DiffGeneratorContext
-import com.predic8.wstool.creator.*
+import groovy.xml.QName
+
+import static com.predic8.soamodel.Consts.SCHEMA_NS
 
 class SimpleType extends TypeDefinition {
 
-	BaseRestriction restriction
-	Union union
-	SchemaList list
+  BaseRestriction restriction
+  Union union
+  SchemaList list
 
-	protected parseChildren(token, child, params){
-		super.parseChildren(token, child, params)
-		switch (child ){
-			case 'union' :
-				union = new Union(schema: schema)
-					union.parse(token, params) ; break
-			case 'list' :
-				list = new SchemaList(schema: schema)
-					list.parse(token, params) ; break
-			case 'restriction' :
-				def base = token.getAttributeValue( null , 'base') ? getTypeQName(token.getAttributeValue( null , 'base')) : null
-				if(base) {
-					def type = base.localPart
-					if(base.namespaceURI == SCHEMA_NS){
-						restriction = RestrictionUtil.getRestriction(type, [base: base, parentSimpleType : this])
-					} else {
-						restriction = new BaseRestriction(parentSimpleType : this , base : base, schema: schema)
-					}
-				} else {
-					//In case of restriction without base attribte!
-					restriction = new SimpleTypeRestriction(parentSimpleType: this, schema: schema)
-				}
-				restriction.parse(token, params)
-		}
-	}
+  protected parseChildren(token, child, params) {
+    super.parseChildren(token, child, params)
+    switch (child) {
+      case 'union':
+        union = new Union(schema: schema)
+        union.parse(token, params); break
+      case 'list':
+        list = new SchemaList(schema: schema)
+        list.parse(token, params); break
+      case 'restriction':
+        def base = token.getAttributeValue(null, 'base') ? getTypeQName(token.getAttributeValue(null, 'base')) : null
+        if (base) {
+          def type = base.localPart
+          if (base.namespaceURI == SCHEMA_NS) {
+            restriction = RestrictionUtil.getRestriction(type, [base: base, parentSimpleType: this])
+          } else {
+            restriction = new BaseRestriction(parentSimpleType: this, base: base, schema: schema)
+          }
+        } else {
+          //In case of restriction without base attribte!
+          restriction = new SimpleTypeRestriction(parentSimpleType: this, schema: schema)
+        }
+        restriction.parse(token, params)
+    }
+  }
 
-	List<QName> getSuperTypes(ctx=[]){
-		if(!restriction) return []
-		if(restriction && schema.getType(restriction.base)){
-			//To avoid cycling type definition
-			if(restriction.base in ctx) return []
-			return [restriction.base]+ schema.getType(restriction.base).getSuperTypes(ctx << restriction.base)
-		}
-		[restriction?.base]?: []
-	}
+  List<QName> getSuperTypes(ctx = []) {
+    if (!restriction) return []
+    if (restriction && schema.getType(restriction.base)) {
+      //To avoid cycling type definition
+      if (restriction.base in ctx) return []
+      return [restriction.base] + schema.getType(restriction.base).getSuperTypes(ctx << restriction.base)
+    }
+    [restriction?.base] ?: []
+  }
 
-	public boolean equals(obj) {
-		obj && ( this.is(obj) ||
-				getClass() == obj.getClass() &&
-				restriction == obj.restriction &&
-				union == obj.union &&
-				list == obj.list )
-	}
+  public boolean equals(obj) {
+    obj && (this.is(obj) ||
+      getClass() == obj.getClass() &&
+      restriction == obj.restriction &&
+      union == obj.union &&
+      list == obj.list)
+  }
 
-	protected getElementName(){
-		'simpleType'
-	}
+  protected getElementName() {
+    'simpleType'
+  }
 
-	String getBuildInTypeName(){
-		if(list) return list.buildInType
-		if(restriction) return restriction.buildInTypeName
-	}
+  String getBuildInTypeName() {
+    if (list) return list.buildInType
+    if (restriction) return restriction.buildInTypeName
+  }
 
-	def create(creator, CreatorContext ctx){
-		creator.createSimpleType(this, ctx.clone())
-	}
+  def create(creator, CreatorContext ctx) {
+    creator.createSimpleType(this, ctx.clone())
+  }
 
-	def compare(AbstractDiffGenerator generator, other, DiffGeneratorContext ctx = new DiffGeneratorContext()){
-		generator.compareSimpleType(this, other, ctx)
-	}
+  def compare(AbstractDiffGenerator generator, other, DiffGeneratorContext ctx = new DiffGeneratorContext()) {
+    generator.compareSimpleType(this, other, ctx)
+  }
 
-	String toString(){
-		"SimpleType[qname=$qname,restriction=$restriction]"
-	}
+  String toString() {
+    "SimpleType[qname=$qname,restriction=$restriction]"
+  }
 }

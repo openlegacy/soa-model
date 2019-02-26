@@ -21,28 +21,28 @@ public class TypeRefAccessException extends ModelAccessException {
   private static final long serialVersionUID = 281182966567288148L;
 
   private QName ref;
-	private String prefix;
+  private String prefix;
 
-	public TypeRefAccessException(String message, QName ref, String prefix) {
-	  super(message);
-	  this.setRef(ref);
-	  this.setPrefix(prefix);
+  public TypeRefAccessException(String message, QName ref, String prefix) {
+    super(message);
+    this.setRef(ref);
+    this.setPrefix(prefix);
   }
 
-	public QName getRef() {
-	  return ref;
+  public QName getRef() {
+    return ref;
   }
 
-	public void setRef(QName ref) {
-	  this.ref = ref;
+  public void setRef(QName ref) {
+    this.ref = ref;
   }
 
-	public String getPrefix() {
-	  return prefix;
+  public String getPrefix() {
+    return prefix;
   }
 
-	public void setPrefix(String prefix) {
-	  this.prefix = prefix;
+  public void setPrefix(String prefix) {
+    this.prefix = prefix;
   }
 
 }

@@ -14,45 +14,45 @@
 
 package com.predic8.wstool.creator
 
-import groovy.xml.*
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
 import com.predic8.soamodel.Consts
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-class SOARequestCreatorTest extends GroovyTestCase{
-  
+class SOARequestCreatorTest extends GroovyTestCase {
+
   def req
-  
-  void testRequestWithEmptyCT(){
+
+  void testRequestWithEmptyCT() {
     def sw = new StringWriter()
-    new SOARequestCreator(getDefinitions("/ArticleService/ArticleService.wsdl"), new RequestCreator(),new MarkupBuilder(sw)).createRequest 'ArticleServicePT', 'getAll', 'ArticleServicePTBinding'
+    new SOARequestCreator(getDefinitions("/ArticleService/ArticleService.wsdl"), new RequestCreator(), new MarkupBuilder(sw)).createRequest 'ArticleServicePT', 'getAll', 'ArticleServicePTBinding'
     assertEquals(Consts.SOAP11_NS, getRequest(sw).Envelope.lookupNamespace('s11'))
     assertEquals('', getRequest(sw).Body.getAll.text())
   }
-  
-  void testRequestWithEmptyElement(){
+
+  void testRequestWithEmptyElement() {
     def sw = new StringWriter()
     def creator = new SOARequestCreator(getDefinitions("/ArticleService/ArticleService2.wsdl"), new RequestCreator(), new MarkupBuilder(sw))
-    creator.formParams = ['xpath:/getAll':'']
+    creator.formParams = ['xpath:/getAll': '']
     creator.createRequest 'ArticleServicePT', 'getAll', 'ArticleServicePTBinding'
     assertEquals(Consts.SOAP11_NS, getRequest(sw).Envelope.lookupNamespace('s11'))
     assertEquals('', getRequest(sw).Body.getAll.text())
   }
-  
-  void testRequest(){
+
+  void testRequest() {
     def sw = new StringWriter()
     def creator = new SOARequestCreator(getDefinitions("/ArticleService/ArticleService.wsdl"),
-        new RequestTemplateCreator(),
-        new MarkupBuilder(sw))
+      new RequestTemplateCreator(),
+      new MarkupBuilder(sw))
     creator.maxRecursionDepth = 10
     creator.createRequest 'ArticleServicePT', 'get', 'ArticleServicePTBinding'
-      assertEquals('???', getRequest(sw).Body.get.id.text())
+    assertEquals('???', getRequest(sw).Body.get.id.text())
   }
-  
+
   private getRequest(sw) {
     new XmlSlurper().parseText(sw.toString())
   }
-  
+
   private def getDefinitions(input) {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     parser.parse(input)

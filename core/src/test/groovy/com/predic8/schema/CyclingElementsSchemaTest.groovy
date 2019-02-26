@@ -14,16 +14,19 @@
 
 package com.predic8.schema
 
-//import javax.xml.stream.*
-import groovy.xml.*
-import com.predic8.xml.util.*
-import com.predic8.schema.creator.*
-import com.predic8.wstool.creator.*
+import com.predic8.wstool.creator.RequestTemplateCreator
+import com.predic8.wstool.creator.RequestTemplateCreatorContext
+import com.predic8.xml.util.ClasspathResolver
 
-class CyclingElementsSchemaTest extends GroovyTestCase{
+//import javax.xml.stream.*
+
+import groovy.xml.MarkupBuilder
+import groovy.xml.QName
+
+class CyclingElementsSchemaTest extends GroovyTestCase {
 
   public static HR_NS = "http://predic8.com/human-resources/"
-  public static PERSON_GROUP = new QName(HR_NS,"PersonGroup")
+  public static PERSON_GROUP = new QName(HR_NS, "PersonGroup")
   public static EMPLOYEE_TYPE = new QName(HR_NS, "EmployeeType")
   def schema
 
@@ -34,8 +37,8 @@ class CyclingElementsSchemaTest extends GroovyTestCase{
 
   void testRequestTemplateCreator() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
-    schema.getElement('area').create(creator, new RequestTemplateCreatorContext(maxRecursionDepth:3))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
+    schema.getElement('area').create(creator, new RequestTemplateCreatorContext(maxRecursionDepth: 3))
     def req = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('?XXX?', req.country.toString())
     assertEquals('?XXX?', req.area.country.toString())
@@ -43,5 +46,5 @@ class CyclingElementsSchemaTest extends GroovyTestCase{
     /* The recursive element is repeated 3 times and there are total 30 letters in the request. */
     assertEquals(30, req.toString().size())
   }
-  
+
 }

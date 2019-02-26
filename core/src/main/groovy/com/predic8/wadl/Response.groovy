@@ -11,45 +11,43 @@
 
 package com.predic8.wadl
 
-import java.util.List;
+import com.predic8.soamodel.Consts
 
 import javax.xml.namespace.QName
 
-import com.predic8.soamodel.Consts
-
 class Response extends WADLElement {
 
-	public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'response')
-	
-	String status // Could be a like: '200 400'
-	List<Integer>	statuses = []
-	Request req
-	Response res
-	
-	List<Param> params = []
-	List<Representation> representations = []
+  public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'response')
 
-	protected parseAttributes(token, ctx){
-		status = token.getAttributeValue( null , 'status')
-	}
-	
-	protected parseChildren(token, child, ctx) {
-		super.parseChildren(token, child, ctx)
-		switch (token.name) {
-			case Param.ELEMENTNAME :
-				def param = new Param(application: application, parent: this)
-				param.parse(token, ctx)
-				params << param
-				break
-			case Representation.ELEMENTNAME :
-				def representation = new Representation(application: application, parent: this)
-				representation.parse(token, ctx)
-				representations << representation
-				break
-		}
-	}
-	
-	String toString() {
-		"response[status: $status, params: $params, representations: $representations]"
-	}
+  String status // Could be a like: '200 400'
+  List<Integer> statuses = []
+  Request req
+  Response res
+
+  List<Param> params = []
+  List<Representation> representations = []
+
+  protected parseAttributes(token, ctx) {
+    status = token.getAttributeValue(null, 'status')
+  }
+
+  protected parseChildren(token, child, ctx) {
+    super.parseChildren(token, child, ctx)
+    switch (token.name) {
+      case Param.ELEMENTNAME:
+        def param = new Param(application: application, parent: this)
+        param.parse(token, ctx)
+        params << param
+        break
+      case Representation.ELEMENTNAME:
+        def representation = new Representation(application: application, parent: this)
+        representation.parse(token, ctx)
+        representations << representation
+        break
+    }
+  }
+
+  String toString() {
+    "response[status: $status, params: $params, representations: $representations]"
+  }
 }

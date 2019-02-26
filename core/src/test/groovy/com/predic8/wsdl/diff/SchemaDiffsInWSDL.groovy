@@ -11,31 +11,33 @@
 
 package com.predic8.wsdl.diff
 
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
+
+import com.predic8.wsdl.Definitions
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
 
 class SchemaDiffsInWSDL extends GroovyTestCase {
 
-	Definitions original
-	Definitions modified
+  Definitions original
+  Definitions modified
 
-	void setUp() {
-		def parser = new WSDLParser(resourceResolver : new ClasspathResolver())
-		original = parser.parse('diff/ArticleService-Original/ArticleService.wsdl')
-		modified = parser.parse('diff/ArticleService-Modified/ArticleService.wsdl')
-	}
+  void setUp() {
+    def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
+    original = parser.parse('diff/ArticleService-Original/ArticleService.wsdl')
+    modified = parser.parse('diff/ArticleService-Modified/ArticleService.wsdl')
+  }
 
-	void testSchemaDiffsInDefinitions() {
-		def diffs = compare(original, modified)
-		assert diffs[0].diffs.size() == 4
-		assert diffs[0].diffs[0].type == 'portType'
-		assert diffs[0].diffs[1].type == 'types'
-		assert diffs[0].diffs[0].diffs[0].description == 'Operation create:'
-		assert diffs[0].diffs[0].diffs[1].description == 'Operation get:'
-		assert diffs[0].diffs[0].diffs[2].description == 'Operation getAll:'
-	}
-	
-	private def compare(a, b) {
-		new WsdlDiffGenerator(a: a, b: b).compare()
-	}
+  void testSchemaDiffsInDefinitions() {
+    def diffs = compare(original, modified)
+    assert diffs[0].diffs.size() == 4
+    assert diffs[0].diffs[0].type == 'portType'
+    assert diffs[0].diffs[1].type == 'types'
+    assert diffs[0].diffs[0].diffs[0].description == 'Operation create:'
+    assert diffs[0].diffs[0].diffs[1].description == 'Operation get:'
+    assert diffs[0].diffs[0].diffs[2].description == 'Operation getAll:'
+  }
+
+  private def compare(a, b) {
+    new WsdlDiffGenerator(a: a, b: b).compare()
+  }
 }

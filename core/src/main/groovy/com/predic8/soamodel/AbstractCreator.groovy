@@ -14,25 +14,23 @@
 
 package com.predic8.soamodel
 
-import groovy.xml.MarkupBuilder;
-
 abstract class AbstractCreator {
 
   def builder
 
 
-  protected getDisplayName(String name, target, error){
-    if(error && error.expr.target?.target == target && error.expr.errorValues.contains(name)) {
+  protected getDisplayName(String name, target, error) {
+    if (error && error.expr.target?.target == target && error.expr.errorValues.contains(name)) {
       return "[mark]${name}[/mark]"
     }
     return name
   }
-  
-  protected Map<String, String> getNamespaceAttributes(XMLElement element){
+
+  protected Map<String, String> getNamespaceAttributes(XMLElement element) {
     def attrs = [:]
     (element.namespaces - element.parent?.namespaceContext).each {
-      if(it.key) attrs.put('xmlns:'+it.key, it.value)
-      else attrs.put('xmlns' , it.value)
+      if (it.key) attrs.put('xmlns:' + it.key, it.value)
+      else attrs.put('xmlns', it.value)
     }
     attrs
   }

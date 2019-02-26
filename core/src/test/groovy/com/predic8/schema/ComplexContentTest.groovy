@@ -14,15 +14,17 @@
 
 package com.predic8.schema
 
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.schema.diff.SchemaDiffGenerator
+import com.predic8.wstool.creator.RequestCreator
+import com.predic8.wstool.creator.RequestCreatorContext
+import com.predic8.wstool.creator.RequestTemplateCreator
+import com.predic8.wstool.creator.RequestTemplateCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-import com.predic8.xml.util.*
-import com.predic8.schema.creator.*
-import com.predic8.schema.diff.*
-import com.predic8.wstool.creator.*
-
-class ComplexContentTest extends GroovyTestCase{
+class ComplexContentTest extends GroovyTestCase {
 
   Schema schemaA
   Schema schemaB
@@ -33,36 +35,36 @@ class ComplexContentTest extends GroovyTestCase{
     schemaB = parser.parse("/schema/complexcontent/person-b.xsd")
   }
 
-	void testParseAnnotation() {
-		assert schemaA.getType('AmigoType').model.annotation.contents[0].content == 'Test OK'
-	}
-
-  void testParseMixedCC(){
-    assert(schemaA.getType('AmigoType').model.mixed)
+  void testParseAnnotation() {
+    assert schemaA.getType('AmigoType').model.annotation.contents[0].content == 'Test OK'
   }
 
-  void testSchemaCreatorExtension(){
+  void testParseMixedCC() {
+    assert (schemaA.getType('AmigoType').model.mixed)
+  }
+
+  void testSchemaCreatorExtension() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schemaA.create(creator, new SchemaCreatorContext())
     def testSchema = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('department', testSchema.complexType[1].complexContent.extension.sequence.element.@name.toString())
   }
 
-  void testSchemaCreatorRestriction(){
+  void testSchemaCreatorRestriction() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schemaA.create(creator, new SchemaCreatorContext())
-	def schemaAsString = strWriter.toString()
+    def schemaAsString = strWriter.toString()
     def testSchema = new XmlSlurper().parseText(schemaAsString)
-	assertEquals('true', testSchema.complexType[2].complexContent.@mixed.toString())
+    assertEquals('true', testSchema.complexType[2].complexContent.@mixed.toString())
     assertEquals('firstName', testSchema.complexType[2].complexContent.restriction.sequence.element.@name.toString())
   }
 
   void testRequestCreatorExtension() {
     def strWriter = new StringWriter()
-    def creator = new RequestCreator(builder : new MarkupBuilder(strWriter))
-    schemaA.getElement('employee').create(creator, new RequestCreatorContext(formParams: ["xpath:/employee/firstName":"Kaveh", "xpath:/employee/lastName":"Keshavarzi","xpath:/employee/department/name":"IT"]))
+    def creator = new RequestCreator(builder: new MarkupBuilder(strWriter))
+    schemaA.getElement('employee').create(creator, new RequestCreatorContext(formParams: ["xpath:/employee/firstName": "Kaveh", "xpath:/employee/lastName": "Keshavarzi", "xpath:/employee/department/name": "IT"]))
     def emp = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('Kaveh', emp.firstName.toString())
     assertEquals('Keshavarzi', emp.lastName.toString())
@@ -71,8 +73,8 @@ class ComplexContentTest extends GroovyTestCase{
 
   void testRequestCreatorRestriction() {
     def strWriter = new StringWriter()
-    def creator = new RequestCreator(builder : new MarkupBuilder(strWriter))
-    schemaA.getElement('amigo').create(creator, new RequestCreatorContext(formParams: ["xpath:/amigo/firstName":"Kaveh"]))
+    def creator = new RequestCreator(builder: new MarkupBuilder(strWriter))
+    schemaA.getElement('amigo').create(creator, new RequestCreatorContext(formParams: ["xpath:/amigo/firstName": "Kaveh"]))
     def amigo = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('Kaveh', amigo.firstName.toString())
     assertEquals('', amigo.lastName.toString())
@@ -80,7 +82,7 @@ class ComplexContentTest extends GroovyTestCase{
 
   void testRequestTemplateCreator() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schemaA.getElement('employee').create(creator, new RequestTemplateCreatorContext())
     def emp = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('?XXX?', emp.firstName.toString())
@@ -89,7 +91,7 @@ class ComplexContentTest extends GroovyTestCase{
     assertEquals('?999?', emp.department.id.toString())
   }
 
-  void testSchemaDiffGenerator(){
+  void testSchemaDiffGenerator() {
     def diffGen = new SchemaDiffGenerator(a: schemaA, b: schemaB)
     def msgs = diffGen.compare()
     assertEquals(3, msgs.size())

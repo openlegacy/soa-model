@@ -14,9 +14,10 @@
 
 package com.predic8.schema.creator
 
-import com.predic8.schema.*
-import com.predic8.xml.util.*
-import groovy.xml.*
+
+import com.predic8.schema.SchemaParser
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
 class CreatorWithSimpleContentTest extends GroovyTestCase {
 
@@ -29,11 +30,11 @@ class CreatorWithSimpleContentTest extends GroovyTestCase {
 
   void testCreatorOutput() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     //schema = parser.parse(new StringReader(strWriter.toString()))
   }
-	
+
 }
 

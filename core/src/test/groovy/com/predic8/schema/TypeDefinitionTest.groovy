@@ -14,23 +14,18 @@
 
 package com.predic8.schema
 
-import javax.xml.stream.*
-import groovy.xml.*
-
-import com.predic8.xml.util.*
-import com.predic8.schema.creator.*
-import com.predic8.wstool.creator.*
+import com.predic8.xml.util.ClasspathResolver
 
 class TypeDefinitionTest extends GroovyTestCase {
 
   def schema
 
- void setUp() {
+  void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/schema/TypeDefinition.xsd")
   }
 
-  void testparse(){
+  void testparse() {
     assertEquals(["BaseAddressAttribute"], schema.getType('BaseAddress').getAllAttributes().name)
     assertEquals(["AddressAttribute", "BaseAddressAttribute"], schema.getType('Address').getAllAttributes().name)
     assertEquals(["USAddressAttribute", "AddressAttribute", "BaseAddressAttribute"], schema.getType('USAddress').getAllAttributes().name)

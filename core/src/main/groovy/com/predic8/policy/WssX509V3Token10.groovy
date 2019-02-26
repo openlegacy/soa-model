@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class WssX509V3Token10 extends PolicyOperator{
+class WssX509V3Token10 extends PolicyOperator {
 
 }
 

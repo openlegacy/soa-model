@@ -14,24 +14,18 @@
 
 package com.predic8.schema.creator
 
-import junit.framework.TestCase
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.SchemaParser
+import com.predic8.xml.util.ExternalResolver
 
-import com.predic8.schema.* 
-import com.predic8.wstool.creator.*
-import com.predic8.xml.util.*
+class OpenSchemaCreatorTest extends GroovyTestCase {
 
-
-class OpenSchemaCreatorTest extends GroovyTestCase{
-  
   def schema
-    
+
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ExternalResolver())
 //    schema = parser.parse("C:/temp/test.xsd")
   }
-    
+
   void testCreatorOutput() {
 //    def strWriter = new StringWriter()
 //    schema.create(new SchemaCreator(builder : new MarkupBuilder(strWriter)), new SchemaCreatorContext())

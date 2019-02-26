@@ -11,7 +11,7 @@
 
 package com.predic8.policy
 
-class UsingAddressing extends PolicyOperator{
+class UsingAddressing extends PolicyOperator {
 
 }
 

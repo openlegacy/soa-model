@@ -14,14 +14,12 @@
 
 package com.predic8.schema
 
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-import com.predic8.xml.util.*
-import com.predic8.schema.creator.*
-import com.predic8.wstool.creator.*
-
-class AnySimpleTypeTest extends GroovyTestCase{
+class AnySimpleTypeTest extends GroovyTestCase {
 
   Schema schema
 
@@ -29,25 +27,25 @@ class AnySimpleTypeTest extends GroovyTestCase{
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("schema/XSD Schema/schemas.xsd")
   }
-	
-	void testParser() {
-		assert schema.getType('string')
-	}
-	
-	void testSchemaCreatorWithBasedRestriction() {
-		def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+
+  void testParser() {
+    assert schema.getType('string')
+  }
+
+  void testSchemaCreatorWithBasedRestriction() {
+    def strWriter = new StringWriter()
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     ((schema.getType('string')).create(creator, new SchemaCreatorContext()))
-		def xsdString = new XmlSlurper().parseText(strWriter.toString())
-		assert xsdString.restriction.@base == 'xsd:anySimpleType'
-	}
-	
-	void testSchemaCreatorWithBaselessRestriction() {
-		def strWriter = new StringWriter()
-		def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
-		((schema.getType('IDREFS')).create(creator, new SchemaCreatorContext()))
-		def idrefs = new XmlSlurper().parseText(strWriter.toString())
-		assert idrefs.restriction.simpleType.list.@itemType == 'xs:IDREF'
-		assert idrefs.restriction.minLength.@value == 1
-	}
+    def xsdString = new XmlSlurper().parseText(strWriter.toString())
+    assert xsdString.restriction.@base == 'xsd:anySimpleType'
+  }
+
+  void testSchemaCreatorWithBaselessRestriction() {
+    def strWriter = new StringWriter()
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
+    ((schema.getType('IDREFS')).create(creator, new SchemaCreatorContext()))
+    def idrefs = new XmlSlurper().parseText(strWriter.toString())
+    assert idrefs.restriction.simpleType.list.@itemType == 'xs:IDREF'
+    assert idrefs.restriction.minLength.@value == 1
+  }
 }

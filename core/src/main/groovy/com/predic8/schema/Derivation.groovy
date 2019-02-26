@@ -11,67 +11,62 @@
 
 package com.predic8.schema
 
-import java.util.List;
-
-import javax.xml.namespace.QName as JQName
-
-import com.predic8.xml.util.PrefixedName;
-
+import com.predic8.xml.util.PrefixedName
 import groovy.xml.QName
 
-abstract class Derivation extends SchemaComponent{
+abstract class Derivation extends SchemaComponent {
 
   QName base
   List<Attribute> attributes = []
   List<AttributeGroup> attributeGroups = []
   SchemaComponent model
   AnyAttribute anyAttribute
-	PrefixedName basePN
+  PrefixedName basePN
 
-  protected parseAttributes(token, params){
-    basePN = new PrefixedName(token.getAttributeValue( null , 'base'))
+  protected parseAttributes(token, params) {
+    basePN = new PrefixedName(token.getAttributeValue(null, 'base'))
   }
 
   protected parseChildren(token, child, params) {
-    switch (child ){
-      case 'sequence' :
-        model = new Sequence(schema:schema)
-          model.parse(token, params) ; break
+    switch (child) {
+      case 'sequence':
+        model = new Sequence(schema: schema)
+        model.parse(token, params); break
       case 'choice':
-        model = new Choice(schema:schema)
-          model.parse(token, params) ; break
-      case 'all' :
-        model = new All(schema:schema)
-          model.parse(token, params) ; break
-      case 'group' :
-        def ref = token.getAttributeValue( null , 'ref')
-        if(ref){
-          model = new GroupRef(schema : schema, ref : getTypeQName(ref))
-        }else{
-          model = new Group(schema:schema)
+        model = new Choice(schema: schema)
+        model.parse(token, params); break
+      case 'all':
+        model = new All(schema: schema)
+        model.parse(token, params); break
+      case 'group':
+        def ref = token.getAttributeValue(null, 'ref')
+        if (ref) {
+          model = new GroupRef(schema: schema, ref: getTypeQName(ref))
+        } else {
+          model = new Group(schema: schema)
         }
         model.parse(token, params)
         break
-      case 'attribute' :
+      case 'attribute':
         def attr = new Attribute(schema: schema)
         attr.parse(token, params)
-        attributes << attr ; break
-      case 'attributeGroup' :
+        attributes << attr; break
+      case 'attributeGroup':
         def attributeGroup = new AttributeGroup(schema: schema)
         attributeGroup.parse(token, params)
-          attributeGroups << attributeGroup ; break
-      case 'anyAttribute' :
+        attributeGroups << attributeGroup; break
+      case 'anyAttribute':
         anyAttribute = new AnyAttribute(schema: schema)
-        anyAttribute.parse(token, params) ; break
+        anyAttribute.parse(token, params); break
     }
   }
-	
-	QName getBase() {
-		if(base) return base
-		base = getQNameForPN(basePN)
-	}
 
-  List<Attribute> getAllAttributes(){
+  QName getBase() {
+    if (base) return base
+    base = getQNameForPN(basePN)
+  }
+
+  List<Attribute> getAllAttributes() {
     def attrs = []
     attrs.addAll(attributes)
     attributeGroups.each {
@@ -79,6 +74,6 @@ abstract class Derivation extends SchemaComponent{
     }
     attrs
   }
-	
+
 }
 

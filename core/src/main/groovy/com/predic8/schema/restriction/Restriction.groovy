@@ -9,10 +9,7 @@
  See the License for the specific language governing permissions and
  limitations under the License. */
 
-package com.predic8.schema.restriction;
-
-import com.predic8.schema.*
-import com.predic8.schema.restriction.facet.Facet
+package com.predic8.schema.restriction
 
 class Restriction extends BaseRestriction {
 

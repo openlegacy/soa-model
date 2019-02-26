@@ -16,14 +16,14 @@ package com.predic8.policy
 
 import com.predic8.soamodel.AbstractParserContext;
 
-class PolicyParserContext extends AbstractParserContext{
+class PolicyParserContext extends AbstractParserContext {
 
   def createNewSubContext(args) {
-    new PolicyParserContext (
-        input: args?.input,
-        targetNamespace: args?.targetNamespace,
-        importedSchemaCache: importedSchemaCache,
-        errors: errors)
+    new PolicyParserContext(
+      input: args?.input,
+      targetNamespace: args?.targetNamespace,
+      importedSchemaCache: importedSchemaCache,
+      errors: errors)
   }
 
 }

@@ -14,47 +14,45 @@
 
 package com.predic8.schema
 
-import com.predic8.soamodel.CreatorContext 
-import javax.xml.stream.*
+import com.predic8.soamodel.CreatorContext
 
 class Appinfo extends SchemaComponent {
 
   String source
   String content = ''
 
-  protected parseAttributes(token, params){
-    source = token.getAttributeValue( null , 'source')
+  protected parseAttributes(token, params) {
+    source = token.getAttributeValue(null, 'source')
   }
 
   protected parseText(text) {
     content += text
   }
-	
-	def getNormalizedContent(){
-		content.replaceAll("\\s+", " ").trim()
-	}
 
-  def create(creator, CreatorContext ctx){
+  def getNormalizedContent() {
+    content.replaceAll("\\s+", " ").trim()
+  }
+
+  def create(creator, CreatorContext ctx) {
     creator.createAppinfo(this, ctx)
   }
 
-  protected getElementName(){
+  protected getElementName() {
     'appinfo'
   }
 
-  public boolean equals(obj){
-    if(this.is(obj)) {
+  public boolean equals(obj) {
+    if (this.is(obj)) {
       return true
     }
-    if( !obj || (obj.getClass() != this.getClass())) {
+    if (!obj || (obj.getClass() != this.getClass())) {
       return false
     }
-    if(source != obj.source) return false
+    if (source != obj.source) return false
     content == obj.content
   }
 
-  public int hashCode()
-  {
+  public int hashCode() {
     1360 + content.hashCode()
   }
 

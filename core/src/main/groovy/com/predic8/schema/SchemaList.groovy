@@ -12,50 +12,50 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.schema;
+package com.predic8.schema
+
+import com.predic8.soamodel.CreatorContext
 
 import javax.xml.namespace.QName as JQName
 
-import com.predic8.soamodel.CreatorContext;
-import com.predic8.wstool.creator.*
 import static com.predic8.soamodel.Consts.SCHEMA_NS
 
 class SchemaList extends SchemaComponent {
-  
+
   String itemType;
   SimpleType simpleType
-  
-  protected parseAttributes(token, params){
-    itemType = token.getAttributeValue( null , 'itemType')
+
+  protected parseAttributes(token, params) {
+    itemType = token.getAttributeValue(null, 'itemType')
   }
 
-  def parseChildren(token, child, params){
-    switch (child ){
-      case 'simpleType' : simpleType = new SimpleType(schema:schema)
-      simpleType.parse(token, params) ; break
+  def parseChildren(token, child, params) {
+    switch (child) {
+      case 'simpleType': simpleType = new SimpleType(schema: schema)
+        simpleType.parse(token, params); break
     }
   }
 
   public boolean equals(obj) {
-    obj && ( this.is(obj) ||
-             this.class == obj.class &&
-             itemType == obj.itemType &&
-             simpleType == obj.simpleType )
+    obj && (this.is(obj) ||
+      this.class == obj.class &&
+      itemType == obj.itemType &&
+      simpleType == obj.simpleType)
   }
 
-  protected getElementName(){
+  protected getElementName() {
     new JQName(SCHEMA_NS, 'list')
   }
-  
-  def create(creator, CreatorContext ctx){
+
+  def create(creator, CreatorContext ctx) {
     creator.createList(this, ctx.clone())
   }
-  
-  String getBuildInTypeName(){
+
+  String getBuildInTypeName() {
     itemType.split(':')[1]
   }
-  
-  String toString(){
+
+  String toString() {
     "list[itemType=$itemType]"
   }
 }

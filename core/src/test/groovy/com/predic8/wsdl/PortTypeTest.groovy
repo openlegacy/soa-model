@@ -11,10 +11,10 @@
 
 package com.predic8.wsdl
 
-import junit.framework.TestCase
-import javax.xml.stream.*
 
-class PortTypeTest extends GroovyTestCase{
+import javax.xml.stream.XMLInputFactory
+
+class PortTypeTest extends GroovyTestCase {
 
   Definitions definitions
   PortType portType
@@ -47,28 +47,28 @@ class PortTypeTest extends GroovyTestCase{
 
   void setUp() {
     definitions = new Definitions()
-    def input1 = new Message(name : 'getBank', definitions : definitions)
-    def output1 = new Message(name : 'getBankResponse', definitions : definitions)
-    def input2 = new Message(name : 'getBankDetails', definitions : definitions)
-    def output2 = new Message(name : 'getBankDetailsResponse', definitions : definitions)
+    def input1 = new Message(name: 'getBank', definitions: definitions)
+    def output1 = new Message(name: 'getBankResponse', definitions: definitions)
+    def input2 = new Message(name: 'getBankDetails', definitions: definitions)
+    def output2 = new Message(name: 'getBankDetailsResponse', definitions: definitions)
     definitions.localMessages << input1 << output1
     definitions.localMessages << input2 << output2
 
     token = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(wsdl))
     while (token.hasNext()) {
-      if(token.startElement) {
-        if(token.name.getLocalPart() == 'portType') {
+      if (token.startElement) {
+        if (token.name.getLocalPart() == 'portType') {
           portType = new PortType(definitions: definitions)
           definitions.localPortTypes << portType
           portType.parse(token, new WSDLParserContext())
         }
       }
-      if(token.hasNext()) token.next()
+      if (token.hasNext()) token.next()
     }
   }
 
   void testOperations() {
-    assertEquals(2 , portType.operations.size())
+    assertEquals(2, portType.operations.size())
   }
 
   void testMessages() {
@@ -81,6 +81,6 @@ class PortTypeTest extends GroovyTestCase{
   }
 
   void testOperationDocumentation() {
-    assertEquals('Operation Docu', definitions.getOperation('getBank','BLZServicePortType').documentation.toString())
+    assertEquals('Operation Docu', definitions.getOperation('getBank', 'BLZServicePortType').documentation.toString())
   }
 }

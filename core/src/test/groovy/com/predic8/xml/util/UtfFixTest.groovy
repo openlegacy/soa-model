@@ -7,25 +7,25 @@ class UtfFixTest extends GroovyTestCase {
     System.arraycopy(bar, 0, tmp, foo.length, bar.length)
     tmp
   }
-  
-    void testFixUtf() {
-        def bom = [0xEF, 0xBB, 0xBF] as byte[]
-        def replacementChar = [0xEF, 0xBF, 0xBD] as byte[]
 
-        def document = '<wsdl:definitions'
-        def documentWithBom = combineArrays(bom, document.bytes)
-        def documentWithReplacementChar = combineArrays(replacementChar, document.bytes)
-        def documentWithTwoReplacementChars = combineArrays(replacementChar, documentWithReplacementChar)
-        def documentWithThreeReplacementChars = combineArrays(replacementChar, documentWithTwoReplacementChars)
+  void testFixUtf() {
+    def bom = [0xEF, 0xBB, 0xBF] as byte[]
+    def replacementChar = [0xEF, 0xBF, 0xBD] as byte[]
 
-        // creates an instance of an anonymous inner class
-        def resolver = new ResourceResolver() {}
+    def document = '<wsdl:definitions'
+    def documentWithBom = combineArrays(bom, document.bytes)
+    def documentWithReplacementChar = combineArrays(replacementChar, document.bytes)
+    def documentWithTwoReplacementChars = combineArrays(replacementChar, documentWithReplacementChar)
+    def documentWithThreeReplacementChars = combineArrays(replacementChar, documentWithTwoReplacementChars)
 
-        assert resolver.fixUtf(new ByteArrayInputStream(document.bytes)).text == '<wsdl:definitions'
-        assert resolver.fixUtf(new ByteArrayInputStream(documentWithBom)).text == '<wsdl:definitions'
-        assert resolver.fixUtf(new ByteArrayInputStream(documentWithReplacementChar)).text == '<wsdl:definitions'
-        assert resolver.fixUtf(new ByteArrayInputStream(documentWithTwoReplacementChars)).text == '<wsdl:definitions'
-        // only replaces the first two replacement characters
-        assert resolver.fixUtf(new ByteArrayInputStream(documentWithThreeReplacementChars)).text == new String(replacementChar) + '<wsdl:definitions'
-    }
+    // creates an instance of an anonymous inner class
+    def resolver = new ResourceResolver() {}
+
+    assert resolver.fixUtf(new ByteArrayInputStream(document.bytes)).text == '<wsdl:definitions'
+    assert resolver.fixUtf(new ByteArrayInputStream(documentWithBom)).text == '<wsdl:definitions'
+    assert resolver.fixUtf(new ByteArrayInputStream(documentWithReplacementChar)).text == '<wsdl:definitions'
+    assert resolver.fixUtf(new ByteArrayInputStream(documentWithTwoReplacementChars)).text == '<wsdl:definitions'
+    // only replaces the first two replacement characters
+    assert resolver.fixUtf(new ByteArrayInputStream(documentWithThreeReplacementChars)).text == new String(replacementChar) + '<wsdl:definitions'
+  }
 }

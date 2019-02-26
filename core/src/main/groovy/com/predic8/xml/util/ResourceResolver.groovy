@@ -16,34 +16,34 @@ package com.predic8.xml.util
 
 abstract class ResourceResolver {
 
-    protected InputStream fixUtf(InputStream is) throws IOException {
-        PushbackInputStream pis = new PushbackInputStream(new BufferedInputStream(is), 3)
-        byte[] bom = new byte[3]
-        if (pis.read(bom) != -1) {
-            if (isBOM(bom)) {
-                return pis
-            }
+  protected InputStream fixUtf(InputStream is) throws IOException {
+    PushbackInputStream pis = new PushbackInputStream(new BufferedInputStream(is), 3)
+    byte[] bom = new byte[3]
+    if (pis.read(bom) != -1) {
+      if (isBOM(bom)) {
+        return pis
+      }
 
-            if (isReplacementCharacter(bom)) {
-                pis.read(bom)
+      if (isReplacementCharacter(bom)) {
+        pis.read(bom)
 
-                if (!isReplacementCharacter(bom)) {
-                    pis.unread(bom)
-                }
-
-                return pis
-            }
-
-            pis.unread(bom)
+        if (!isReplacementCharacter(bom)) {
+          pis.unread(bom)
         }
-        pis
-    }
 
-    private boolean isBOM(byte[] bom) {
-        bom[0] == (byte) 0xEF && bom[1] == (byte) 0xBB && bom[2] == (byte) 0xBF
-    }
+        return pis
+      }
 
-    private boolean isReplacementCharacter(byte[] bom) {
-        bom[0] == (byte) 0xEF && bom[1] == (byte) 0xBF && bom[2] == (byte) 0xBD
+      pis.unread(bom)
     }
+    pis
+  }
+
+  private boolean isBOM(byte[] bom) {
+    bom[0] == (byte) 0xEF && bom[1] == (byte) 0xBB && bom[2] == (byte) 0xBF
+  }
+
+  private boolean isReplacementCharacter(byte[] bom) {
+    bom[0] == (byte) 0xEF && bom[1] == (byte) 0xBF && bom[2] == (byte) 0xBD
+  }
 }

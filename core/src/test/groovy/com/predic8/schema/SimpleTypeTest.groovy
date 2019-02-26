@@ -14,78 +14,77 @@
 
 package com.predic8.schema
 
-import junit.framework.TestCase
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.diff.SchemaDiffGenerator
+import com.predic8.schema.restriction.StringRestriction
+import com.predic8.wstool.creator.RequestTemplateCreator
+import com.predic8.wstool.creator.RequestTemplateCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
+import groovy.xml.QName
 
-import com.predic8.wstool.creator.*
-import com.predic8.xml.util.*
-import com.predic8.schema.restriction.*
-import com.predic8.schema.diff.*
+class SimpleTypeTest extends GroovyTestCase {
 
-class SimpleTypeTest extends GroovyTestCase{
-  
   def token
   Schema schemaA
   Schema schemaB
 
-  def static qname = new QName("http://thomas-bayer.com/blz/",'getBankType')
-  
+  def static qname = new QName("http://thomas-bayer.com/blz/", 'getBankType')
+
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schemaA = parser.parse("/schema/simpletype/language-a.xsd")
     schemaB = parser.parse("/schema/simpletype/language-b.xsd")
   }
-  
+
   void testSimpleType() {
     assertEquals(1, schemaA.simpleTypes.size())
   }
-  
+
   void testRestriction() {
     assertTrue(schemaA.simpleTypes[0].restriction instanceof StringRestriction)
   }
-  
+
   void testFacet() {
-    assertEquals(6 , schemaA.simpleTypes[0].restriction.facets.size())
+    assertEquals(6, schemaA.simpleTypes[0].restriction.facets.size())
   }
-  
+
   void testEnumerationNumbers() {
-    assertEquals(5 , schemaA.simpleTypes[0].restriction.enumerationFacets.size())
+    assertEquals(5, schemaA.simpleTypes[0].restriction.enumerationFacets.size())
   }
-  
+
   void testLengthFacet() {
-    assertEquals('16' , schemaA.simpleTypes[0].restriction.lengthFacet.value)
+    assertEquals('16', schemaA.simpleTypes[0].restriction.lengthFacet.value)
   }
-  
+
   void testGetSimpleTypeFromSchema() {
     def qname = new QName("http://predic8.com", "Language")
     assertNotNull(schemaA.getType(qname))
   }
-  
+
   void testCreateXML() {
     def strWriter = new StringWriter()
     def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schemaA.elements[0].create(creator, new RequestTemplateCreatorContext())
     def Translate = new XmlSlurper().parseText(strWriter.toString())
-    assertEquals('LanguageMode' , Translate.LanguageMode.name())
-    assertEquals('???' , Translate.LanguageMode.text())
+    assertEquals('LanguageMode', Translate.LanguageMode.name())
+    assertEquals('???', Translate.LanguageMode.text())
   }
-  
+
   void testDocumentation() {
     assertTrue('Docu' in schemaA.getType('Language').annotation.documentations.content)
   }
 
-  void testDiffGenerator(){
+  void testDiffGenerator() {
     def diffGen = new SchemaDiffGenerator(a: schemaA, b: schemaB)
     def diffs = diffGen.compare()
-		assert diffs[0].dump().contains('SimpleType {http://predic8.com}Sprache added.')
-		assert diffs[1].dump().contains('SimpleType Language:')
-		assert diffs[1].diffs[0].dump().contains('Content of annotation has changed.')
-		assert diffs[1].diffs[1].dump().contains('Enumerartion with value: EnglishTOSpanish added.')
+    assert diffs[0].dump().contains('SimpleType {http://predic8.com}Sprache added.')
+    assert diffs[1].dump().contains('SimpleType Language:')
+    assert diffs[1].diffs[0].dump().contains('Content of annotation has changed.')
+    assert diffs[1].diffs[1].dump().contains('Enumerartion with value: EnglishTOSpanish added.')
   }
-	
-	void testSuperTypes() {
-		assert schemaB.getSimpleType('Sprache').superTypes.size() == 2
-	}
-	
+
+  void testSuperTypes() {
+    assert schemaB.getSimpleType('Sprache').superTypes.size() == 2
+  }
+
 }

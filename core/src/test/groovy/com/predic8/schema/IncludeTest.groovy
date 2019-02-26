@@ -14,37 +14,38 @@
 
 package com.predic8.schema
 
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
+
+import com.predic8.xml.util.ClasspathResolver
 
 class IncludeTest extends GroovyTestCase {
-  
+
   def schema
   def schema2
-  
+
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/include.xsd")
-   
-    parser = new SchemaParser(resourceResolver: new ClasspathResolver())    
+
+    parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema2 = parser.parse("/common.xsd")
   }
-    
-  void testNotIncludedElement(){
+
+  void testNotIncludedElement() {
     assertNotNull(schema.getElement('city'))
   }
-  void testIncludedType(){
+
+  void testIncludedType() {
     assertNotNull(schema.getType('IdentifierType'))
   }
-  
+
   void testTargetNamespace() {
     assertNotNull(schema2.asXml([:]))
   }
-  
+
   void testBuildInTypeName() {
     assertEquals('string', schema2.getType('PersonType').model.getElement('id').buildInTypeName)
     assertEquals('string', schema2.getType('PersonType').model.getElement('firstName').buildInTypeName)
     assertEquals(null, schema2.getType('PersonType').model.getElement('address').buildInTypeName)
   }
-  
+
 }

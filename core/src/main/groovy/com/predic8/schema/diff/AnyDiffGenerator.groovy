@@ -11,7 +11,8 @@
 
 package com.predic8.schema.diff
 
-import com.predic8.soamodel.*
+
+import com.predic8.soamodel.Difference
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -19,109 +20,113 @@ import org.slf4j.LoggerFactory
  * DiffGenerator for processing 'any' elements.
  */
 class AnyDiffGenerator extends ElementDiffGenerator {
-	// extends ElementDiffGenerator to inherit max/min and annotation processing
-	
-	public AnyDiffGenerator() {
-		updateLabels()
-		super.updateLabels()
-	}
+  // extends ElementDiffGenerator to inherit max/min and annotation processing
 
-	// Very helpful for understanding this element and its attributes:
-	// http://msdn.microsoft.com/en-us/library/ms256043.aspx
+  public AnyDiffGenerator() {
+    updateLabels()
+    super.updateLabels()
+  }
 
-	private static final Logger log = LoggerFactory.getLogger(AnyDiffGenerator.class)
+  // Very helpful for understanding this element and its attributes:
+  // http://msdn.microsoft.com/en-us/library/ms256043.aspx
 
-	private def labelHasChanged, labelAdded, labelAnyElement, labelRemoved, labelHasChenged, labelNamespaceChanged, labelProcessContentLess, labelProcessContentMore
+  private static final Logger log = LoggerFactory.getLogger(AnyDiffGenerator.class)
 
-	// removing an 'any' is a breaking change
-	def removed = {new Difference(description:"${labelAnyElement} ${labelRemoved}.", type: 'any', breaks: ctx.exchange ? true: null, exchange: a.exchange)}
+  private def labelHasChanged, labelAdded, labelAnyElement, labelRemoved, labelHasChenged, labelNamespaceChanged, labelProcessContentLess, labelProcessContentMore
 
-	// adding an 'any' is non-breaking
-	def added = { new Difference(description:"${labelAnyElement} ${labelAdded}.", type: 'any', breaks:ctx.exchange ? false: null, exchange: b.exchange)}
+  // removing an 'any' is a breaking change
+  def removed = {
+    new Difference(description: "${labelAnyElement} ${labelRemoved}.", type: 'any', breaks: ctx.exchange ? true : null, exchange: a.exchange)
+  }
 
-	// changes may be breaking depend on their nature.  processing of attributes will determine...
-	def changed = { diffs ->
-		new Difference(description:"${labelAnyElement}:" , type: 'any' ,  diffs : diffs, exchange: a.exchange)
-	}
+  // adding an 'any' is non-breaking
+  def added = {
+    new Difference(description: "${labelAnyElement} ${labelAdded}.", type: 'any', breaks: ctx.exchange ? false : null, exchange: b.exchange)
+  }
 
-	// array of processContents values in order of stringency from most leniant to most strict
-	private ArrayList<String> processContentsStrictness = ['skip', 'lax', 'strict']
+  // changes may be breaking depend on their nature.  processing of attributes will determine...
+  def changed = { diffs ->
+    new Difference(description: "${labelAnyElement}:", type: 'any', diffs: diffs, exchange: a.exchange)
+  }
 
-	protected getTypeAndName() {
-		"any"
-	}
+  // array of processContents values in order of stringency from most leniant to most strict
+  private ArrayList<String> processContentsStrictness = ['skip', 'lax', 'strict']
 
-	List<Difference> compareUnit(){
-		log.debug("compareAny")
-		def lDiffs = []
-		lDiffs.addAll(generator.compareAnnotation(a.annotation, b.annotation))
-		lDiffs.addAll(compareMinMaxOccurs('any'))
-		lDiffs.addAll(compareNamespace())
-		lDiffs.addAll(compareProcessing())
+  protected getTypeAndName() {
+    "any"
+  }
 
-		lDiffs
-	}
+  List<Difference> compareUnit() {
+    log.debug("compareAny")
+    def lDiffs = []
+    lDiffs.addAll(generator.compareAnnotation(a.annotation, b.annotation))
+    lDiffs.addAll(compareMinMaxOccurs('any'))
+    lDiffs.addAll(compareNamespace())
+    lDiffs.addAll(compareProcessing())
 
-	List<Difference> compareNamespace() {
+    lDiffs
+  }
 
-		// ##any is the default
-		String aNamespace = (a.namespace ?: '##any').trim()
-		String bNamespace = (b.namespace ?: '##any').trim()
+  List<Difference> compareNamespace() {
 
-		Set aNamespaces = new HashSet<String>(Arrays.asList(aNamespace.split("\\s+")))
-		Set bNamespaces = new HashSet<String>(Arrays.asList(bNamespace.split("\\s+")))
+    // ##any is the default
+    String aNamespace = (a.namespace ?: '##any').trim()
+    String bNamespace = (b.namespace ?: '##any').trim()
 
-		// ASSUMPTIONS:
-		// 1) if the new namespace is ##any, the change is safe
-		// 2) if the the new namespace is ##other and the old namespace isnt ##any and
-		//      doesn't contain ##targetNamespace, we're safe
-		// 3) if b has a set of namespace options, they must be a superset of a's namespaces to be safe
+    Set aNamespaces = new HashSet<String>(Arrays.asList(aNamespace.split("\\s+")))
+    Set bNamespaces = new HashSet<String>(Arrays.asList(bNamespace.split("\\s+")))
 
-		def isDiffBreaks = true
+    // ASSUMPTIONS:
+    // 1) if the new namespace is ##any, the change is safe
+    // 2) if the the new namespace is ##other and the old namespace isnt ##any and
+    //      doesn't contain ##targetNamespace, we're safe
+    // 3) if b has a set of namespace options, they must be a superset of a's namespaces to be safe
 
-		if (
-		bNamespace == '##any' ||  // #1
-		( bNamespace == '##other' && (aNamespace == "##any" || !aNamespaces.contains("##targetNamespace")) ) || // #2
-		bNamespaces.containsAll(aNamespaces)  // #3
-		) {
-			isDiffBreaks = false
-		}
+    def isDiffBreaks = true
 
-		if (!aNamespaces.equals(bNamespaces)) {
-			return [
-				new Difference(description:"${labelNamespaceChanged} '${bNamespace}'", type: 'any', breaks: ctx.exchange? isDiffBreaks : null, exchange: a.exchange)
-			]
-		}
+    if (
+    bNamespace == '##any' ||  // #1
+      (bNamespace == '##other' && (aNamespace == "##any" || !aNamespaces.contains("##targetNamespace"))) || // #2
+      bNamespaces.containsAll(aNamespaces)  // #3
+    ) {
+      isDiffBreaks = false
+    }
 
-		[]
-	}
+    if (!aNamespaces.equals(bNamespaces)) {
+      return [
+        new Difference(description: "${labelNamespaceChanged} '${bNamespace}'", type: 'any', breaks: ctx.exchange ? isDiffBreaks : null, exchange: a.exchange)
+      ]
+    }
 
-	List<Difference> compareProcessing() {
-		// default value for processContents is 'strict'
-		def aProcessContents = a.processContents ?: 'strict'
-		def bProcessContents = b.processContents ?: 'strict'
+    []
+  }
 
-		int aStrictnessIndex = processContentsStrictness.indexOf(aProcessContents);
-		int bStrictnessIndex = processContentsStrictness.indexOf(bProcessContents);
+  List<Difference> compareProcessing() {
+    // default value for processContents is 'strict'
+    def aProcessContents = a.processContents ?: 'strict'
+    def bProcessContents = b.processContents ?: 'strict'
 
-		if (aStrictnessIndex > bStrictnessIndex) return [
-				new Difference(description:"${labelProcessContentLess}", type: 'any', breaks: ctx.exchange? false: null, exchange: a.exchange)
-			]
-		if (aStrictnessIndex < bStrictnessIndex) return [
-				new Difference(description:"${labelProcessContentMore}", type: 'any', breaks: ctx.exchange? true: null, exchange: a.exchange)
-			]
+    int aStrictnessIndex = processContentsStrictness.indexOf(aProcessContents);
+    int bStrictnessIndex = processContentsStrictness.indexOf(bProcessContents);
 
-		[]
-	}
+    if (aStrictnessIndex > bStrictnessIndex) return [
+      new Difference(description: "${labelProcessContentLess}", type: 'any', breaks: ctx.exchange ? false : null, exchange: a.exchange)
+    ]
+    if (aStrictnessIndex < bStrictnessIndex) return [
+      new Difference(description: "${labelProcessContentMore}", type: 'any', breaks: ctx.exchange ? true : null, exchange: a.exchange)
+    ]
 
-	protected def updateLabels(){
-		labelNamespaceChanged = bundle.getString("com.predic8.schema.diff.labelNamespaceChanged")
-		labelAnyElement = bundle.getString("com.predic8.schema.diff.labelAnyElement")
-		labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
-		labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
-		labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
-		labelProcessContentLess = bundle.getString("com.predic8.schema.diff.labelProcessContentLess")
-		labelProcessContentMore = bundle.getString("com.predic8.schema.diff.labelProcessContentMore")
-	}
+    []
+  }
+
+  protected def updateLabels() {
+    labelNamespaceChanged = bundle.getString("com.predic8.schema.diff.labelNamespaceChanged")
+    labelAnyElement = bundle.getString("com.predic8.schema.diff.labelAnyElement")
+    labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
+    labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
+    labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
+    labelProcessContentLess = bundle.getString("com.predic8.schema.diff.labelProcessContentLess")
+    labelProcessContentMore = bundle.getString("com.predic8.schema.diff.labelProcessContentMore")
+  }
 
 }

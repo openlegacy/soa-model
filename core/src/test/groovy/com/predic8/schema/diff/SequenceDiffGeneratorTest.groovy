@@ -14,13 +14,10 @@
 
 package com.predic8.schema.diff
 
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.SchemaParser
+import com.predic8.xml.util.ClasspathResolver
 
-import com.predic8.xml.util.*
-import com.predic8.schema.*
-
-class SequenceDiffGeneratorTest extends GroovyTestCase{
+class SequenceDiffGeneratorTest extends GroovyTestCase {
 
   def schema
   def seqA
@@ -52,86 +49,86 @@ class SequenceDiffGeneratorTest extends GroovyTestCase{
 
   }
 
-  void testEqual(){
-    def diffGen = new SequenceDiffGenerator(a: seqA , b: seqB, generator : new SchemaDiffGenerator())
+  void testEqual() {
+    def diffGen = new SequenceDiffGenerator(a: seqA, b: seqB, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(0, diffs.size())
   }
 
-  void testElementChanged(){
-    def diffGen = new SequenceDiffGenerator(a: seqA , b: seqC, generator : new SchemaDiffGenerator())
+  void testElementChanged() {
+    def diffGen = new SequenceDiffGenerator(a: seqA, b: seqC, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assertEquals(1, diffs[0].diffs.size())
     assert diffs.diffs.description.toString().contains('Element number:')
   }
 
-  void testElementRemoved(){
-    def diffGen = new SequenceDiffGenerator(a: seqA , b: seqD, generator : new SchemaDiffGenerator())
+  void testElementRemoved() {
+    def diffGen = new SequenceDiffGenerator(a: seqA, b: seqD, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assertEquals(1, diffs[0].diffs.size())
     assert diffs.diffs.description.toString().contains('removed')
   }
 
-  void testElementReorderd(){
-    def diffGen = new SequenceDiffGenerator(a: seqA , b: seqE, generator : new SchemaDiffGenerator())
+  void testElementReorderd() {
+    def diffGen = new SequenceDiffGenerator(a: seqA, b: seqE, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assertEquals(2, diffs[0].diffs.size())
     assert diffs.diffs.description.toString().contains('changed')
-		assert diffs[0].diffs[0].dump().contains('Position of element street changed from 2 to 3.')
-		assert diffs[0].diffs[1].dump().contains('Position of element number changed from 3 to 2.')
+    assert diffs[0].diffs[0].dump().contains('Position of element street changed from 2 to 3.')
+    assert diffs[0].diffs[1].dump().contains('Position of element number changed from 3 to 2.')
   }
 
-  void testElementAdded(){
-    def diffGen = new SequenceDiffGenerator(a: seqA , b: seqF, generator : new SchemaDiffGenerator())
+  void testElementAdded() {
+    def diffGen = new SequenceDiffGenerator(a: seqA, b: seqF, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assertEquals(4, diffs[0].diffs.size())
     assert diffs.diffs.description.toString().contains('added')
   }
 
-  void testElement2Sequence(){
-    def diffGen = new SequenceDiffGenerator(a: seqF , b: seqG, generator : new SchemaDiffGenerator())
+  void testElement2Sequence() {
+    def diffGen = new SequenceDiffGenerator(a: seqF, b: seqG, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assert diffs.diffs.description.toString().contains('removed')
     assert diffs.diffs.description.toString().contains('added')
   }
 
-  void testElementsAndSequenceEquals(){
-    def diffGen = new SequenceDiffGenerator(a: seqG , b: seqH, generator : new SchemaDiffGenerator())
+  void testElementsAndSequenceEquals() {
+    def diffGen = new SequenceDiffGenerator(a: seqG, b: seqH, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(0, diffs.size())
   }
 
-  void testSequence2Choice(){
-    def diffGen = new SequenceDiffGenerator(a: seqG , b: seqI, generator : new SchemaDiffGenerator())
+  void testSequence2Choice() {
+    def diffGen = new SequenceDiffGenerator(a: seqG, b: seqI, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assertEquals(1, diffs[0].diffs.size())
     assert diffs.diffs.description.toString().contains('replaced')
   }
 
-  void testChoice2Sequence(){
-    def diffGen = new SequenceDiffGenerator(a: seqI , b: seqG, generator : new SchemaDiffGenerator())
+  void testChoice2Sequence() {
+    def diffGen = new SequenceDiffGenerator(a: seqI, b: seqG, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assertEquals(1, diffs[0].diffs.size())
     assert diffs.diffs.description.toString().contains('replaced')
   }
 
-  void testElementAddedInSequence(){
-    def diffGen = new SequenceDiffGenerator(a: seqG , b: seqJ, generator : new SchemaDiffGenerator())
+  void testElementAddedInSequence() {
+    def diffGen = new SequenceDiffGenerator(a: seqG, b: seqJ, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assertEquals(2, diffs[0].diffs[0].diffs.size())
     assert diffs.diffs.diffs.description.toString().contains('added')
   }
 
-  void testAdditionalSequence(){
-    def diffGen = new SequenceDiffGenerator(a: seqA , b: seqK, generator : new SchemaDiffGenerator())
+  void testAdditionalSequence() {
+    def diffGen = new SequenceDiffGenerator(a: seqA, b: seqK, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(1, diffs.size())
     assert diffs.diffs.description.toString().contains('sequence added to position 3.')

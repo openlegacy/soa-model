@@ -16,20 +16,20 @@ package com.predic8.schema
 
 import com.predic8.wsdl.Definitions
 import com.predic8.wsdl.WSDLParser
-import com.predic8.xml.util.*
+import com.predic8.xml.util.ClasspathResolver
 
 class SuperTypesTest extends GroovyTestCase {
-  
+
   Definitions wsdl
-  
-  void setUp(){
+
+  void setUp() {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     wsdl = parser.parse("article-service-inheritance/ArticleService.wsdl")
   }
-  
-	void testComplexTypeGetSuperTypes() {
-		Schema schema1 = wsdl.getSchema('http://predic8.com/wsdl/material/ArticleService/1/')
-		assert 4 == schema1.getComplexType('Child').superTypes.size()
-	}
+
+  void testComplexTypeGetSuperTypes() {
+    Schema schema1 = wsdl.getSchema('http://predic8.com/wsdl/material/ArticleService/1/')
+    assert 4 == schema1.getComplexType('Child').superTypes.size()
+  }
 }
 

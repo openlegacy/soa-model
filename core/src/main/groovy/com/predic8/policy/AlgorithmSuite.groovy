@@ -11,7 +11,7 @@
 
 package com.predic8.policy
 
-class AlgorithmSuite extends PolicyOperator{
-	
+class AlgorithmSuite extends PolicyOperator {
+
 }
 

@@ -12,22 +12,22 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl.soap12;
+package com.predic8.wsdl.soap12
+
+import com.predic8.soamodel.Consts
+import com.predic8.wsdl.AbstractSOAPBinding
 
 import javax.xml.namespace.QName as JQName
-import com.predic8.soamodel.Consts
-import com.predic8.wsdl.*
 
-
-class SOAPBinding extends AbstractSOAPBinding{
+class SOAPBinding extends AbstractSOAPBinding {
 
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL_SOAP12_NS, 'binding')
-  
-  String getContentType(){
+
+  String getContentType() {
     'application/soap+xml'
   }
-  
-  String getProtocol(){
+
+  String getProtocol() {
     "SOAP12"
   }
 }

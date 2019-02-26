@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class MustSupportRefEncryptedKey extends PolicyOperator{
+class MustSupportRefEncryptedKey extends PolicyOperator {
 
 }
 

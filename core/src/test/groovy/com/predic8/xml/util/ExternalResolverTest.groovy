@@ -19,19 +19,19 @@ import org.junit.Before
 import org.junit.Test
 
 class ExternalResolverTest {
-  
-	def resolver
-	def url
 
-    @Before
-	void setUp() {
-	  resolver = new ExternalResolver()
-	  url = 'http://www.thomas-bayer.com/axis2/services/BLZService?wsdl'
-	}
+  def resolver
+  def url
 
-   @Test
-   void testResolveAsString() {
-     Assume.assumeTrue(!System.getenv('OFFLINETESTING'))
-     assert resolver.resolveAsString(url) != null
-   }
+  @Before
+  void setUp() {
+    resolver = new ExternalResolver()
+    url = 'http://www.thomas-bayer.com/axis2/services/BLZService?wsdl'
+  }
+
+  @Test
+  void testResolveAsString() {
+    Assume.assumeTrue(!System.getenv('OFFLINETESTING'))
+    assert resolver.resolveAsString(url) != null
+  }
 }

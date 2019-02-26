@@ -9,44 +9,40 @@
  See the License for the specific language governing permissions and
  limitations under the License. */
 
-package com.predic8.schema;
-
-import static com.predic8.soamodel.Consts.SCHEMA_NS
-import groovy.xml.*
+package com.predic8.schema
 
 import com.predic8.soamodel.CreatorContext
-import com.predic8.wstool.creator.*
 
 class Unique extends SchemaComponent {
 
-	Selector selector
-	List<Field> fields = []
-	String id
-	
-	protected parseAttributes(token, params){
-		super.parseAttributes(token, params)
-		id = token.getAttributeValue( null , 'id')
-	}
-	
-	protected parseChildren(token, child, params){
-		super.parseChildren(token, child, params)
-		switch (child ){
-			case 'selector' :
-				selector  = new Selector(schema: schema)
-				selector.parse(token, params) ; break
-			case 'field' :
-				def field = new Field(schema: schema)
-				field.parse(token, params) 
-				fields << field ; break
-		}
-	}
+  Selector selector
+  List<Field> fields = []
+  String id
 
-  protected getElementName(){
+  protected parseAttributes(token, params) {
+    super.parseAttributes(token, params)
+    id = token.getAttributeValue(null, 'id')
+  }
+
+  protected parseChildren(token, child, params) {
+    super.parseChildren(token, child, params)
+    switch (child) {
+      case 'selector':
+        selector = new Selector(schema: schema)
+        selector.parse(token, params); break
+      case 'field':
+        def field = new Field(schema: schema)
+        field.parse(token, params)
+        fields << field; break
+    }
+  }
+
+  protected getElementName() {
     'unique'
   }
-	
-	def create(creator, CreatorContext ctx){
-		creator.createUnique(this, ctx.clone())
-	}
+
+  def create(creator, CreatorContext ctx) {
+    creator.createUnique(this, ctx.clone())
+  }
 
 }

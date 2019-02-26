@@ -14,23 +14,25 @@
 
 package com.predic8.wsdl.diff
 
-import com.predic8.schema.Element
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
+
+import com.predic8.wsdl.Definitions
+import com.predic8.wsdl.Operation
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
 
 class WsdlDiffGeneratorTest extends GroovyTestCase {
-  
+
   def orig
-  
+
   void setUp() {
     orig = getDefinitions()
   }
-  
+
   private def getDefinitions() {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     parser.parse("/project-service.wsdl")
   }
-  
+
   void testServiceName() {
     def d = getDefinitions()
     d.services[0].name = "ProService"
@@ -42,24 +44,24 @@ class WsdlDiffGeneratorTest extends GroovyTestCase {
     def d = getDefinitions()
     d.services[0].ports[0].name = "ProServicePort"
     def diffs = compare(orig, d)
-		assert diffs*.dump().toString().contains('Port ProjectServicePort removed.')
-		assert diffs*.dump().toString().contains('Port ProServicePort added.')
+    assert diffs*.dump().toString().contains('Port ProjectServicePort removed.')
+    assert diffs*.dump().toString().contains('Port ProServicePort added.')
   }
 
   void testPortType() {
     def d = getDefinitions()
     d.portTypes[0].name = "ProjectServicePortType"
-    def diffs = new WsdlDiffGenerator(a:orig, b:d).comparePortTypes()
+    def diffs = new WsdlDiffGenerator(a: orig, b: d).comparePortTypes()
     assertEquals(1, diffs.size())
-		assert diffs*.dump().toString().contains('PortType name has changed from ProjectServicePT to ProjectServicePortType.')
+    assert diffs*.dump().toString().contains('PortType name has changed from ProjectServicePT to ProjectServicePortType.')
   }
 
   void testOperation() {
     def d = getDefinitions()
-    def operation = new Operation(name:"newOperation")
+    def operation = new Operation(name: "newOperation")
     d.portTypes[0].operations << operation
     def diffs = compare(orig, d)
-		assert diffs*.dump().toString().contains('Operation newOperation added.')
+    assert diffs*.dump().toString().contains('Operation newOperation added.')
     diffs = compare(d, orig)
     assert diffs*.dump().toString().contains('Operation newOperation removed.')
   }
@@ -68,22 +70,22 @@ class WsdlDiffGeneratorTest extends GroovyTestCase {
     def d = getDefinitions()
     d.services[0].ports[0].address.location = "http://newhost.de"
     def diffs = compare(orig, d)
-		assert diffs*.dump().toString().contains('Location of the port ProjectServicePort changed form http://localhost:${HttpDefaultPort}/ProjectService/ProjectServicePort to http://newhost.de.')
+    assert diffs*.dump().toString().contains('Location of the port ProjectServicePort changed form http://localhost:${HttpDefaultPort}/ProjectService/ProjectServicePort to http://newhost.de.')
   }
 
   void testMessageName() {
     def d = getDefinitions()
     d.portTypes[0].operations[0].input.name = "NewInputName"
     def diffs = compare(orig, d)
-		assert diffs*.dump().toString().contains('Name has changed from input1 to NewInputName.')
+    assert diffs*.dump().toString().contains('Name has changed from input1 to NewInputName.')
   }
-  
+
   void testBindingName() {
-  	Definitions d = getDefinitions()
-		d.bindings[0].name = "ProjectServiceTestBinding"
-		def diffs = compare(orig, d)
-		assert diffs*.dump().toString().contains('Binding ProjectServiceBinding removed.')
-		assert diffs*.dump().toString().contains('Binding ProjectServiceTestBinding added.')
+    Definitions d = getDefinitions()
+    d.bindings[0].name = "ProjectServiceTestBinding"
+    def diffs = compare(orig, d)
+    assert diffs*.dump().toString().contains('Binding ProjectServiceBinding removed.')
+    assert diffs*.dump().toString().contains('Binding ProjectServiceTestBinding added.')
   }
 
   private def compare(a, b) {

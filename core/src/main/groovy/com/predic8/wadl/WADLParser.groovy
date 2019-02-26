@@ -11,37 +11,36 @@
 
 package com.predic8.wadl
 
-import javax.xml.stream.XMLStreamReader
-
 import com.predic8.soamodel.AbstractParser
 import com.predic8.soamodel.WrongGrammarException
 
-class WADLParser extends AbstractParser{
-	
-	Application parse(String input){
-		super.parse(new WADLParserContext(input: input))
-	}
-	
-	Application parse(WADLParserContext ctx){
-		super.parse(ctx)
-	}
-	
-	protected Application parseLocal(XMLStreamReader token, WADLParserContext ctx){
-		Application application
-		while(token.hasNext()) {
-			if (token.startElement) {
-				if(token.name == Application.ELEMENTNAME) {
-					application = new Application(baseDir : ctx.newBaseDir, resourceResolver: ctx.resourceResolver)
-					application.parse(token, ctx)
-				}
-				else {
-					throw new WrongGrammarException("Expected root element '{http://wadl.dev.java.net/2009/02}application' for the WADL document but was '${token.name}'.", token.name, token.location)
-				}
-			}
-			if(token.hasNext()) token.next()
-		}
-		if(!application) throw new RuntimeException("The parsed document ${ctx.input} is not a valid WADL document.")
-		application
-	}
-	
+import javax.xml.stream.XMLStreamReader
+
+class WADLParser extends AbstractParser {
+
+  Application parse(String input) {
+    super.parse(new WADLParserContext(input: input))
+  }
+
+  Application parse(WADLParserContext ctx) {
+    super.parse(ctx)
+  }
+
+  protected Application parseLocal(XMLStreamReader token, WADLParserContext ctx) {
+    Application application
+    while (token.hasNext()) {
+      if (token.startElement) {
+        if (token.name == Application.ELEMENTNAME) {
+          application = new Application(baseDir: ctx.newBaseDir, resourceResolver: ctx.resourceResolver)
+          application.parse(token, ctx)
+        } else {
+          throw new WrongGrammarException("Expected root element '{http://wadl.dev.java.net/2009/02}application' for the WADL document but was '${token.name}'.", token.name, token.location)
+        }
+      }
+      if (token.hasNext()) token.next()
+    }
+    if (!application) throw new RuntimeException("The parsed document ${ctx.input} is not a valid WADL document.")
+    application
+  }
+
 }

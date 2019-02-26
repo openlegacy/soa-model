@@ -12,24 +12,21 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl;
+package com.predic8.wsdl
 
-import groovy.xml.QName
+import com.predic8.wsi.WSIResult
 
-import com.predic8.soamodel.*
-import com.predic8.wsi.*
+abstract class BindingElement extends WSDLElement {
 
-abstract class BindingElement extends WSDLElement{
-  
   String use = 'literal'
   String encodingStyle
   String namespace
 
-  protected parseAttributes(token, WSDLParserContext ctx){
-    name = token.getAttributeValue(null , 'name')
-    use = token.getAttributeValue(null , 'use')
-    if(use != 'literal') ctx.wsiResults << new WSIResult(rule : 'R2706')
-    encodingStyle = token.getAttributeValue(null , 'encodingStyle')
-    namespace = token.getAttributeValue(null , 'namespace')
+  protected parseAttributes(token, WSDLParserContext ctx) {
+    name = token.getAttributeValue(null, 'name')
+    use = token.getAttributeValue(null, 'use')
+    if (use != 'literal') ctx.wsiResults << new WSIResult(rule: 'R2706')
+    encodingStyle = token.getAttributeValue(null, 'encodingStyle')
+    namespace = token.getAttributeValue(null, 'namespace')
   }
 }

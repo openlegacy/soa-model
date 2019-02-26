@@ -12,88 +12,90 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.schema;
+package com.predic8.schema
 
-import java.util.List;
-import com.predic8.wstool.creator.*
 import com.predic8.xml.util.PrefixedName
 import groovy.xml.QName
-import javax.xml.namespace.QName as JQName
 
-abstract class ModelGroup extends SchemaComponent{
-  
+abstract class ModelGroup extends SchemaComponent {
+
   List<SchemaComponent> particles = []
   def minOccurs = 1
   def maxOccurs = 1
-	
-  protected parseAttributes(token, params){
-    minOccurs = token.getAttributeValue( null , 'minOccurs') ?: 1
-    maxOccurs = token.getAttributeValue( null , 'maxOccurs') ?: 1
+
+  protected parseAttributes(token, params) {
+    minOccurs = token.getAttributeValue(null, 'minOccurs') ?: 1
+    maxOccurs = token.getAttributeValue(null, 'maxOccurs') ?: 1
   }
 
   protected parseChildren(token, child, params) {
-    switch (child ){
-      case 'element' : def element = new Element(schema:schema)
-      element.parse(token, params)
-      particles << element ; break
-      case 'sequence' : def sequence = new Sequence(schema:schema)
-      sequence.parse(token, params)
-      particles << sequence ; break
-      case 'choice' : def choice = new Choice(schema:schema)
-      choice.parse(token, params)
-      particles << choice; break
-      case 'group' : def ref = token.getAttributeValue( null , 'ref')
-      def group
-      if(ref){
-        def groupName = new PrefixedName(ref)
-        group = new GroupRef( ref : new QName(schema.getNamespace(groupName.prefix), groupName.localName), schema : schema)
-      }else{
-        group = new Group(schema:schema)
-      }
-      group.parse(token, params)
-      particles << group ; break
-      case 'any' : def any = new Any(schema:schema)
-      any.parse(token, params)
-      particles << any ; break
+    switch (child) {
+      case 'element':
+        def element = new Element(schema: schema)
+        element.parse(token, params)
+        particles << element; break
+      case 'sequence':
+        def sequence = new Sequence(schema: schema)
+        sequence.parse(token, params)
+        particles << sequence; break
+      case 'choice':
+        def choice = new Choice(schema: schema)
+        choice.parse(token, params)
+        particles << choice; break
+      case 'group':
+        def ref = token.getAttributeValue(null, 'ref')
+        def group
+        if (ref) {
+          def groupName = new PrefixedName(ref)
+          group = new GroupRef(ref: new QName(schema.getNamespace(groupName.prefix), groupName.localName), schema: schema)
+        } else {
+          group = new Group(schema: schema)
+        }
+        group.parse(token, params)
+        particles << group; break
+      case 'any':
+        def any = new Any(schema: schema)
+        any.parse(token, params)
+        particles << any; break
     }
   }
 
-  List<Element> getElements(){
-    particles.findAll{it instanceof com.predic8.schema.Element}
+  List<Element> getElements() {
+    particles.findAll { it instanceof com.predic8.schema.Element }
   }
-  
+
   Element getElement(String name) {
-    elements.find{it.name == name}
+    elements.find { it.name == name }
   }
-  
-  void add(Element element){
+
+  void add(Element element) {
     element.parent = this
     particles << element
   }
-  
-  Element newElement(String name, type){
+
+  Element newElement(String name, type) {
     def e = new Element(name: name, type: new QName(type.namespaceURI, type.localPart), schema: schema, parent: this)
     particles << e
     e
   }
-  
-  Element newElement(String name){
+
+  Element newElement(String name) {
     def e = new Element(name: name, schema: schema, parent: this)
     particles << e
     e
   }
-  
-  Element newElement(String name, String type){
+
+  Element newElement(String name, String type) {
     def e = new Element(name: name, type: new QName(schema.targetNamespace, type), schema: schema, parent: this)
     particles << e
     e
   }
-  
-  def compare(generator, other){
+
+  def compare(generator, other) {
     throw new RuntimeException("Compare not implemented for ${this.getClass()}")
   }
-  
-  String toString(){
+
+  String toString() {
     "$elementName[particles=$particles]"
   }
 }

@@ -14,50 +14,52 @@
 
 package com.predic8.wsdl
 
-import javax.xml.namespace.QName as JQName
-import javax.xml.stream.*
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
 
-import com.predic8.soamodel.*
+import javax.xml.namespace.QName as JQName
+import javax.xml.stream.XMLStreamReader
 
 class Documentation extends WSDLElement {
-  
+
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL11_NS, 'documentation')
-  
+
   String content = ''
-  
-  def parse(token, WSDLParserContext ctx){
+
+  def parse(token, WSDLParserContext ctx) {
     token.next()
-    while(token.hasNext()) {
-      if(token.startElement) {
+    while (token.hasNext()) {
+      if (token.startElement) {
         content += getStartTag(token)
       }
-      if(token.getEventType() in [XMLStreamReader.CHARACTERS,XMLStreamReader.CDATA,XMLStreamReader.SPACE]) {
+      if (token.getEventType() in [XMLStreamReader.CHARACTERS, XMLStreamReader.CDATA, XMLStreamReader.SPACE]) {
         content += token.getText()
       }
-      if(token.endElement){
-        if(token.name == ELEMENTNAME){
+      if (token.endElement) {
+        if (token.name == ELEMENTNAME) {
           break
         }
-        content += (token.prefix)? "</${token.prefix}:${token.name.localPart}>" : "</${token.name.localPart}>"
+        content += (token.prefix) ? "</${token.prefix}:${token.name.localPart}>" : "</${token.name.localPart}>"
       }
-      if(token.hasNext()) token.next()
+      if (token.hasNext()) token.next()
     }
   }
-  
-  private getStartTag(token){
+
+  private getStartTag(token) {
     String str = ''
-    str += (token.prefix)? "<${token.prefix}:${token.name.localPart} xmlns:${token.prefix}='${token.name.namespaceURI}'" : "<${token.name.localPart}"
-    (token.attributeCount).times{ i ->
-      def pre = (token.getAttributePrefix(i) != null)? " ${token.getAttributePrefix(i)}:" : ''
+    str += (token.prefix) ? "<${token.prefix}:${token.name.localPart} xmlns:${token.prefix}='${token.name.namespaceURI}'" : "<${token.name.localPart}"
+    (token.attributeCount).times { i ->
+      def pre = (token.getAttributePrefix(i) != null) ? " ${token.getAttributePrefix(i)}:" : ''
       str += " $pre${token.getAttributeName(i).localPart}='${token.getAttributeValue(i)}'"
     }
-    str +=">"
+    str += ">"
   }
-  
+
   void create(AbstractCreator creator, CreatorContext ctx) {
     creator.createDocumentation(this, ctx.clone())
   }
-  
+
   String toString() {
     content
   }

@@ -11,28 +11,22 @@
 
 package com.predic8.schema
 
-import javax.xml.stream.*
-import com.predic8.xml.util.*
-import groovy.xml.*
-import com.predic8.schema.creator.*
-import com.predic8.schema.diff.SchemaDiffGenerator
+class FileTest extends GroovyTestCase {
 
-class FileTest extends GroovyTestCase{
+  def schema1
+  def schema2
 
-	def schema1
-	def schema2
-
-	void setUp() {
+  void setUp() {
 //		def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
 //		schema1 = parser.parse("/extern/File1.xsd")
 //		schema2 = parser.parse("/extern/File2.xsd")
-	}
+  }
 
-	void testDiffGen() {
+  void testDiffGen() {
 //		def diffs = compare(schema1, schema2)
 //    println diffs.description
-	}
-	
+  }
+
 //	private def compare(a, b) {
 //	  new SchemaDiffGenerator(a: a, b: b).compare()
 //	}

@@ -29,8 +29,8 @@ abstract class AbstractParserContext {
   String targetNamespace
   def token
   def wsiResults = []
-	def errors = []
-	def validated = []
+  def errors = []
+  def validated = []
 
   //TODO ITHENA what with Included schema's? (com.predic8.schema.Include & com.predic8.wadl.Include)
   ParserImportedSchemaCache importedSchemaCache = new ParserImportedSchemaCache()
@@ -47,8 +47,8 @@ abstract class AbstractParserContext {
    */
   Schema getImportedSchema(Import importStatement) {
     importedSchemaCache.addSchema(
-        { importStatement.parseImportedSchema(createNewSubContext([input: importStatement])) },
-        getSchemaCacheKey(importStatement))
+      { importStatement.parseImportedSchema(createNewSubContext([input: importStatement])) },
+      getSchemaCacheKey(importStatement))
   }
 
   Schema setImportedSchema(Schema schema) {
@@ -60,7 +60,7 @@ abstract class AbstractParserContext {
   }
 
   String getSchemaCacheKey(Schema schema) {
-      "${schema?.targetNamespace}${extractFileName(schema?.schemaLocation)}"
+    "${schema?.targetNamespace}${extractFileName(schema?.schemaLocation)}"
   }
 
   /**
@@ -68,11 +68,15 @@ abstract class AbstractParserContext {
    * from the importing WSDL or Schema.
    */
   protected String extractFileName(String schemaLocation) {
-      if (!schemaLocation) { return '' }
-      if (schemaLocation.size() == 1) { return schemaLocation }
+    if (!schemaLocation) {
+      return ''
+    }
+    if (schemaLocation.size() == 1) {
+      return schemaLocation
+    }
 
-      int separatorIndex = schemaLocation.lastIndexOf(File.separator)
-      schemaLocation[separatorIndex+1..-1]
+    int separatorIndex = schemaLocation.lastIndexOf(File.separator)
+    schemaLocation[separatorIndex + 1..-1]
   }
 
 }

@@ -14,35 +14,29 @@
 
 package com.predic8.wsdl.usage
 
-import groovy.xml.*
-
-import com.predic8.schema.*
 import com.predic8.wsdl.Definitions
 import com.predic8.wsdl.WSDLParser
-import com.predic8.wsdl.usage.OperationUsageAnalyzer
 import com.predic8.wsdl.usage.OperationUseVisitor
 import com.predic8.wsdl.usage.OperationUseVisitorContext
-import com.predic8.wstool.creator.*
-import com.predic8.xml.util.*
+import com.predic8.xml.util.ClasspathResolver
 
+class OperationUsageAnalyzerWithCyclingTypesTest extends GroovyTestCase {
 
-class OperationUsageAnalyzerWithCyclingTypesTest extends GroovyTestCase{
-  
-	Definitions wsdl
-	
+  Definitions wsdl
+
   void setUp() {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     wsdl = parser.parse("cycling-types/cyclingTypes.wsdl")
   }
-	
-	void testVisitor() {
-		OperationUseVisitorContext ctx = new OperationUseVisitorContext()
-		OperationUseVisitor visitor = new OperationUseVisitor()
-		wsdl.portTypes.each { pt ->
-			pt.operations.each {op ->
-				visitor.visitSchema4Operation(op, pt, ctx)
-			}
-		}
-		assert 3 == ctx.elementsInfo.keySet().name.size()
-	}
+
+  void testVisitor() {
+    OperationUseVisitorContext ctx = new OperationUseVisitorContext()
+    OperationUseVisitor visitor = new OperationUseVisitor()
+    wsdl.portTypes.each { pt ->
+      pt.operations.each { op ->
+        visitor.visitSchema4Operation(op, pt, ctx)
+      }
+    }
+    assert 3 == ctx.elementsInfo.keySet().name.size()
+  }
 }

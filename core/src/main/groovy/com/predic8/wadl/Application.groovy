@@ -11,56 +11,56 @@
 
 package com.predic8.wadl
 
-import javax.xml.namespace.QName
-
 import com.predic8.soamodel.Consts
+
+import javax.xml.namespace.QName
 
 class Application extends WADLElement {
 
-	public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'application')
+  public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'application')
 
-	def resourceResolver
+  def resourceResolver
 
-	def baseDir
+  def baseDir
 
-	Grammars grammars
-	List<Resources> rscss = []
-	
-	WADLElement choiceElement // Could be one of these objects: ResourceType, Method, Representation, Param
+  Grammars grammars
+  List<Resources> rscss = []
 
-	protected parseChildren(token, child, ctx) {
-		super.parseChildren(token, child, ctx)
-		switch (token.name) {
-			case Grammars.ELEMENTNAME :
-				grammars = new Grammars(application: this, parent: this)
-				grammars.parse(token, ctx)
-				break
-			case Resources.ELEMENTNAME :
-				def rscs = new Resources(application: this, parent: this)
-				rscs.parse(token, ctx)
-				rscss << rscs
-				break
-			case ResourceType.ELEMENTNAME :
-				choiceElement = new ResourceType(application: this, parent: this)
-				choiceElement.parse(token, ctx)
-				break
-			case Method.ELEMENTNAME :
-				choiceElement = new Method(application: this, parent: this)
-				choiceElement.parse(token, ctx)
-				break
-			case Representation.ELEMENTNAME :
-				choiceElement = new Representation(application: this, parent: this)
-				choiceElement.parse(token, ctx)
-				break
-			case Param.ELEMENTNAME :
-				choiceElement = new Param(application: this, parent: this)
-				choiceElement.parse(token, ctx)
-				break
-		}
-	}
-	
-	String toString() {
-		def str = "application[" + (docs? "docs: $docs , " : '') + (grammars? "grammars: $grammars , " : '') + (rscss? "resources: $rscss]" : ']') 
-		str
-	}
+  WADLElement choiceElement // Could be one of these objects: ResourceType, Method, Representation, Param
+
+  protected parseChildren(token, child, ctx) {
+    super.parseChildren(token, child, ctx)
+    switch (token.name) {
+      case Grammars.ELEMENTNAME:
+        grammars = new Grammars(application: this, parent: this)
+        grammars.parse(token, ctx)
+        break
+      case Resources.ELEMENTNAME:
+        def rscs = new Resources(application: this, parent: this)
+        rscs.parse(token, ctx)
+        rscss << rscs
+        break
+      case ResourceType.ELEMENTNAME:
+        choiceElement = new ResourceType(application: this, parent: this)
+        choiceElement.parse(token, ctx)
+        break
+      case Method.ELEMENTNAME:
+        choiceElement = new Method(application: this, parent: this)
+        choiceElement.parse(token, ctx)
+        break
+      case Representation.ELEMENTNAME:
+        choiceElement = new Representation(application: this, parent: this)
+        choiceElement.parse(token, ctx)
+        break
+      case Param.ELEMENTNAME:
+        choiceElement = new Param(application: this, parent: this)
+        choiceElement.parse(token, ctx)
+        break
+    }
+  }
+
+  String toString() {
+    def str = "application[" + (docs ? "docs: $docs , " : '') + (grammars ? "grammars: $grammars , " : '') + (rscss ? "resources: $rscss]" : ']')
+    str
+  }
 }

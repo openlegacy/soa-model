@@ -14,26 +14,27 @@
 
 package samples.wsdl;
 
-import groovy.xml.MarkupBuilder;
-import java.io.StringWriter;
 import com.predic8.wsdl.Definitions;
 import com.predic8.wsdl.WSDLParser;
 import com.predic8.wstool.creator.RequestTemplateCreator;
 import com.predic8.wstool.creator.SOARequestCreator;
+import groovy.xml.MarkupBuilder;
+
+import java.io.StringWriter;
 
 public class CreateSOAPRequestTemplate {
 
   public static void main(String[] args) {
 
     WSDLParser parser = new WSDLParser();
-    
+
     Definitions wsdl = parser.parse("samples/wsdl/article-service/article.wsdl");
-    
+
     StringWriter writer = new StringWriter();
-    
+
     //SOAPRequestCreator constructor: SOARequestCreator(Definitions, Creator, MarkupBuilder)
     SOARequestCreator creator = new SOARequestCreator(wsdl, new RequestTemplateCreator(), new MarkupBuilder(writer));
-    
+
     //creator.createRequest(PortType name, Operation name, Binding name);
     creator.createRequest("ArticleServicePT", "create", "ArticleServicePTBinding");
 

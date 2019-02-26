@@ -12,100 +12,120 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.schema.creator;
+package com.predic8.schema.creator
 
-import com.predic8.schema.*
+
+import com.predic8.schema.All
+import com.predic8.schema.Annotation
+import com.predic8.schema.Attribute
+import com.predic8.schema.AttributeGroup
+import com.predic8.schema.ComplexType
+import com.predic8.schema.Element
+import com.predic8.schema.Extension
+import com.predic8.schema.Group
+import com.predic8.schema.GroupRef
+import com.predic8.schema.Restriction
+import com.predic8.schema.Schema
+import com.predic8.schema.SchemaList
 import com.predic8.schema.Sequence as SchemaSequence
-import com.predic8.schema.restriction.facet.* 
+import com.predic8.schema.SimpleType
+import com.predic8.schema.Union
 import com.predic8.schema.restriction.BaseRestriction
+import com.predic8.schema.restriction.facet.EnumerationFacet
+import com.predic8.schema.restriction.facet.FractionDigits
+import com.predic8.schema.restriction.facet.LengthFacet
+import com.predic8.schema.restriction.facet.MaxLengthFacet
+import com.predic8.schema.restriction.facet.MinLengthFacet
+import com.predic8.schema.restriction.facet.PatternFacet
 
 class DummySchemaCreator extends AbstractSchemaCreator<SchemaCreatorContext> {
- 
-  void createSchema(Schema schema, SchemaCreatorContext context){
+
+  void createSchema(Schema schema, SchemaCreatorContext context) {
     println "createSchema"
   }
-  
-  void createElement(Element element, SchemaCreatorContext  context){
+
+  void createElement(Element element, SchemaCreatorContext context) {
     println "createElement"
   }
-  
-  void createComplexType(ComplexType complexType, SchemaCreatorContext  context){
-    println "createComplexType"    
+
+  void createComplexType(ComplexType complexType, SchemaCreatorContext context) {
+    println "createComplexType"
   }
-  
-  void createSequence(SchemaSequence sequence, SchemaCreatorContext  context){
-    println "createSequence"    
+
+  void createSequence(SchemaSequence sequence, SchemaCreatorContext context) {
+    println "createSequence"
   }
-  
-  void createGroup(Group group, SchemaCreatorContext  context) {
+
+  void createGroup(Group group, SchemaCreatorContext context) {
     println "createGroup"
   }
 
-  void createGroupRef(GroupRef groupRef, SchemaCreatorContext  context) {
+  void createGroupRef(GroupRef groupRef, SchemaCreatorContext context) {
     println "createGroupRef"
   }
 
-  void createAll(All all, SchemaCreatorContext  context) {
+  void createAll(All all, SchemaCreatorContext context) {
     println "createAll"
   }
-  
-  void createPatternFacet(PatternFacet facet, SchemaCreatorContext  context){
+
+  void createPatternFacet(PatternFacet facet, SchemaCreatorContext context) {
     println "createPatternFacet"
   }
-  void createEnumerationFacet(EnumerationFacet facet, SchemaCreatorContext  context){
-    println "createEnumerationFacet"  
+
+  void createEnumerationFacet(EnumerationFacet facet, SchemaCreatorContext context) {
+    println "createEnumerationFacet"
   }
-   
-  void createLengthFacet(LengthFacet facet, SchemaCreatorContext  context){
+
+  void createLengthFacet(LengthFacet facet, SchemaCreatorContext context) {
     println "createLengthFacet"
   }
-  
-  void createMaxLengthFacet(MaxLengthFacet facet, SchemaCreatorContext  context){
+
+  void createMaxLengthFacet(MaxLengthFacet facet, SchemaCreatorContext context) {
     println "createMaxLengthFacet"
   }
 
-	void createFractionDigits(FractionDigits fdigits, SchemaCreatorContext  context) {
-		println "createFractionDigits"
-	}	
+  void createFractionDigits(FractionDigits fdigits, SchemaCreatorContext context) {
+    println "createFractionDigits"
+  }
 
-  void createMinLengthFacet(MinLengthFacet facet, SchemaCreatorContext  context){
+  void createMinLengthFacet(MinLengthFacet facet, SchemaCreatorContext context) {
     println "createMinLengthFacet"
   }
-  
-  void createSimpleType(SimpleType simpleType, SchemaCreatorContext  context){
+
+  void createSimpleType(SimpleType simpleType, SchemaCreatorContext context) {
     println "createSimpleType"
   }
-  
-  void createList(SchemaList list, SchemaCreatorContext  context){
+
+  void createList(SchemaList list, SchemaCreatorContext context) {
     println "createList"
   }
 
-  void createUnion(Union union, SchemaCreatorContext  context) {
+  void createUnion(Union union, SchemaCreatorContext context) {
     println "createUnion"
   }
-  
-  void createSimpleRestriction(BaseRestriction restriction, SchemaCreatorContext  context){
+
+  void createSimpleRestriction(BaseRestriction restriction, SchemaCreatorContext context) {
     println "createSimpleRestriction"
   }
 
-  void createComplexRestriction(Restriction restriction, SchemaCreatorContext  context){
+  void createComplexRestriction(Restriction restriction, SchemaCreatorContext context) {
     println "createComplexRestriction"
   }
 
-  void createExtension(Extension extension, SchemaCreatorContext  context) {
+  void createExtension(Extension extension, SchemaCreatorContext context) {
     println "createExtension"
   }
-  
 
-  void createAnnotation(Annotation annotation, SchemaCreatorContext  context){
+
+  void createAnnotation(Annotation annotation, SchemaCreatorContext context) {
     println "createAnnotation"
   }
-  
-  void createAttribute(Attribute attr, SchemaCreatorContext  context){
+
+  void createAttribute(Attribute attr, SchemaCreatorContext context) {
     println "createAttribute"
   }
-  
-  void createAttributeGroup(AttributeGroup attrG, SchemaCreatorContext  context){
+
+  void createAttributeGroup(AttributeGroup attrG, SchemaCreatorContext context) {
     println "createAttributeGroup"
   }
 

@@ -14,86 +14,86 @@
 
 package com.predic8.schema.diff
 
-import com.predic8.soamodel.*
 
-class ComplexContentDiffGenerator extends AbstractDiffGenerator{
-	
-	public ComplexContentDiffGenerator(){
-		updateLabels()
-	}
+import com.predic8.soamodel.AbstractDiffGenerator
+import com.predic8.soamodel.Difference
+
+class ComplexContentDiffGenerator extends AbstractDiffGenerator {
+
+  public ComplexContentDiffGenerator() {
+    updateLabels()
+  }
 
   def generator
 
-  private def labelContentModelElement, labelContentModelElementMixed, labelComplexContentChangeExtension, 
-  			  labelComplexContentChangeRestriction, labelComplexContentChange, labelHasChanged, labelRemoved, labelAdded
-  
-  def compare(){
+  private def labelContentModelElement, labelContentModelElementMixed, labelComplexContentChangeExtension,
+              labelComplexContentChangeRestriction, labelComplexContentChange, labelHasChanged, labelRemoved, labelAdded
+
+  def compare() {
     def diffs = compareMixed()
     diffs.addAll(compareDerivation())
     diffs
   }
 
-  private compareMixed(){
-    if(a.mixed  && !b.mixed) return [new Difference(description:"${labelContentModelElement}", type: 'complexContent', breaks:ctx.exchange ? true: null, exchange: a.exchange)]
-    if(!a.mixed  && b.mixed) return [new Difference(description:"${labelContentModelElementMixed}", type: 'complexContent', breaks:ctx.exchange ? true: null, exchange: a.exchange)]
+  private compareMixed() {
+    if (a.mixed && !b.mixed) return [new Difference(description: "${labelContentModelElement}", type: 'complexContent', breaks: ctx.exchange ? true : null, exchange: a.exchange)]
+    if (!a.mixed && b.mixed) return [new Difference(description: "${labelContentModelElementMixed}", type: 'complexContent', breaks: ctx.exchange ? true : null, exchange: a.exchange)]
     []
   }
 
-  private compareDerivation(){
-    if(a.hasRestriction()  && b.hasExtension()) {
-      return [new Difference(description:"${labelComplexContentChangeExtension}", type: 'complexContent', breaks:ctx.exchange ? true: null, exchange: a.exchange)]
+  private compareDerivation() {
+    if (a.hasRestriction() && b.hasExtension()) {
+      return [new Difference(description: "${labelComplexContentChangeExtension}", type: 'complexContent', breaks: ctx.exchange ? true : null, exchange: a.exchange)]
     }
-    if(a.hasExtension() && b.hasRestriction()) {
-      return [new Difference(description:"${labelComplexContentChangeRestriction}", type: 'complexContent', breaks:ctx.exchange ? true: null, exchange: a.exchange)]
-		  
+    if (a.hasExtension() && b.hasRestriction()) {
+      return [new Difference(description: "${labelComplexContentChangeRestriction}", type: 'complexContent', breaks: ctx.exchange ? true : null, exchange: a.exchange)]
+
     }
-		def lDiffs = compareModel() 
-    if(lDiffs){
-      return [new Difference(description:"${labelComplexContentChange}: " , type: 'complexContent', diffs: lDiffs, exchange: a.exchange)]
+    def lDiffs = compareModel()
+    if (lDiffs) {
+      return [new Difference(description: "${labelComplexContentChange}: ", type: 'complexContent', diffs: lDiffs, exchange: a.exchange)]
     }
     []
   }
 
-  private compareModel(){
+  private compareModel() {
     def lDiffs
-    
+
     // Check that a and b derivation ModelGroup aren't the same
-    if(a.derivation.model && b.derivation.model
+    if (a.derivation.model && b.derivation.model
       && a.derivation.model.class != b.derivation.model.class) {
-      lDiffs = [new Difference(description:"ModelGroup has changed from '${a.derivation.model.elementName}' to '${b.derivation.model.elementName}'.", type: 'model', breaks:true, exchange: a.exchange)]
-    }
-    else { // if one or both derivation model are not set or they are of same class
-      
+      lDiffs = [new Difference(description: "ModelGroup has changed from '${a.derivation.model.elementName}' to '${b.derivation.model.elementName}'.", type: 'model', breaks: true, exchange: a.exchange)]
+    } else { // if one or both derivation model are not set or they are of same class
+
       def aDerivationModelOverride = a.derivation.model
       def bDerivationModelOverride = b.derivation.model
-      
+
       // We instantiate empty derivation models with the same type as a or b
-      if(a.derivation.model && !b.derivation.model) { // only a has a derivation model => derivation model removed
+      if (a.derivation.model && !b.derivation.model) { // only a has a derivation model => derivation model removed
         bDerivationModelOverride = a.derivation.model.getClass().newInstance();
-      }
-      else if(b.derivation.model && !a.derivation.model) { // only b has a derivation model => derivation model added
+      } else if (b.derivation.model && !a.derivation.model) { // only b has a derivation model => derivation model added
         aDerivationModelOverride = b.derivation.model.getClass().newInstance();
       }
-      
+
       lDiffs = aDerivationModelOverride?.compare(generator, bDerivationModelOverride, ctx.clone())
     }
-    
-    if(lDiffs && lDiffs.size() > 0) {
-      return [new Difference(description:"${a.derivation.elementName.localPart.capitalize()}: " , type: 'complexContent',
+
+    if (lDiffs && lDiffs.size() > 0) {
+      return [new Difference(description: "${a.derivation.elementName.localPart.capitalize()}: ", type: 'complexContent',
         diffs: lDiffs, exchange: a.exchange)]
     }
-		[]
+    []
   }
-  
-  protected def updateLabels(){
-	  labelContentModelElement = bundle.getString("com.predic8.schema.diff.labelContentModelElement")
-	  labelContentModelElementMixed = bundle.getString("com.predic8.schema.diff.labelContentModelElementMixed")
-	  labelComplexContentChangeExtension = bundle.getString("com.predic8.schema.diff.labelComplexContentChangeExtension")
-	  labelComplexContentChangeRestriction = bundle.getString("com.predic8.schema.diff.labelComplexContentChangeRestriction")
-	  labelComplexContentChange = bundle.getString("com.predic8.schema.diff.labelComplexContentChange")
-	  labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
-	  labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
-	  labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
+
+  protected def updateLabels() {
+    labelContentModelElement = bundle.getString("com.predic8.schema.diff.labelContentModelElement")
+    labelContentModelElementMixed = bundle.getString("com.predic8.schema.diff.labelContentModelElementMixed")
+    labelComplexContentChangeExtension = bundle.getString("com.predic8.schema.diff.labelComplexContentChangeExtension")
+    labelComplexContentChangeRestriction = bundle.getString("com.predic8.schema.diff.labelComplexContentChangeRestriction")
+    labelComplexContentChange = bundle.getString("com.predic8.schema.diff.labelComplexContentChange")
+    labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
+    labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
+    labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
   }
 }
 

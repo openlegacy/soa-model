@@ -19,69 +19,69 @@ import com.predic8.wsdl.WSDLElement;
 
 public class ModelAccessException extends RuntimeException {
 
-	protected WSDLElement wsdlElement;
-	protected SchemaComponent schemaComponent;
+  protected WSDLElement wsdlElement;
+  protected SchemaComponent schemaComponent;
 
-	private static final long serialVersionUID = 5405085246506357279L;
+  private static final long serialVersionUID = 5405085246506357279L;
 
-	public ModelAccessException() {
-		super();
-	}
+  public ModelAccessException() {
+    super();
+  }
 
-	public ModelAccessException(String message, Throwable cause,
-	    boolean enableSuppression, boolean writableStackTrace) {
-	//	super(message, cause, enableSuppression, writableStackTrace);
-		super(message, cause);
-	}
+  public ModelAccessException(String message, Throwable cause,
+                              boolean enableSuppression, boolean writableStackTrace) {
+    //	super(message, cause, enableSuppression, writableStackTrace);
+    super(message, cause);
+  }
 
-	public ModelAccessException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  public ModelAccessException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	public ModelAccessException(Throwable cause) {
-		super(cause);
-	}
+  public ModelAccessException(Throwable cause) {
+    super(cause);
+  }
 
-	public ModelAccessException(String message) {
-		super(message);
-	}
-	
-	public ModelAccessException(String message, Throwable cause,
-			WSDLElement wsdlElement) {
-		super(message, cause);
-		this.wsdlElement = wsdlElement;
-	}
-	
-	public ModelAccessException(String message, WSDLElement wsdlElement) {
-		super(message);
-		this.wsdlElement = wsdlElement;
-	}
-	
-	public ModelAccessException(String message, Throwable cause,
-			SchemaComponent schemaComponent) {
-		super(message, cause);
-		this.schemaComponent = schemaComponent;
-	}
-	
-	public ModelAccessException(String message, SchemaComponent schemaComponent) {
-		super(message);
-		this.schemaComponent = schemaComponent;
-	}
+  public ModelAccessException(String message) {
+    super(message);
+  }
 
-	public WSDLElement getElement() {
-		return wsdlElement;
-	}
+  public ModelAccessException(String message, Throwable cause,
+                              WSDLElement wsdlElement) {
+    super(message, cause);
+    this.wsdlElement = wsdlElement;
+  }
 
-	public void setElement(WSDLElement element) {
-		this.wsdlElement = element;
-	}
-	
-	public SchemaComponent getSchemaComponent() {
-		return schemaComponent;
-	}
+  public ModelAccessException(String message, WSDLElement wsdlElement) {
+    super(message);
+    this.wsdlElement = wsdlElement;
+  }
 
-	public void setSchemaComponent(SchemaComponent schemaComponent) {
-		this.schemaComponent = schemaComponent;
-	}
+  public ModelAccessException(String message, Throwable cause,
+                              SchemaComponent schemaComponent) {
+    super(message, cause);
+    this.schemaComponent = schemaComponent;
+  }
+
+  public ModelAccessException(String message, SchemaComponent schemaComponent) {
+    super(message);
+    this.schemaComponent = schemaComponent;
+  }
+
+  public WSDLElement getElement() {
+    return wsdlElement;
+  }
+
+  public void setElement(WSDLElement element) {
+    this.wsdlElement = element;
+  }
+
+  public SchemaComponent getSchemaComponent() {
+    return schemaComponent;
+  }
+
+  public void setSchemaComponent(SchemaComponent schemaComponent) {
+    this.schemaComponent = schemaComponent;
+  }
 
 }

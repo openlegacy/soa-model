@@ -11,51 +11,53 @@
 
 package com.predic8.wsdl.diff
 
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
+
+import com.predic8.wsdl.Definitions
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
 
 class OnlyOnePortTypeDiffGeneratorTest extends GroovyTestCase {
 
-	def parser
-	Definitions wsdl1
-	Definitions wsdl2
+  def parser
+  Definitions wsdl1
+  Definitions wsdl2
 
-	void setUp() {
-		parser = new WSDLParser(resourceResolver : new ClasspathResolver())
-		wsdl1 = parser.parse('diff/message-parts/BLZService1.wsdl')
-		wsdl2 = parser.parse('diff/message-parts/BLZService2.wsdl')
-	}
+  void setUp() {
+    parser = new WSDLParser(resourceResolver: new ClasspathResolver())
+    wsdl1 = parser.parse('diff/message-parts/BLZService1.wsdl')
+    wsdl2 = parser.parse('diff/message-parts/BLZService2.wsdl')
+  }
 
-	void testPortTypeOperationChanges() {
-		def diffs = new WsdlDiffGenerator(a: wsdl2, b: wsdl1).comparePortTypes()
-		assert diffs*.dump().toString().contains('PortType BLZServicePortType:')
-		assert diffs*.dump().toString().contains("Part parameters in the modified document uses an invalid element('getBank'):")
-		assert diffs*.dump().toString().contains("Could not find the referenced element 'getBank' in namespace 'http://schemas.xmlsoap.org/wsdl/'.")
-	}
+  void testPortTypeOperationChanges() {
+    def diffs = new WsdlDiffGenerator(a: wsdl2, b: wsdl1).comparePortTypes()
+    assert diffs*.dump().toString().contains('PortType BLZServicePortType:')
+    assert diffs*.dump().toString().contains("Part parameters in the modified document uses an invalid element('getBank'):")
+    assert diffs*.dump().toString().contains("Could not find the referenced element 'getBank' in namespace 'http://schemas.xmlsoap.org/wsdl/'.")
+  }
 
-	void testPortTypeNameAndOperationChanges() {
-		wsdl2.portTypes[0].name = 'Test'
-		def diffs = new WsdlDiffGenerator(a: wsdl2, b: wsdl1).comparePortTypes()
-		assert diffs*.dump().toString().contains('PortType name has changed from Test to BLZServicePortType:')
-		assert diffs*.dump().toString().contains("Part parameters in the modified document uses an invalid element('getBank'):")
-		assert diffs*.dump().toString().contains("Could not find the referenced element 'getBank' in namespace 'http://schemas.xmlsoap.org/wsdl/'.")
-	}
-	
-	void testPTNameChanges() {
-		wsdl2 = parser.parse('diff/message-parts/BLZService1.wsdl')
-		wsdl2.portTypes[0].name = 'Test'
-		def diffs = new WsdlDiffGenerator(a: wsdl1, b: wsdl2).comparePortTypes()
-		assert diffs[0].description == "PortType name has changed from BLZServicePortType to Test:"
-		diffs = new WsdlDiffGenerator(a: wsdl2, b: wsdl1).comparePortTypes()
-		assert diffs[0].description == "PortType name has changed from Test to BLZServicePortType:"
-	}
-	
-	void testPTWithNoChangesButInvalidDocument() {
-		//Because of the error in part there will be a diff, although the documents are the same!
-		wsdl2 = parser.parse('diff/message-parts/BLZService1.wsdl')
-		def diffs = new WsdlDiffGenerator(a: wsdl1, b: wsdl2).comparePortTypes()
-		assert diffs*.dump().toString().contains("Could not find the referenced element 'getBank' in namespace 'http://schemas.xmlsoap.org/wsdl/'.")
-		diffs = new WsdlDiffGenerator(a: wsdl1, b: wsdl1).comparePortTypes()
-		assert diffs*.dump().toString().contains("Could not find the referenced element 'getBank' in namespace 'http://schemas.xmlsoap.org/wsdl/'.")
-	}
+  void testPortTypeNameAndOperationChanges() {
+    wsdl2.portTypes[0].name = 'Test'
+    def diffs = new WsdlDiffGenerator(a: wsdl2, b: wsdl1).comparePortTypes()
+    assert diffs*.dump().toString().contains('PortType name has changed from Test to BLZServicePortType:')
+    assert diffs*.dump().toString().contains("Part parameters in the modified document uses an invalid element('getBank'):")
+    assert diffs*.dump().toString().contains("Could not find the referenced element 'getBank' in namespace 'http://schemas.xmlsoap.org/wsdl/'.")
+  }
+
+  void testPTNameChanges() {
+    wsdl2 = parser.parse('diff/message-parts/BLZService1.wsdl')
+    wsdl2.portTypes[0].name = 'Test'
+    def diffs = new WsdlDiffGenerator(a: wsdl1, b: wsdl2).comparePortTypes()
+    assert diffs[0].description == "PortType name has changed from BLZServicePortType to Test:"
+    diffs = new WsdlDiffGenerator(a: wsdl2, b: wsdl1).comparePortTypes()
+    assert diffs[0].description == "PortType name has changed from Test to BLZServicePortType:"
+  }
+
+  void testPTWithNoChangesButInvalidDocument() {
+    //Because of the error in part there will be a diff, although the documents are the same!
+    wsdl2 = parser.parse('diff/message-parts/BLZService1.wsdl')
+    def diffs = new WsdlDiffGenerator(a: wsdl1, b: wsdl2).comparePortTypes()
+    assert diffs*.dump().toString().contains("Could not find the referenced element 'getBank' in namespace 'http://schemas.xmlsoap.org/wsdl/'.")
+    diffs = new WsdlDiffGenerator(a: wsdl1, b: wsdl1).comparePortTypes()
+    assert diffs*.dump().toString().contains("Could not find the referenced element 'getBank' in namespace 'http://schemas.xmlsoap.org/wsdl/'.")
+  }
 }

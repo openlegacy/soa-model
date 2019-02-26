@@ -17,36 +17,37 @@ package com.predic8.schema
 import groovy.xml.QName
 
 import javax.xml.namespace.QName as JQName
+
 import static com.predic8.soamodel.Consts.SCHEMA_NS
 
 abstract class Declaration extends SchemaComponent {
   QName type
-  
+
   /**
    * for wsdl:arrayType
    */
-  String arrayType 
-  
-	QName getQname() {
-		new QName(namespaceUri, name)
-	}
-	
-  void setType(QName type){ //without this groovy 1.8.5 tries to cast QName to JQName and throws ClassCastException
+  String arrayType
+
+  QName getQname() {
+    new QName(namespaceUri, name)
+  }
+
+  void setType(QName type) { //without this groovy 1.8.5 tries to cast QName to JQName and throws ClassCastException
     this.type = type
   }
 
-  QName setType(JQName type){
+  QName setType(JQName type) {
     this.type = new QName(type.namespaceURI, type.localPart)
   }
-  
-  protected parseAttributes(token, params){
+
+  protected parseAttributes(token, params) {
     super.parseAttributes(token, params)
-    arrayType = token.getAttributeValue( 'http://schemas.xmlsoap.org/wsdl/' , 'arrayType')
+    arrayType = token.getAttributeValue('http://schemas.xmlsoap.org/wsdl/', 'arrayType')
   }
-  
-  String getBuildInTypeName(){
-    if(type?.namespaceURI == SCHEMA_NS) return type.localPart
-    if(type && schema.getType(type)) return schema.getType(type).buildInTypeName
+
+  String getBuildInTypeName() {
+    if (type?.namespaceURI == SCHEMA_NS) return type.localPart
+    if (type && schema.getType(type)) return schema.getType(type).buildInTypeName
     buildInTypeNameLocal
   }
 }

@@ -14,40 +14,42 @@
 
 package com.predic8.wsdl
 
-import com.predic8.soamodel.*
+
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.CreatorContext
 
 abstract class AbstractSOAPBody extends BindingElement {
 
   List<Part> parts = []
-	
-	protected List<String> partNames = []
 
-  protected parseAttributes(token, WSDLParserContext ctx){
+  protected List<String> partNames = []
+
+  protected parseAttributes(token, WSDLParserContext ctx) {
     super.parseAttributes(token, ctx)
-    if(token.getAttributeValue(null , 'parts')){
-      token.getAttributeValue(null , 'parts').split().each {
+    if (token.getAttributeValue(null, 'parts')) {
+      token.getAttributeValue(null, 'parts').split().each {
         partNames << it
       }
     }
   }
-	
-	/**
-	 * lazy access to parts is needed cause of possible WSDL import structure.
-	 */
-	List<Part> getParts() {
-		if(parts) return parts
-		if(partNames) {
-			parts = partNames.collect{getMessagePart(it)}
-			return parts
-		}
-		parts = parent.message.parts
-	}
-  
+
+  /**
+   * lazy access to parts is needed cause of possible WSDL import structure.
+   */
+  List<Part> getParts() {
+    if (parts) return parts
+    if (partNames) {
+      parts = partNames.collect { getMessagePart(it) }
+      return parts
+    }
+    parts = parent.message.parts
+  }
+
   void create(AbstractCreator creator, CreatorContext ctx) {
     creator.createSOAPBody(this, ctx)
   }
 
-  protected Part getMessagePart(String part){
-  	parent.message.parts.find{it.name == part}
+  protected Part getMessagePart(String part) {
+    parent.message.parts.find { it.name == part }
   }
 }

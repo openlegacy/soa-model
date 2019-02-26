@@ -11,25 +11,25 @@
 
 package com.predic8.wadl
 
-import javax.xml.namespace.QName
-
 import com.predic8.soamodel.Consts
+
+import javax.xml.namespace.QName
 
 class Link extends WADLElement {
 
-	public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'link')
+  public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'link')
 
-	String resourceType
-	def rel
-	def rev
-	
-	protected parseAttributes(token, ctx){
-		resourceType = token.getAttributeValue( null , 'resource_type')
-		rel = token.getAttributeValue( null , 'rel')
-		rev = token.getAttributeValue( null , 'rev')
-	}
-	
-	String toString() {
-		"link[]"
-	}
+  String resourceType
+  def rel
+  def rev
+
+  protected parseAttributes(token, ctx) {
+    resourceType = token.getAttributeValue(null, 'resource_type')
+    rel = token.getAttributeValue(null, 'rel')
+    rev = token.getAttributeValue(null, 'rev')
+  }
+
+  String toString() {
+    "link[]"
+  }
 }

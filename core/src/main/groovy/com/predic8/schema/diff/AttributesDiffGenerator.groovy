@@ -14,38 +14,39 @@
 
 package com.predic8.schema.diff
 
-import com.predic8.soamodel.*
 
-class AttributesDiffGenerator extends ListDiffGenerator{
-	
-	public AttributesDiffGenerator(){
-		updateLabels()
-	}
-  
+import com.predic8.soamodel.Difference
+
+class AttributesDiffGenerator extends ListDiffGenerator {
+
+  public AttributesDiffGenerator() {
+    updateLabels()
+  }
+
   def labelAttribute, labelRemoved, labelAdded
-	
-  def generator
-  
-  def removed = { new Difference(description:"${labelAttribute} ${it.name} ${labelRemoved}." , type : 'attribute') }
 
-  def added = { new Difference(description:"${labelAttribute} ${it.name} ${labelAdded}.", type : 'attribute') }
+  def generator
+
+  def removed = { new Difference(description: "${labelAttribute} ${it.name} ${labelRemoved}.", type: 'attribute') }
+
+  def added = { new Difference(description: "${labelAttribute} ${it.name} ${labelAdded}.", type: 'attribute') }
 
   protected getIntersection() {
     (a.name).intersect(b.name)
   }
 
-  List<Difference> compareUnit(name){
-    def aAttr = a.find{ it.name == name}
-    def bAttr = b.find{ it.name == name}
-    aAttr.compare(generator , bAttr)
+  List<Difference> compareUnit(name) {
+    def aAttr = a.find { it.name == name }
+    def bAttr = b.find { it.name == name }
+    aAttr.compare(generator, bAttr)
   }
 
-  protected def updateLabels(){
-	   labelAttribute = bundle.getString("com.predic8.schema.diff.labelAttribute")
-	   labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
-	   labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
+  protected def updateLabels() {
+    labelAttribute = bundle.getString("com.predic8.schema.diff.labelAttribute")
+    labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
+    labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
 
-   }
-  
+  }
+
 }
 

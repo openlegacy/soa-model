@@ -14,51 +14,50 @@
 
 package com.predic8.schema
 
-import junit.framework.TestCase
-import javax.xml.stream.*
-import javax.xml.xpath.*
-import groovy.xml.*
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.wstool.creator.RequestCreator
+import com.predic8.wstool.creator.RequestCreatorContext
+import com.predic8.wstool.creator.RequestTemplateCreator
+import com.predic8.wstool.creator.RequestTemplateCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-import com.predic8.schema.creator.*
-import com.predic8.wstool.creator.*
+class AttributeTest extends GroovyTestCase {
 
-import com.predic8.xml.util.*
-
-class AttributeTest extends GroovyTestCase{
-  
   def schema
-  
+
 
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/schema/attribute/attr-test.xsd")
   }
-  
+
   void testParsing() {
     assertEquals('id', schema.getType('CarType').getAttribute('id').name)
     assertEquals('xsd:integer[]', schema.getType('CarType').getAttribute('id').arrayType)
     assertEquals('xsd:integer[]', schema.getElement('MyCar').arrayType)
     assertEquals('speed', schema.getType('CarType').getAttribute('speed').name)
-    assertEquals('door',schema.getType('SmallCarType').model.derivation.attributes[0].name)
+    assertEquals('door', schema.getType('SmallCarType').model.derivation.attributes[0].name)
 //	println schema.getType('SmallCarType').model.derivation.attributes[0].annotation.contents.content
   }
-  
+
   void testSchemaCreator() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     def testSchema = new XmlSlurper().parseText(strWriter.toString())
     def nameList = []
-    testSchema.complexType.attribute.each { nameList << it.@name}
+    testSchema.complexType.attribute.each { nameList << it.@name }
     assertEquals("[id, speed]", nameList.toString())
     assertEquals('door', testSchema.complexType[1].complexContent.extension.attribute.@name.toString())
     assertEquals('2', testSchema.complexType[1].complexContent.extension.attribute.@fixed.toString())
     assertEquals('required', testSchema.complexType[1].complexContent.extension.attribute.@use.toString())
   }
-  
+
   void testRequestTemplateCreatorWithFixedAttribute() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('MyCar').create(creator, new RequestTemplateCreatorContext())
     def testXML = new XmlSlurper().parseText(strWriter.toString()).declareNamespace(car: 'http://predic8.com/car')
     assertEquals('?XXX?', testXML.'@car:id'.toString())
@@ -68,38 +67,38 @@ class AttributeTest extends GroovyTestCase{
 
   void testRequestTemplateCreatorWithRefAttribute() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('MyNewCar').create(creator, new RequestTemplateCreatorContext())
     def testXML = new XmlSlurper().parseText(strWriter.toString()).declareNamespace(car: 'http://predic8.com/car')
     assertEquals('?XXX?', testXML.'@car:id'.toString())
     assertEquals('?999?', testXML.'@car:speed'.toString())
     assertEquals('?999?', testXML.@door.toString())
   }
-  
+
   void testRequestCreator() {
     def strWriter = new StringWriter()
-    def creator = new RequestCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestCreator(builder: new MarkupBuilder(strWriter))
     def formParams = [:]
-    formParams['xpath:/MyCar/@id']='BN-A1234'
-    formParams['xpath:/MyCar/@speed']='200'
-    formParams['xpath:/MyCar/@door']='4'
-    schema.getElement('MyCar').create(creator, new RequestCreatorContext(formParams:formParams))
+    formParams['xpath:/MyCar/@id'] = 'BN-A1234'
+    formParams['xpath:/MyCar/@speed'] = '200'
+    formParams['xpath:/MyCar/@door'] = '4'
+    schema.getElement('MyCar').create(creator, new RequestCreatorContext(formParams: formParams))
     def testXML = new XmlSlurper().parseText(strWriter.toString())
   }
-  
+
   void testGetBuildIntTypeNameFromEmbeddedType() {
     assertEquals('int', schema.getAttribute('door').buildInTypeName)
   }
-  
+
   void testGetBuildInTypeNameFromRefType() {
     assertEquals('int', schema.getType('NewSmallCarType').model.derivation.attributes[0].buildInTypeName)
   }
-  
+
   void testGetBuildInTypeName() {
     assertEquals('integer', schema.getType('SmallCarType').model.derivation.attributes[0].buildInTypeName)
   }
-	
-	void testAnnotation() {
-		assertEquals('This is a documentation for Attribute.', schema.getAttribute('door').annotation.documentations[0].content)
-	}
+
+  void testAnnotation() {
+    assertEquals('This is a documentation for Attribute.', schema.getAttribute('door').annotation.documentations[0].content)
+  }
 }

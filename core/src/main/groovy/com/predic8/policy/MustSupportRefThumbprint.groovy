@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class MustSupportRefThumbprint extends PolicyOperator{
+class MustSupportRefThumbprint extends PolicyOperator {
 
 }
 

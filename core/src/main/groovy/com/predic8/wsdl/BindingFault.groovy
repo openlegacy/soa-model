@@ -14,21 +14,24 @@
 
 package com.predic8.wsdl
 
-import javax.xml.namespace.QName as JQName
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.MessageAccessException
 
-import com.predic8.soamodel.*
+import javax.xml.namespace.QName as JQName
 
 class BindingFault extends BindingMessage {
 
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL11_NS, 'fault')
-	
-	protected Message getMessage(){
-		try {
-			definitions.getMessage(bindingOperation.binding.portType.getOperation(bindingOperation.name).faults.find{it.name == name}.message.qname)
-		} catch (Exception e) {
-			throw new MessageAccessException("Could not find the message for fault '$name' of the operation '${bindingOperation.name}' in the WSDL.", bindingOperation, '')
-		}
-	}
+
+  protected Message getMessage() {
+    try {
+      definitions.getMessage(bindingOperation.binding.portType.getOperation(bindingOperation.name).faults.find {
+        it.name == name
+      }.message.qname)
+    } catch (Exception e) {
+      throw new MessageAccessException("Could not find the message for fault '$name' of the operation '${bindingOperation.name}' in the WSDL.", bindingOperation, '')
+    }
+  }
 
 }
 

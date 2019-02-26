@@ -14,11 +14,12 @@
 
 package com.predic8.wsdl.soap12
 
-import javax.xml.namespace.QName as JQName
 import com.predic8.soamodel.Consts
-import com.predic8.wsdl.*
+import com.predic8.wsdl.AbstractSOAPFault
 
-class SOAPFault extends AbstractSOAPFault{
+import javax.xml.namespace.QName as JQName
 
-public static final JQName ELEMENTNAME = new JQName(Consts.WSDL_SOAP12_NS, 'fault')
+class SOAPFault extends AbstractSOAPFault {
+
+  public static final JQName ELEMENTNAME = new JQName(Consts.WSDL_SOAP12_NS, 'fault')
 }

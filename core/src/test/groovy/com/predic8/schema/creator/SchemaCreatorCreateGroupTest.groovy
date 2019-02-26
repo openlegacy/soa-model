@@ -14,36 +14,31 @@
 
 package com.predic8.schema.creator
 
-import groovy.xml.*
+import com.predic8.schema.SchemaParser
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-import javax.xml.stream.*
+class SchemaCreatorCreateWSDLSchemaTest extends GroovyTestCase {
 
-import com.predic8.schema.*
-import com.predic8.wstool.creator.*
-import com.predic8.xml.util.*
-
-
-class SchemaCreatorCreateWSDLSchemaTest extends GroovyTestCase{
-  
   def schema
-    
+
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("wsdl.xsd")
   }
-    
+
   void testCreatorGroup() {
     def strWriter = new StringWriter()
-    schema.create(new SchemaCreator(builder : new MarkupBuilder(strWriter)), new SchemaCreatorContext())
-		def result = new SchemaParser().parse(new ByteArrayInputStream(strWriter.toString().bytes))
-		assert 3 == result.groups.size
+    schema.create(new SchemaCreator(builder: new MarkupBuilder(strWriter)), new SchemaCreatorContext())
+    def result = new SchemaParser().parse(new ByteArrayInputStream(strWriter.toString().bytes))
+    assert 3 == result.groups.size
   }
-	
-	void testCreatorWithUnique() {
-		def strWriter = new StringWriter()
-		schema.create(new SchemaCreator(builder : new MarkupBuilder(strWriter)), new SchemaCreatorContext())
-		assert strWriter.toString().contains("<xsd:unique name='part'>")
-		assert strWriter.toString().contains("<xsd:selector xpath='wsdl:part' />")
-		assert strWriter.toString().contains("<xsd:field xpath='@name' />")
-	}
+
+  void testCreatorWithUnique() {
+    def strWriter = new StringWriter()
+    schema.create(new SchemaCreator(builder: new MarkupBuilder(strWriter)), new SchemaCreatorContext())
+    assert strWriter.toString().contains("<xsd:unique name='part'>")
+    assert strWriter.toString().contains("<xsd:selector xpath='wsdl:part' />")
+    assert strWriter.toString().contains("<xsd:field xpath='@name' />")
+  }
 }

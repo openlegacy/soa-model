@@ -9,34 +9,25 @@
  See the License for the specific language governing permissions and
  limitations under the License. */
 
-package com.predic8.schema;
+package com.predic8.schema
 
-import static com.predic8.soamodel.Consts.SCHEMA_NS
-import groovy.xml.*
-
-import com.predic8.schema.restriction.BaseRestriction
-import com.predic8.schema.restriction.RestrictionUtil
-import com.predic8.schema.restriction.Restriction as SimpleTypeRestriction
-import com.predic8.soamodel.AbstractDiffGenerator
 import com.predic8.soamodel.CreatorContext
-import com.predic8.soamodel.DiffGeneratorContext
-import com.predic8.wstool.creator.*
 
 class Selector extends SchemaComponent {
-	
-	String id
-	String xpath
 
-	protected parseAttributes(token, params){
-		super.parseAttributes(token, params)
-		id = token.getAttributeValue( null , 'id')
-		xpath = token.getAttributeValue( null , 'xpath')
-	}
-	
+  String id
+  String xpath
+
+  protected parseAttributes(token, params) {
+    super.parseAttributes(token, params)
+    id = token.getAttributeValue(null, 'id')
+    xpath = token.getAttributeValue(null, 'xpath')
+  }
+
   protected getElementName() {
     'selector'
   }
-	
-	def create(creator, CreatorContext ctx) {}
+
+  def create(creator, CreatorContext ctx) {}
 
 }

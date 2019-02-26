@@ -14,29 +14,27 @@
 
 package com.predic8.soamodel
 
-import groovy.xml.*
-
-import com.predic8.schema.*
-import com.predic8.schema.diff.*
-import com.predic8.xml.util.*
+import com.predic8.schema.ComplexType
+import com.predic8.schema.diff.SchemaDiffGenerator
+import groovy.xml.QName
 
 class DiffGeneratorTest extends GroovyTestCase {
-  
-  def comType1 = new ComplexType(qname : new QName('urn','a'))
-  def comType2 = new ComplexType(qname : new QName('urn','b'))
-  def comType3 = new ComplexType(qname : new QName('urn','a'))
-  def comType4 = new ComplexType(qname : new QName('urn','c'))
+
+  def comType1 = new ComplexType(qname: new QName('urn', 'a'))
+  def comType2 = new ComplexType(qname: new QName('urn', 'b'))
+  def comType3 = new ComplexType(qname: new QName('urn', 'a'))
+  def comType4 = new ComplexType(qname: new QName('urn', 'c'))
   def comTypesA = [comType1, comType2]
   def comTypesB = [comType3, comType4]
-  
-  void testAbstractDiffGenerator(){
+
+  void testAbstractDiffGenerator() {
     def diffGen = new SchemaDiffGenerator()
-    assertEquals(2, diffGen.compare(comTypesA, comTypesB, {"${it.qname} removed"}, {"${it.qname} added"}).size())
+    assertEquals(2, diffGen.compare(comTypesA, comTypesB, { "${it.qname} removed" }, { "${it.qname} added" }).size())
   }
-  
-  void testDoCompare(){
+
+  void testDoCompare() {
     def diffGen = new SchemaDiffGenerator()
-    def msgs = diffGen.doCompare(comTypesA, comTypesB, {"${it.qname} removed"}, {"${it.qname} added"}, {it.qname})
+    def msgs = diffGen.doCompare(comTypesA, comTypesB, { "${it.qname} removed" }, { "${it.qname} added" }, { it.qname })
     assertEquals(2, msgs.size())
     assert msgs*.toString().contains('{urn}b removed')
     assert msgs*.toString().contains('{urn}c added')

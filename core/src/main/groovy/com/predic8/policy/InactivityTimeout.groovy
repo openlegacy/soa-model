@@ -11,7 +11,7 @@
 
 package com.predic8.policy
 
-class InactivityTimeout extends PolicyOperator{
+class InactivityTimeout extends PolicyOperator {
 
 }
 

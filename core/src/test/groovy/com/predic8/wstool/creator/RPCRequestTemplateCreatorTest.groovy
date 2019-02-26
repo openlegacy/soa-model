@@ -12,15 +12,13 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wstool.creator;
-
-import junit.framework.TestCase
-import groovy.xml.*
+package com.predic8.wstool.creator
 
 import com.predic8.wsdl.AbstractWSDLTest
+import groovy.xml.MarkupBuilder
 
 class RPCRequestTemplateCreatorTest extends AbstractWSDLTest {
-  
+
   def static wsdl = '''<wsdl:definitions name="urn:NewsSearch" targetNamespace="urn:NewsSearch" xmlns:typens="urn:NewsSearch" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/">
                          
                          <message name="doNewsSearch">
@@ -39,16 +37,16 @@ class RPCRequestTemplateCreatorTest extends AbstractWSDLTest {
                            </operation>
                          </portType>
                        </wsdl:definitions>'''
-  
-                       
+
+
   void testDocumentation() {
     def strWriter = new StringWriter()
-    def creator = new RPCRequestTemplateCreator(builder : new MarkupBuilder(strWriter),definitions: definitions)
+    def creator = new RPCRequestTemplateCreator(builder: new MarkupBuilder(strWriter), definitions: definitions)
     creator.createRequest('NewsSearchPort', 'doNewsSearch')
     def testXML = new XmlSlurper().parseText(strWriter.toString())
     assertEquals(3, testXML.children().size())
-     def elementsNames =[]
-    testXML.childNodes().each{ elementsNames << it.name() }
+    def elementsNames = []
+    testXML.childNodes().each { elementsNames << it.name() }
     assertEquals(["username", "password", "query"], elementsNames)
   }
 }

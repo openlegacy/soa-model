@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class Trust13 extends PolicyOperator{
+class Trust13 extends PolicyOperator {
 
 }
 

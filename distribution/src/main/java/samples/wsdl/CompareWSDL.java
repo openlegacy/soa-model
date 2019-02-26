@@ -14,18 +14,20 @@
 
 package samples.wsdl;
 
-import java.util.List;
-import com.predic8.wsdl.*;
-import com.predic8.wsdl.diff.WsdlDiffGenerator;
 import com.predic8.soamodel.Difference;
+import com.predic8.wsdl.Definitions;
+import com.predic8.wsdl.WSDLParser;
+import com.predic8.wsdl.diff.WsdlDiffGenerator;
+
+import java.util.List;
 
 public class CompareWSDL {
 
   public static void main(String[] args) {
     compare();
   }
-  
-  private static void compare(){
+
+  private static void compare() {
     WSDLParser parser = new WSDLParser();
 
     Definitions wsdl1 = parser.parse("samples/diff/original/article.wsdl");
@@ -35,8 +37,8 @@ public class CompareWSDL {
     WsdlDiffGenerator diffGen = new WsdlDiffGenerator(wsdl1, wsdl2);
     List<Difference> lst = diffGen.compare();
     for (Difference diff : lst) {
-    	System.out.println(diff.dump());
+      System.out.println(diff.dump());
     }
   }
-  
+
 }

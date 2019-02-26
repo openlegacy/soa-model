@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class MustSupportRefIssuerSerial extends PolicyOperator{
+class MustSupportRefIssuerSerial extends PolicyOperator {
 
 }
 

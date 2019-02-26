@@ -14,10 +14,10 @@ package com.predic8.wsdl;
 public class WSDLVersion2NotSupportedException extends RuntimeException {
 
   public WSDLVersion2NotSupportedException(String message) {
-	  super(message);
+    super(message);
   }
 
-	private static final long serialVersionUID = 7180057899382788821L;
-  
-	
+  private static final long serialVersionUID = 7180057899382788821L;
+
+
 }

@@ -14,16 +14,16 @@
 
 package com.predic8.wstool.creator
 
-import groovy.xml.*
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
 import com.predic8.soamodel.Consts
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-class SOARequestCreatorSOAP11Test extends GroovyTestCase{
+class SOARequestCreatorSOAP11Test extends GroovyTestCase {
 
   def request
 
-  void testRequestTemplateCreatorWithDocLit(){
+  void testRequestTemplateCreatorWithDocLit() {
     def sw = new StringWriter()
     def creator = new SOARequestCreator(getDefinitions("/header/LibraryServiceService.wsdl"), new RequestTemplateCreator(), new MarkupBuilder(sw))
     creator.createRequest('LibraryService', 'addBook', 'LibraryServicePortBinding')
@@ -35,13 +35,13 @@ class SOARequestCreatorSOAP11Test extends GroovyTestCase{
     assertEquals('?XXX?', request.Body.addBook.author.text())
   }
 
-  void testRequestCreatorWithDocLit(){
+  void testRequestCreatorWithDocLit() {
     def sw = new StringWriter()
     def formParams = [:]
-    formParams['xpath:/username']='Malkhas'
-    formParams['xpath:/timeout']='200'
-    formParams['xpath:/addBook/title']='MyBook'
-    formParams['xpath:/addBook/author']='Me'
+    formParams['xpath:/username'] = 'Malkhas'
+    formParams['xpath:/timeout'] = '200'
+    formParams['xpath:/addBook/title'] = 'MyBook'
+    formParams['xpath:/addBook/author'] = 'Me'
     def creator = new SOARequestCreator(getDefinitions("/header/LibraryServiceService.wsdl"), new RequestCreator(), new MarkupBuilder(sw))
     creator.formParams = formParams
     creator.createRequest('LibraryService', 'addBook', 'LibraryServicePortBinding')
@@ -53,7 +53,7 @@ class SOARequestCreatorSOAP11Test extends GroovyTestCase{
     assertEquals('Me', request.Body.addBook.author.text())
   }
 
-  void testRequestTemplateCreatorWithRPCLit(){
+  void testRequestTemplateCreatorWithRPCLit() {
     def sw = new StringWriter()
     def creator = new SOARequestCreator(getDefinitions("/RPCLiteralSample.wsdl"), new RequestTemplateCreator(), new MarkupBuilder(sw))
     creator.createRequest('RPCLiteralSamplePT', 'addPerson', 'RPCLiteralSampleBinding')
@@ -65,13 +65,13 @@ class SOARequestCreatorSOAP11Test extends GroovyTestCase{
     assertEquals('?999?', request.Body.addPerson.age.text())
   }
 
-  void testRequestCreatorWithRPCLit(){
+  void testRequestCreatorWithRPCLit() {
     def sw = new StringWriter()
     def formParams = [:]
-    formParams['xpath:/addPerson/name']='kaveh'
-    formParams['xpath:/addPerson/lastname']='keshavarzi'
-    formParams['xpath:/addPerson/age']='28'
-    formParams['xpath:/addPerson/email']='foo@bar'
+    formParams['xpath:/addPerson/name'] = 'kaveh'
+    formParams['xpath:/addPerson/lastname'] = 'keshavarzi'
+    formParams['xpath:/addPerson/age'] = '28'
+    formParams['xpath:/addPerson/email'] = 'foo@bar'
     def creator = new SOARequestCreator(getDefinitions("/RPCLiteralSample.wsdl"), new RequestCreator(), new MarkupBuilder(sw))
     creator.formParams = formParams
     creator.createRequest('RPCLiteralSamplePT', 'addPerson', 'RPCLiteralSampleBinding')
@@ -84,11 +84,11 @@ class SOARequestCreatorSOAP11Test extends GroovyTestCase{
   }
 
 
-  void testEnvelopeWrapper(){
+  void testEnvelopeWrapper() {
     def sw = new StringWriter()
     def creator = new SOARequestCreator(getDefinitions("/RPCLiteralSample.wsdl"),
-                            new RequestTemplateCreator(),
-                            new MarkupBuilder(sw))
+      new RequestTemplateCreator(),
+      new MarkupBuilder(sw))
     creator.bindingName = 'RPCLiteralSampleBinding'
     creator.operationName = 'addPerson'
     creator.wrapEnvelope('<addPerson><name>Shaan</name></addPerson>')
@@ -99,7 +99,7 @@ class SOARequestCreatorSOAP11Test extends GroovyTestCase{
   def createRequest(sw) {
     new XmlSlurper().parseText(sw.toString())
   }
-  
+
   private def getDefinitions(input) {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     parser.parse(input)

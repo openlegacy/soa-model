@@ -15,9 +15,9 @@
 package com.predic8.schema.restriction;
 
 class DateTimeRestriction extends BaseRestriction {
-  
-  String getBuildInType(){
+
+  String getBuildInType() {
     'dateTime'
   }
-  
+
 }

@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class OnlySignEntireHeadersAndBody extends PolicyOperator{
+class OnlySignEntireHeadersAndBody extends PolicyOperator {
 
 }
 

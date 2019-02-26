@@ -14,9 +14,9 @@
 
 package com.predic8.wsdl
 
-import javax.xml.namespace.QName as JQName
+import com.predic8.soamodel.Consts
 
-import com.predic8.soamodel.*
+import javax.xml.namespace.QName as JQName
 
 class BindingOutput extends BindingMessage {
 

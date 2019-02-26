@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class NOTATIONRestriction extends BaseRestriction{
-  
+class NOTATIONRestriction extends BaseRestriction {
+
 }

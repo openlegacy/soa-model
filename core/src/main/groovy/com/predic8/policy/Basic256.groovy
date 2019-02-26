@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class Basic256 extends PolicyOperator{
+class Basic256 extends PolicyOperator {
 
 }
 

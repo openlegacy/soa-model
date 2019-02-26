@@ -12,29 +12,28 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.schema;
+package com.predic8.schema
 
-import com.predic8.wstool.creator.*
-import com.predic8.soamodel.AbstractDiffGenerator;
-import com.predic8.soamodel.CreatorContext 
-import com.predic8.soamodel.DiffGeneratorContext;
+import com.predic8.soamodel.AbstractDiffGenerator
+import com.predic8.soamodel.CreatorContext
+import com.predic8.soamodel.DiffGeneratorContext
 
-class Sequence extends ModelGroup{
-  
-  def getElementName(){
+class Sequence extends ModelGroup {
+
+  def getElementName() {
     // If changed to QName, SchemaDiffGenerator has to be modified.
     'sequence'
   }
-  
-  def create(creator, CreatorContext ctx){
+
+  def create(creator, CreatorContext ctx) {
     creator.createSequence(this, ctx.clone())
   }
 
-  def compare(AbstractDiffGenerator generator, other, DiffGeneratorContext ctx = new DiffGeneratorContext()){
+  def compare(AbstractDiffGenerator generator, other, DiffGeneratorContext ctx = new DiffGeneratorContext()) {
     generator.compareSequence(this, other, ctx)
   }
-  
-  String toString(){
+
+  String toString() {
     "sequence[name= $name, particles=$particles]"
   }
 }

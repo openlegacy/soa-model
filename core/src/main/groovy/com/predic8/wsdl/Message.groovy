@@ -12,14 +12,15 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl;
+package com.predic8.wsdl
 
+import com.predic8.schema.Element
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
 import groovy.xml.QName
 
 import javax.xml.namespace.QName as JQName
-
-import com.predic8.schema.Element
-import com.predic8.soamodel.*
 
 class Message extends WSDLElement {
 
@@ -27,45 +28,45 @@ class Message extends WSDLElement {
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL11_NS, 'message')
 
   List<Part> parts = []
-  
-  protected parseAttributes(token, WSDLParserContext ctx){
-    name = token.getAttributeValue( null , 'name')
+
+  protected parseAttributes(token, WSDLParserContext ctx) {
+    name = token.getAttributeValue(null, 'name')
   }
 
-  protected parseChildren(token, child, WSDLParserContext ctx){
+  protected parseChildren(token, child, WSDLParserContext ctx) {
     super.parseChildren(token, child, ctx)
-    switch(token.name) {
-      case Part.ELEMENTNAME :
-      def part = new Part(definitions: definitions)
-      part.parse(token, ctx)
-      parts << part ; break
+    switch (token.name) {
+      case Part.ELEMENTNAME:
+        def part = new Part(definitions: definitions)
+        part.parse(token, ctx)
+        parts << part; break
     }
   }
-  
+
   QName getQname() {
     new QName(definitions.targetNamespace, name)
   }
 
-  Part getPart(name){
-    parts.find{it.name == name}
+  Part getPart(name) {
+    parts.find { it.name == name }
   }
-  
-  void create(AbstractCreator creator, CreatorContext ctx){
+
+  void create(AbstractCreator creator, CreatorContext ctx) {
     creator.createMessage(this, ctx)
   }
-  
-  Part newPart(String name, String element){
-    Part part = new Part(name:name, definitions:definitions, element:definitions.getElement(element))
+
+  Part newPart(String name, String element) {
+    Part part = new Part(name: name, definitions: definitions, element: definitions.getElement(element))
     parts << part
     part
   }
-  
-	Part newPart(String name, Element element){
-		Part part = new Part(name:name, definitions:definitions, element:element)
-		parts << part
-		part
-	}
-	
+
+  Part newPart(String name, Element element) {
+    Part part = new Part(name: name, definitions: definitions, element: element)
+    parts << part
+    part
+  }
+
   String toString() {
     "message[qname:${getQname()}]"
   }

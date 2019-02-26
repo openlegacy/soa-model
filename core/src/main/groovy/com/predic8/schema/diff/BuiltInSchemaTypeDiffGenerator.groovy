@@ -14,28 +14,30 @@
 
 package com.predic8.schema.diff
 
-import com.predic8.soamodel.*
+
+import com.predic8.soamodel.AbstractDiffGenerator
+import com.predic8.soamodel.Difference
 
 class BuiltInSchemaTypeDiffGenerator extends AbstractDiffGenerator {
-	
-	def generator
-	def a,b
-	
-	
-	/**
-	 * This method was generated for completeness.
-	 * The diffs will be detected local by the containing element.
-	 * Don't implement this method, or remove the duplicates before
-	 * from e.g. WSDLDiffGenerator(l. 242)
-	 */
-	public List<Difference> compare() {
-		[]
-	}
+
+  def generator
+  def a, b
 
 
-	@Override
+  /**
+   * This method was generated for completeness.
+   * The diffs will be detected local by the containing element.
+   * Don't implement this method, or remove the duplicates before
+   * from e.g. WSDLDiffGenerator(l. 242)
+   */
+  public List<Difference> compare() {
+    []
+  }
+
+
+  @Override
   protected Object updateLabels() {
-	  return null;
+    return null;
   }
 }
 

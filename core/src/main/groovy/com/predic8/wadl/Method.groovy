@@ -11,42 +11,42 @@
 
 package com.predic8.wadl
 
-import javax.xml.namespace.QName
-
 import com.predic8.soamodel.Consts
+
+import javax.xml.namespace.QName
 
 class Method extends WADLElement {
 
-	public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'method')
-	
-	String id
-	String name
-	String href
-	
-	Request request
-	Response response
+  public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'method')
 
-	protected parseAttributes(token, ctx){
-		name = token.getAttributeValue( null , 'name')
-		id = token.getAttributeValue( null , 'id')
-		href = token.getAttributeValue( null , 'href')
-	}
-	
-	protected parseChildren(token, child, ctx) {
-		super.parseChildren(token, child, ctx)
-		switch (token.name) {
-			case Request.ELEMENTNAME :
-				request = new Request(application: application, parent: this)
-				request.parse(token, ctx)
-				break
-			case Response.ELEMENTNAME :
-				response = new Response(application: application, parent: this)
-				response.parse(token, ctx)
-				break
-		}
-	}
-	
-	String toString() {
-		"method[name: $name, request: $request, response: $response]"
-	}
+  String id
+  String name
+  String href
+
+  Request request
+  Response response
+
+  protected parseAttributes(token, ctx) {
+    name = token.getAttributeValue(null, 'name')
+    id = token.getAttributeValue(null, 'id')
+    href = token.getAttributeValue(null, 'href')
+  }
+
+  protected parseChildren(token, child, ctx) {
+    super.parseChildren(token, child, ctx)
+    switch (token.name) {
+      case Request.ELEMENTNAME:
+        request = new Request(application: application, parent: this)
+        request.parse(token, ctx)
+        break
+      case Response.ELEMENTNAME:
+        response = new Response(application: application, parent: this)
+        response.parse(token, ctx)
+        break
+    }
+  }
+
+  String toString() {
+    "method[name: $name, request: $request, response: $response]"
+  }
 }

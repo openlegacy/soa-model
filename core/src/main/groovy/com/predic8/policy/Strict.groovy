@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class Strict extends PolicyOperator{
+class Strict extends PolicyOperator {
 
 }
 

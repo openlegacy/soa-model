@@ -14,16 +14,18 @@
 
 package com.predic8.wsdl
 
-import com.predic8.soamodel.*
 
-abstract class ExtensibilityOperation extends WSDLElement{
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.CreatorContext
 
-  String soapAction =''
+abstract class ExtensibilityOperation extends WSDLElement {
+
+  String soapAction = ''
   String style = 'document'
 
-  protected parseAttributes(token, WSDLParserContext ctx){
-    soapAction = token.getAttributeValue(null , 'soapAction')
-    style = token.getAttributeValue(null , 'style')
+  protected parseAttributes(token, WSDLParserContext ctx) {
+    soapAction = token.getAttributeValue(null, 'soapAction')
+    style = token.getAttributeValue(null, 'style')
   }
 
   void create(AbstractCreator creator, CreatorContext ctx) {

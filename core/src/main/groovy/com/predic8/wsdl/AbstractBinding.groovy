@@ -14,10 +14,10 @@
 
 package com.predic8.wsdl
 
-abstract class AbstractBinding extends WSDLElement{
-	
-	abstract String getProtocol()
-	
-	abstract Map checkStyle()
+abstract class AbstractBinding extends WSDLElement {
+
+  abstract String getProtocol()
+
+  abstract Map checkStyle()
 
 }

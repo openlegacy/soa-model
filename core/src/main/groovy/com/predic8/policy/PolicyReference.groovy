@@ -14,41 +14,44 @@
 
 package com.predic8.policy
 
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.AbstractParserContext
+import com.predic8.soamodel.CreatorContext
+import com.predic8.soamodel.XMLElement
+
 import javax.xml.namespace.QName
 
-import com.predic8.soamodel.*
+class PolicyReference extends XMLElement {
 
-class PolicyReference extends XMLElement{
+  QName ELEMENTNAME
 
-	QName ELEMENTNAME
-	
   String uri
   String Digest
 
-  protected parseAttributes(token, AbstractParserContext ctx){
-    uri = token.getAttributeValue(null , 'URI')
-    digest = token.getAttributeValue(null , 'Digest')
+  protected parseAttributes(token, AbstractParserContext ctx) {
+    uri = token.getAttributeValue(null, 'URI')
+    digest = token.getAttributeValue(null, 'Digest')
   }
 
-	String getNamespaceUri() {
-		definitions.targetNamespace
-	}
-	
-	/**
-	 * Should return the prefix for the namespace of the element, like wsdl, soap, http & etc.
-	 * Used in WSDLCreator.
-	 */
-	String getPrefix(){
-		getPrefix(ELEMENTNAME.namespaceURI)
-	}
+  String getNamespaceUri() {
+    definitions.targetNamespace
+  }
+
+  /**
+   * Should return the prefix for the namespace of the element, like wsdl, soap, http & etc.
+   * Used in WSDLCreator.
+   */
+  String getPrefix() {
+    getPrefix(ELEMENTNAME.namespaceURI)
+  }
 
   QName getElementName() {
     ELEMENTNAME
   }
-	
-	void create(AbstractCreator creator, CreatorContext ctx){
-		creator.createPolicyReference(this, ctx)
-	}
-	
+
+  void create(AbstractCreator creator, CreatorContext ctx) {
+    creator.createPolicyReference(this, ctx)
+  }
+
 }
 

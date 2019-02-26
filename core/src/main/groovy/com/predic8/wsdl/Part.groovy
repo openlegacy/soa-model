@@ -12,49 +12,50 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl;
+package com.predic8.wsdl
 
-import groovy.xml.*
+import com.predic8.schema.Element
+import com.predic8.schema.TypeDefinition
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
+import com.predic8.wsi.WSIResult
+import com.predic8.xml.util.PrefixedName
 
 import javax.xml.namespace.QName as JQName
 
-import com.predic8.schema.*
-import com.predic8.soamodel.*
-import com.predic8.wsi.*
-import com.predic8.xml.util.PrefixedName
-
-class Part extends WSDLElement{
+class Part extends WSDLElement {
 
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL11_NS, 'part')
-  
+
   Element element
   TypeDefinition type
-	PrefixedName typePN
-	PrefixedName elementPN
-	
-  protected parseAttributes(token, WSDLParserContext ctx){
-    name = token.getAttributeValue( null , 'name')
-    if(token.getAttributeValue(null , 'element')) elementPN = new PrefixedName(token.getAttributeValue(null , 'element'))
-    if(token.getAttributeValue( null , 'type')) typePN = new PrefixedName(token.getAttributeValue( null , 'type'))
-    if(elementPN && typePN) ctx.wsiResults << new WSIResult(rule : 'R2306')
+  PrefixedName typePN
+  PrefixedName elementPN
+
+  protected parseAttributes(token, WSDLParserContext ctx) {
+    name = token.getAttributeValue(null, 'name')
+    if (token.getAttributeValue(null, 'element')) elementPN = new PrefixedName(token.getAttributeValue(null, 'element'))
+    if (token.getAttributeValue(null, 'type')) typePN = new PrefixedName(token.getAttributeValue(null, 'type'))
+    if (elementPN && typePN) ctx.wsiResults << new WSIResult(rule: 'R2306')
   }
-	
-	Element getElement() {
-		if(element) return element
-		if(!elementPN) return
-		element = definitions.getElement(getQNameForPN(elementPN))
-	}
-  
-	TypeDefinition getType() {
-		if(type) return type
-		if(!typePN) return
-		type = definitions.getSchemaType(getQNameForPN(typePN))
-	}
-	
-	void create(AbstractCreator creator, CreatorContext ctx) {
-		creator.createPart(this, ctx)
-	}
-	
+
+  Element getElement() {
+    if (element) return element
+    if (!elementPN) return
+    element = definitions.getElement(getQNameForPN(elementPN))
+  }
+
+  TypeDefinition getType() {
+    if (type) return type
+    if (!typePN) return
+    type = definitions.getSchemaType(getQNameForPN(typePN))
+  }
+
+  void create(AbstractCreator creator, CreatorContext ctx) {
+    creator.createPart(this, ctx)
+  }
+
   String toString() {
     "part[name= $name, type= ${getType()}, element= ${getElement()}]"
   }

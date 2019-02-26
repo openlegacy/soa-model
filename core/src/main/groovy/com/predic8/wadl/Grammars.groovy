@@ -11,44 +11,44 @@
 
 package com.predic8.wadl
 
-import javax.xml.namespace.QName
-
 import com.predic8.schema.Element
 import com.predic8.schema.Schema
 import com.predic8.soamodel.Consts
 
+import javax.xml.namespace.QName
+
 class Grammars extends WADLElement {
 
-	public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'grammars')
+  public static final QName ELEMENTNAME = new QName(Consts.WADL_NS, 'grammars')
 
-	List<Include> includes = []
-	List<Schema> schemas = []
-	
-	protected parseChildren(token, child, ctx) {
-		super.parseChildren(token, child, ctx)
-		switch (token.name) {
-			case Include.ELEMENTNAME :
-				def inc = new Include(application: application, parent: this)
-				inc.parse(token, ctx)
-				includes << inc
-				break
-			case Schema.ELEMENTNAME :
-				def schema = new Schema()
-				schema.parse(token, ctx)
-				schemas << schema
-				break
-		}
-	}
-	
-	List<Schema> getAllSchemas() {
-		schemas + includes.grep{it.schema}.schema
-	}
-	
-	public Element getElement(String name) {
-		allSchemas.find{it.getElement(name)}.getElement(name)
-	}
-	
-	String toString() {
-		"grammer[docs: $docs, includes: $includes]"
-	}
+  List<Include> includes = []
+  List<Schema> schemas = []
+
+  protected parseChildren(token, child, ctx) {
+    super.parseChildren(token, child, ctx)
+    switch (token.name) {
+      case Include.ELEMENTNAME:
+        def inc = new Include(application: application, parent: this)
+        inc.parse(token, ctx)
+        includes << inc
+        break
+      case Schema.ELEMENTNAME:
+        def schema = new Schema()
+        schema.parse(token, ctx)
+        schemas << schema
+        break
+    }
+  }
+
+  List<Schema> getAllSchemas() {
+    schemas + includes.grep { it.schema }.schema
+  }
+
+  public Element getElement(String name) {
+    allSchemas.find { it.getElement(name) }.getElement(name)
+  }
+
+  String toString() {
+    "grammer[docs: $docs, includes: $includes]"
+  }
 }

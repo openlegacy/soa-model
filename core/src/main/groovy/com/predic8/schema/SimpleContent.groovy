@@ -11,15 +11,14 @@
 
 package com.predic8.schema
 
-import java.util.List
+import com.predic8.schema.restriction.BaseRestriction
+import com.predic8.schema.restriction.Restriction as SimpleTypeRestriction
+import com.predic8.schema.restriction.RestrictionUtil
+import com.predic8.soamodel.AbstractDiffGenerator
+import com.predic8.soamodel.CreatorContext
+import com.predic8.soamodel.DiffGeneratorContext
 
 import javax.xml.namespace.QName as JQName
-
-import com.predic8.soamodel.AbstractDiffGenerator;
-import com.predic8.soamodel.CreatorContext
-import com.predic8.soamodel.DiffGeneratorContext;
-import com.predic8.schema.restriction.*
-import com.predic8.schema.restriction.Restriction as SimpleTypeRestriction
 
 import static com.predic8.soamodel.Consts.SCHEMA_NS
 
@@ -30,26 +29,26 @@ class SimpleContent extends SchemaComponent {
   BaseRestriction restriction
 
   protected parseChildren(token, child, params) {
-    switch (child ){
-      case 'extension' :
+    switch (child) {
+      case 'extension':
         extension = new Extension(schema: schema)
-          extension.parse(token, params) ; break
-      case 'restriction' :
+        extension.parse(token, params); break
+      case 'restriction':
         def base = null
-          if (token.getAttributeValue( null , 'base'))
-            base = getTypeQName(token.getAttributeValue( null , 'base'))
-				if(base) {
-					def type = base.localPart
-					if(base.namespaceURI == SCHEMA_NS){
-						restriction = RestrictionUtil.getRestriction(type, [base: base])
-						restriction.schema = schema
-					} else {
-						restriction = new BaseRestriction(base : base, schema: schema)
-					}
-				} else {
-					restriction = new SimpleTypeRestriction(schema: schema)
-				}
-        restriction.parse(token, params) ; break
+        if (token.getAttributeValue(null, 'base'))
+          base = getTypeQName(token.getAttributeValue(null, 'base'))
+        if (base) {
+          def type = base.localPart
+          if (base.namespaceURI == SCHEMA_NS) {
+            restriction = RestrictionUtil.getRestriction(type, [base: base])
+            restriction.schema = schema
+          } else {
+            restriction = new BaseRestriction(base: base, schema: schema)
+          }
+        } else {
+          restriction = new SimpleTypeRestriction(schema: schema)
+        }
+        restriction.parse(token, params); break
     }
   }
 
@@ -57,15 +56,15 @@ class SimpleContent extends SchemaComponent {
     return extension ?: restriction
   }
 
-  protected getElementName(){
+  protected getElementName() {
     new JQName(SCHEMA_NS, 'simpleContent')
   }
 
-  def create(creator, CreatorContext ctx){
+  def create(creator, CreatorContext ctx) {
     creator.createSimpleContent(this, ctx)
   }
 
-  def compare(AbstractDiffGenerator generator, other, DiffGeneratorContext ctx = new DiffGeneratorContext()){
+  def compare(AbstractDiffGenerator generator, other, DiffGeneratorContext ctx = new DiffGeneratorContext()) {
     generator.compareSimpleContent(this, other, ctx)
   }
 }

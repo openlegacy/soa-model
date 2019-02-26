@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class DecimalRestriction extends BaseRestriction{
-  
+class DecimalRestriction extends BaseRestriction {
+
 }

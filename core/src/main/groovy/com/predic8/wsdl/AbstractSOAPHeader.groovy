@@ -14,37 +14,38 @@
 
 package com.predic8.wsdl
 
-import com.predic8.soamodel.*
-import com.predic8.xml.util.*
 
-abstract class AbstractSOAPHeader extends BindingElement{
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.CreatorContext
 
-	String messageName
+abstract class AbstractSOAPHeader extends BindingElement {
+
+  String messageName
   Message message
   String partName
-	/**
-	 * SOAPHeader uses part and not parts. WSDL spec section A 4.2 SOAP Binding Schema is wrong!
-	 */
+  /**
+   * SOAPHeader uses part and not parts. WSDL spec section A 4.2 SOAP Binding Schema is wrong!
+   */
   Part part
-	
 
-  protected parseAttributes(token, WSDLParserContext ctx){
+
+  protected parseAttributes(token, WSDLParserContext ctx) {
     super.parseAttributes(token, ctx)
-		messageName = token.getAttributeValue(null , 'message')
-    partName = token.getAttributeValue(null , 'part')
+    messageName = token.getAttributeValue(null, 'message')
+    partName = token.getAttributeValue(null, 'part')
   }
-	
-	Message getMessage() {
-		if(message) return message
-		message = definitions.getMessage(getTypeQName(messageName))
-	}
-	
 
-  Part getPart(){
-		if(part) return part
-		part = getMessage().parts.find{it.name == partName}
+  Message getMessage() {
+    if (message) return message
+    message = definitions.getMessage(getTypeQName(messageName))
   }
-  
+
+
+  Part getPart() {
+    if (part) return part
+    part = getMessage().parts.find { it.name == partName }
+  }
+
   void create(AbstractCreator creator, CreatorContext ctx) {
     creator.createSOAPHeader(this, ctx)
   }

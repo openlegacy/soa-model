@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class QNameRestriction extends BaseRestriction{
-  
+class QNameRestriction extends BaseRestriction {
+
 }

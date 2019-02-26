@@ -14,12 +14,13 @@
 
 package com.predic8.wsdl.creator
 
-import com.predic8.soamodel.*
+
+import com.predic8.soamodel.CreatorContext
 
 class WSDLCreatorContext extends CreatorContext {
-  
-  public Object clone() { 
-    new WSDLCreatorContext(declNS:copyDeclNS())
+
+  public Object clone() {
+    new WSDLCreatorContext(declNS: copyDeclNS())
   }
 }
 

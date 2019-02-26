@@ -11,19 +11,18 @@
 
 package com.predic8.policy.creator
 
-import com.predic8.policy.Policy
+
 import com.predic8.policy.PolicyReference
-import com.predic8.schema.creator.SchemaCreatorContext
-import com.predic8.soamodel.CreatorContext;
+import com.predic8.soamodel.CreatorContext
 import com.predic8.wsdl.WSDLElement
 
 class PolicyVisitorContext extends CreatorContext {
 
 //	Map<WSDLElement, Policy> policies = [:]
-	Map<WSDLElement, PolicyReference> policyRefs = [:]
+  Map<WSDLElement, PolicyReference> policyRefs = [:]
 
-	public Object clone() {
-		new PolicyVisitorContext(policyRefs: policyRefs)
-	}
+  public Object clone() {
+    new PolicyVisitorContext(policyRefs: policyRefs)
+  }
 }
 

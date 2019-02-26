@@ -12,13 +12,12 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.schema;
+package com.predic8.schema
 
-import com.predic8.soamodel.AbstractDiffGenerator;
-import com.predic8.soamodel.CreatorContext 
-import com.predic8.soamodel.DiffGeneratorContext;
-
-import groovy.xml.*
+import com.predic8.soamodel.AbstractDiffGenerator
+import com.predic8.soamodel.CreatorContext
+import com.predic8.soamodel.DiffGeneratorContext
+import groovy.xml.QName
 
 import javax.xml.namespace.QName as JQName
 
@@ -29,66 +28,65 @@ class Attribute extends Declaration {
   QName ref
   String use
   SimpleType simpleType
-	String defaultValue 
-	String fixedValue  
+  String defaultValue
+  String fixedValue
 
-  
-  Attribute(){  }
-  
-  Attribute(String name, JQName type){
+
+  Attribute() {}
+
+  Attribute(String name, JQName type) {
     this.name = name
     this.type = new QName(type.namespaceURI, type.localPart)
   }
-	
-		
-  
-  protected parseAttributes(token, params){
-		super.parseAttributes(token, params)
-		name = token.getAttributeValue( null , 'name')
-		defaultValue = token.getAttributeValue( null , 'default')
-		fixedValue = token.getAttributeValue( null , 'fixed')
-    form = token.getAttributeValue( null , 'form')
-    id = token.getAttributeValue( null , 'id')
-    if (token.getAttributeValue( null , 'ref'))
-      ref = getTypeQName(token.getAttributeValue( null , 'ref'))
+
+
+  protected parseAttributes(token, params) {
+    super.parseAttributes(token, params)
+    name = token.getAttributeValue(null, 'name')
+    defaultValue = token.getAttributeValue(null, 'default')
+    fixedValue = token.getAttributeValue(null, 'fixed')
+    form = token.getAttributeValue(null, 'form')
+    id = token.getAttributeValue(null, 'id')
+    if (token.getAttributeValue(null, 'ref'))
+      ref = getTypeQName(token.getAttributeValue(null, 'ref'))
     //if(ref && form) throw new RuntimeException('Form and ref attributes cannot be both present in an attribute element.')
     //if(ref && name) throw new RuntimeException('Name and ref attributes cannot be both present in an attribute element.')
-    if (token.getAttributeValue( null , 'type'))
-      type = getTypeQName(token.getAttributeValue( null , 'type'))
+    if (token.getAttributeValue(null, 'type'))
+      type = getTypeQName(token.getAttributeValue(null, 'type'))
     //if(ref && type) throw new RuntimeException('Type and ref attributes cannot be both present in an attribute element.')
-    use = token.getAttributeValue( null , 'use')?:'optional'
+    use = token.getAttributeValue(null, 'use') ?: 'optional'
   }
 
-  protected parseChildren(token, child, params){
-    switch (child ){
-			case 'annotation' :
-  			annotation = new Annotation(schema: schema)
-  			annotation.parse(token, params) ; break
-      case 'simpleType' :
-        simpleType = new SimpleType(schema:schema)
-        simpleType.parse(token, params) ; break
+  protected parseChildren(token, child, params) {
+    switch (child) {
+      case 'annotation':
+        annotation = new Annotation(schema: schema)
+        annotation.parse(token, params); break
+      case 'simpleType':
+        simpleType = new SimpleType(schema: schema)
+        simpleType.parse(token, params); break
     }
   }
-  
-  String getBuildInTypeNameLocal(){
-    if(ref) return schema.getAttribute(ref).getBuildInTypeName() 
+
+  String getBuildInTypeNameLocal() {
+    if (ref) return schema.getAttribute(ref).getBuildInTypeName()
     simpleType.buildInTypeName
   }
 
-  def create(creator, CreatorContext ctx){
+  def create(creator, CreatorContext ctx) {
     creator.createAttribute(this, ctx)
   }
 
-  def compare(AbstractDiffGenerator generator, other, DiffGeneratorContext ctx = new DiffGeneratorContext()){
+  def compare(AbstractDiffGenerator generator, other, DiffGeneratorContext ctx = new DiffGeneratorContext()) {
     generator.compareAttribute(this, other, ctx)
   }
 
-  def getElementName(){
+  def getElementName() {
     'attribute'
   }
-  
-  String toString(){
+
+  String toString() {
     "attribute[name= $name, ref=$ref, type=$type]"
   }
-  
+
 }

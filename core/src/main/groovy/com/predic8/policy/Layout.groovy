@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class Layout extends PolicyOperator{
+class Layout extends PolicyOperator {
 
 }
 

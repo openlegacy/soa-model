@@ -14,24 +14,25 @@
 
 package com.predic8.schema
 
-import groovy.xml.*
-
 import com.predic8.schema.creator.SchemaCreator
 import com.predic8.schema.creator.SchemaCreatorContext
-import com.predic8.schema.restriction.*
-import com.predic8.xml.util.*
+import com.predic8.schema.restriction.StringRestriction
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
+import groovy.xml.QName
+
 import static com.predic8.soamodel.Consts.SCHEMA_NS
 
 class AttributeWithSimpeTypeTest extends GroovyTestCase {
 
   def schema
 
-  void setUp(){
+  void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("/schema/simplecontent/attributeWithSimpleType.xsd")
-	def strWriter = new StringWriter()
-	def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
-	schema.create(creator, new SchemaCreatorContext())
+    def strWriter = new StringWriter()
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
+    schema.create(creator, new SchemaCreatorContext())
   }
 
   void testParsingComplexType() {
@@ -48,7 +49,7 @@ class AttributeWithSimpeTypeTest extends GroovyTestCase {
     assertEquals(new QName(SCHEMA_NS, 'string'), schema.getElement('shoeSize').embeddedType.model.extension.attributes[0].simpleType.restriction.base)
     assertEquals(4, schema.getElement('shoeSize').embeddedType.model.extension.attributes[0].simpleType.restriction.enumerationFacets.value.size())
   }
-  
+
   void testGetBuildIntTypeName() {
     assertEquals('string', schema.getElement('shoeSize').embeddedType.model.extension.attributes[0].buildInTypeName)
   }

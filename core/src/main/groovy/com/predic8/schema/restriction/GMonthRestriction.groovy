@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class GMonthRestriction extends BaseRestriction{
-  
+class GMonthRestriction extends BaseRestriction {
+
 }

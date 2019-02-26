@@ -14,7 +14,7 @@
 
 package com.predic8.schema.restriction;
 
-class BooleanRestriction extends BaseRestriction{
- 
-  
+class BooleanRestriction extends BaseRestriction {
+
+
 }

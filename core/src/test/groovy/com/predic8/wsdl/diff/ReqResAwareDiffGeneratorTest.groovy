@@ -11,32 +11,34 @@
 
 package com.predic8.wsdl.diff
 
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
+
+import com.predic8.wsdl.Definitions
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
 
 class ReqResAwareDiffGeneratorTest extends GroovyTestCase {
 
-	Definitions oldWSDL
-	Definitions newWSDL
+  Definitions oldWSDL
+  Definitions newWSDL
 
-	void setUp() {
-		def parser = new WSDLParser(resourceResolver : new ClasspathResolver())
-		oldWSDL = parser.parse('diff/req-res-aware/old.wsdl')
-		newWSDL = parser.parse('diff/req-res-aware/new.wsdl')
-	}
+  void setUp() {
+    def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
+    oldWSDL = parser.parse('diff/req-res-aware/old.wsdl')
+    newWSDL = parser.parse('diff/req-res-aware/new.wsdl')
+  }
 
-	void testSchemaDiffsInDefinitions() {
-		def diffs = compare(oldWSDL, newWSDL)
-		//Definitions -> Types -> Schema -> CType -> Seq  -> Element
-		assert diffs[0].diffs[1].diffs[0].diffs[0].diffs[0].diffs[0].description == 'Element newElementRequest with minOccurs 0 added to position 3(end of sequence).'
-		assert !diffs[0].diffs[1].diffs[0].diffs[0].diffs[0].diffs[0].safe()
-		assert !diffs[0].diffs[1].diffs[0].diffs[0].diffs[0].diffs[0].breaks()
-		assert diffs[0].diffs[1].diffs[0].diffs[1].diffs[0].diffs[1].description == 'Element newElementResponse with minOccurs 0 added to position 3(end of sequence).'
-		assert !diffs[0].diffs[1].diffs[0].diffs[1].diffs[0].diffs[1].safe()
-		assert !diffs[0].diffs[1].diffs[0].diffs[1].diffs[0].diffs[1].breaks()
-	}
-	
-	private def compare(a, b) {
-		new WsdlDiffGenerator(a: a, b: b).compare()
-	}
+  void testSchemaDiffsInDefinitions() {
+    def diffs = compare(oldWSDL, newWSDL)
+    //Definitions -> Types -> Schema -> CType -> Seq  -> Element
+    assert diffs[0].diffs[1].diffs[0].diffs[0].diffs[0].diffs[0].description == 'Element newElementRequest with minOccurs 0 added to position 3(end of sequence).'
+    assert !diffs[0].diffs[1].diffs[0].diffs[0].diffs[0].diffs[0].safe()
+    assert !diffs[0].diffs[1].diffs[0].diffs[0].diffs[0].diffs[0].breaks()
+    assert diffs[0].diffs[1].diffs[0].diffs[1].diffs[0].diffs[1].description == 'Element newElementResponse with minOccurs 0 added to position 3(end of sequence).'
+    assert !diffs[0].diffs[1].diffs[0].diffs[1].diffs[0].diffs[1].safe()
+    assert !diffs[0].diffs[1].diffs[0].diffs[1].diffs[0].diffs[1].breaks()
+  }
+
+  private def compare(a, b) {
+    new WsdlDiffGenerator(a: a, b: b).compare()
+  }
 }

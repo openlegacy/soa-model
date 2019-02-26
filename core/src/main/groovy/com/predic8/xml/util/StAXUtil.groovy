@@ -14,26 +14,27 @@
 
 package com.predic8.xml.util
 
-import javax.xml.stream.*
+
+import javax.xml.stream.XMLStreamReader
 
 class StAXUtil {
-  
+
   def static getType(token) {
-    if(token.isStartElement()) return 'START_ELEMENT'
-    if(token.isEndElement()) return 'END_ELEMENT'
-    if(token.isWhiteSpace()) return 'SPACE'
-    if(token.isCharacters()) return 'CHARACTERS'
+    if (token.isStartElement()) return 'START_ELEMENT'
+    if (token.isEndElement()) return 'END_ELEMENT'
+    if (token.isWhiteSpace()) return 'SPACE'
+    if (token.isCharacters()) return 'CHARACTERS'
     else {
-      switch(token.getEventType()) {
-        case XMLStreamReader.ATTRIBUTE   : return 'ATTRIBUTE '
-        case XMLStreamReader.CDATA  : return 'CDATA'
-        case XMLStreamReader.NAMESPACE   : return 'NAMESPACE '
-        case XMLStreamReader.COMMENT  : return 'COMMENT'
-        case XMLStreamReader.START_DOCUMENT : return 'START_DOCUMENT'
-        case XMLStreamReader.END_DOCUMENT : return 'END_DOCUMENT'
-        case XMLStreamReader.END_DOCUMENT : return 'PROCESSING_INSTRUCTION'
-        case XMLStreamReader.END_DOCUMENT : return 'ENTITY_REFERENCE'
-        case XMLStreamReader.DTD  : return 'DTD'
+      switch (token.getEventType()) {
+        case XMLStreamReader.ATTRIBUTE: return 'ATTRIBUTE '
+        case XMLStreamReader.CDATA: return 'CDATA'
+        case XMLStreamReader.NAMESPACE: return 'NAMESPACE '
+        case XMLStreamReader.COMMENT: return 'COMMENT'
+        case XMLStreamReader.START_DOCUMENT: return 'START_DOCUMENT'
+        case XMLStreamReader.END_DOCUMENT: return 'END_DOCUMENT'
+        case XMLStreamReader.END_DOCUMENT: return 'PROCESSING_INSTRUCTION'
+        case XMLStreamReader.END_DOCUMENT: return 'ENTITY_REFERENCE'
+        case XMLStreamReader.DTD: return 'DTD'
       }
       return 'Unknown Element'
     }

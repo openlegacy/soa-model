@@ -9,58 +9,56 @@
  See the License for the specific language governing permissions and
  limitations under the License. */
 
-package com.predic8.wadl.creator;
+package com.predic8.wadl.creator
 
+import com.predic8.schema.BuiltInSchemaType
+import com.predic8.schema.Element
+import com.predic8.schema.Sequence
+import com.predic8.schema.creator.AbstractSchemaCreator
+import com.predic8.wstool.creator.TemplateUtil
 import groovy.json.JsonBuilder
 
-import static com.predic8.soamodel.Consts.SCHEMA_NS
+class JsonCreator extends AbstractSchemaCreator<JsonCreatorContext> {
 
-import com.predic8.schema.*
-import com.predic8.schema.creator.*
-import com.predic8.wstool.creator.TemplateUtil
+  JsonBuilder builder
 
-class JsonCreator extends AbstractSchemaCreator <JsonCreatorContext>{
+  String getElementAsJson(Element element, JsonCreatorContext ctx = new JsonCreatorContext()) {
+    createElement(element, ctx)
+    def map = ["${element.name}": ctx.jsonElements["${element.name}"]]
+    builder = new JsonBuilder()
+    builder map
+    builder.toPrettyString()
+  }
 
-	JsonBuilder builder
-	
-	String getElementAsJson(Element element, JsonCreatorContext ctx = new JsonCreatorContext()) {
-		createElement(element, ctx)
-		def map = ["${element.name}":ctx.jsonElements["${element.name}"]]
-		builder = new JsonBuilder()
-		builder map
-		builder.toPrettyString()
-	}
+  public void createElement(Element element, JsonCreatorContext ctx) {
+    if (element.ref) {
+      element.schema.getElement(element.ref).create(this, ctx)
+      return
+    }
+    def type
+    if (!element.type) {
+      type = element.embeddedType
+    } else {
+      type = element.schema.getType(element.type) ?: element.embeddedType
+    }
+    if (type instanceof BuiltInSchemaType) {
+      ctx.jsonElements[element.name] = TemplateUtil.getTemplateValue(type)
+      return
+    }
+    ctx.element = element
+    type.create(this, ctx)
+  }
 
-	public void createElement(Element element, JsonCreatorContext ctx) {
-		if(element.ref) {
-		element.schema.getElement(element.ref).create(this, ctx)
-			return
-		}
-		def type
-		if(!element.type) {
-			type = element.embeddedType
-		} else {
-			type = element.schema.getType(element.type) ?: element.embeddedType
-		}
-		if(type instanceof BuiltInSchemaType){
-			ctx.jsonElements[element.name] = TemplateUtil.getTemplateValue(type)
-			return
-		}
-		ctx.element = element
-		type.create(this, ctx)
-	}
-	
-	void createSequence(Sequence sequence, JsonCreatorContext ctx){
-		sequence.particles.each {
-			if(it instanceof Element){
-				it.create(this, ctx)
-				if(ctx.jsonElements[ctx.element.name]) {
-					ctx.jsonElements[ctx.element.name] << ["${it.name}" : ctx.jsonElements[it.name]]
-				} else {
-					ctx.jsonElements[ctx.element.name] = ["${it.name}" : ctx.jsonElements[it.name]]
-				}
-			}
-			else it.create(this, ctx)
-		}
-	}
+  void createSequence(Sequence sequence, JsonCreatorContext ctx) {
+    sequence.particles.each {
+      if (it instanceof Element) {
+        it.create(this, ctx)
+        if (ctx.jsonElements[ctx.element.name]) {
+          ctx.jsonElements[ctx.element.name] << ["${it.name}": ctx.jsonElements[it.name]]
+        } else {
+          ctx.jsonElements[ctx.element.name] = ["${it.name}": ctx.jsonElements[it.name]]
+        }
+      } else it.create(this, ctx)
+    }
+  }
 }

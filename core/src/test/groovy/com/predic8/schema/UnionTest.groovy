@@ -14,12 +14,12 @@
 
 package com.predic8.schema
 
-import com.predic8.xml.util.*
-import com.predic8.schema.creator.*
-import com.predic8.wstool.creator.*
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.xml.util.ClasspathResolver
 import groovy.xml.MarkupBuilder
 
-class UnionTest extends GroovyTestCase{
+class UnionTest extends GroovyTestCase {
 
   def schema
 
@@ -28,14 +28,14 @@ class UnionTest extends GroovyTestCase{
     schema = parser.parse("/schema/union.xsd")
   }
 
-  void testParser(){
+  void testParser() {
     assertEquals(3, schema.getType('contact').union.memberTypes.size())
     assertEquals(2, schema.getType('fax').union.simpleTypes.size())
   }
 
-  void testSchemaCreator(){
+  void testSchemaCreator() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     def testSchema = new XmlSlurper().parseText(strWriter.toString())
     assertEquals(2, testSchema.simpleType[2].union.simpleType.size())

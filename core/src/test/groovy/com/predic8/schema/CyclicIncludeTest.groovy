@@ -14,24 +14,22 @@
 
 package com.predic8.schema
 
-import junit.framework.TestCase
-import javax.xml.stream.*
-import com.predic8.xml.util.*
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.QName
 
-import groovy.xml.*
-class CyclicIncludeTest extends GroovyTestCase{
-  
+class CyclicIncludeTest extends GroovyTestCase {
+
   Schema schema
 
   void setUp() {
     def parser = new SchemaParser(resourceResolver: new ClasspathResolver())
     schema = parser.parse("IncludeImport/schema-a.xsd")
   }
-  
+
   void test() {
-		// Element from an imported schema in the included schema
-		assert schema.getElement(new QName('SCHEMA-B', 'element-b-1'))
-		assert 5 == schema.includes.size()
-	}
+    // Element from an imported schema in the included schema
+    assert schema.getElement(new QName('SCHEMA-B', 'element-b-1'))
+    assert 5 == schema.includes.size()
+  }
 
 }

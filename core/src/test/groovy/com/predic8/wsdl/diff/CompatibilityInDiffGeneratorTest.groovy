@@ -11,55 +11,57 @@
 
 package com.predic8.wsdl.diff
 
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
+
+import com.predic8.wsdl.Definitions
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
 
 class CompatibilityInDiffGeneratorTest extends GroovyTestCase {
 
-	Definitions wsdl1
-	Definitions wsdl2
+  Definitions wsdl1
+  Definitions wsdl2
 
-	void setUp() {
-		def parser = new WSDLParser(resourceResolver : new ClasspathResolver())
-		wsdl1 = parser.parse('diff/compatibility/BLZService1.wsdl')
-		wsdl2 = parser.parse('diff/compatibility/BLZService2.wsdl')
-	}
+  void setUp() {
+    def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
+    wsdl1 = parser.parse('diff/compatibility/BLZService1.wsdl')
+    wsdl2 = parser.parse('diff/compatibility/BLZService2.wsdl')
+  }
 
-	void testElementAdded2Req() {
-		def diffs = compare(wsdl1, wsdl2)
-		assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[0].description ==
-		"Element ElementWithMinOcc1 with minOccurs 1 removed."
-		assert !diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[0].safe
-		assert !diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[0].warning
-		assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[0].breaks
-		assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[1].description ==
-		"Element test with minOccurs 0 added to position 5(end of sequence)."
-		assert !diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[1].safe
-		assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[1].warning
-		assert !diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[1].breaks
-		
-		assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[0].breaks
-		
-		assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].description == 
-		"Element details:"
-		
-		assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].description == 
-		"MinOccurs changed from 1 to 0."
-		assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].warning
-	}
-	
-	void testElementMin0Removed() {
-		def diffs = compare(wsdl2, wsdl1)
-		assert diffs[0].diffs[0].diffs[0].diffs[0].description == 'Output:'
-		assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].description ==
-		"MinOccurs changed from 0 to 1."
-		assert !diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].breaks
-		assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].safe
-		//Warnin is false because the change is relative to response and not request.
-		assert !diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].warning
-	}
-	
-	private def compare(a, b) {
-		new WsdlDiffGenerator(a: a, b: b).compare()
-	}
+  void testElementAdded2Req() {
+    def diffs = compare(wsdl1, wsdl2)
+    assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[0].description ==
+      "Element ElementWithMinOcc1 with minOccurs 1 removed."
+    assert !diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[0].safe
+    assert !diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[0].warning
+    assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[0].breaks
+    assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[1].description ==
+      "Element test with minOccurs 0 added to position 5(end of sequence)."
+    assert !diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[1].safe
+    assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[1].warning
+    assert !diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[1].breaks
+
+    assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[1].diffs[0].diffs[0].breaks
+
+    assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].description ==
+      "Element details:"
+
+    assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].description ==
+      "MinOccurs changed from 1 to 0."
+    assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].warning
+  }
+
+  void testElementMin0Removed() {
+    def diffs = compare(wsdl2, wsdl1)
+    assert diffs[0].diffs[0].diffs[0].diffs[0].description == 'Output:'
+    assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].description ==
+      "MinOccurs changed from 0 to 1."
+    assert !diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].breaks
+    assert diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].safe
+    //Warnin is false because the change is relative to response and not request.
+    assert !diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].diffs[0].warning
+  }
+
+  private def compare(a, b) {
+    new WsdlDiffGenerator(a: a, b: b).compare()
+  }
 }

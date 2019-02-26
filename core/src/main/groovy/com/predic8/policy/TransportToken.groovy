@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class TransportToken extends PolicyOperator{
+class TransportToken extends PolicyOperator {
 
 }
 

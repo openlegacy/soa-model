@@ -14,16 +14,16 @@
 
 package com.predic8.wstool.creator
 
-import groovy.xml.*
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
 import com.predic8.soamodel.Consts
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-class RequestCreatorsWithDifferentNamespacePrefixesTest extends GroovyTestCase{
+class RequestCreatorsWithDifferentNamespacePrefixesTest extends GroovyTestCase {
 
   def request
 
-  void testRequestTemplateCreator(){
+  void testRequestTemplateCreator() {
     def sw = new StringWriter()
     def creator = new SOARequestCreator(getDefinitions("/ns-test.wsdl"), new RequestTemplateCreator(), new MarkupBuilder(sw))
     creator.createRequest("MYTESTServicePortType", "MYTEST", "MYTESTServiceBinding")
@@ -33,18 +33,18 @@ class RequestCreatorsWithDifferentNamespacePrefixesTest extends GroovyTestCase{
     assertEquals('http://www.test.com/mytest/reoperation/types', request.Body.MYTESTRequestDocument.t1.lookupNamespace('ns1'))
   }
 
-  void testRequestCreator(){
+  void testRequestCreator() {
     def sw = new StringWriter()
     def formParams = [:]
-    formParams['xpath:/MYTESTRequestDocument/t1']='foo'
-    formParams['xpath:/MYTESTRequestDocument/t2']='bar'
+    formParams['xpath:/MYTESTRequestDocument/t1'] = 'foo'
+    formParams['xpath:/MYTESTRequestDocument/t2'] = 'bar'
     def creator = new SOARequestCreator(getDefinitions("/ns-test.wsdl"), new RequestCreator(), new MarkupBuilder(sw))
     creator.formParams = formParams
     creator.createRequest("MYTESTServicePortType", "MYTEST", "MYTESTServiceBinding")
     request = parseRequest(sw)
-		assertEquals(Consts.SOAP11_NS, request.Envelope.lookupNamespace('s11'))
-		assertEquals('http://www.test.com/mytest/reoperation', request.Body.MYTESTRequestDocument.lookupNamespace('TEST3N1'))
-		assertEquals('http://www.test.com/mytest/reoperation/types', request.Body.MYTESTRequestDocument.t1.lookupNamespace('ns1'))
+    assertEquals(Consts.SOAP11_NS, request.Envelope.lookupNamespace('s11'))
+    assertEquals('http://www.test.com/mytest/reoperation', request.Body.MYTESTRequestDocument.lookupNamespace('TEST3N1'))
+    assertEquals('http://www.test.com/mytest/reoperation/types', request.Body.MYTESTRequestDocument.t1.lookupNamespace('ns1'))
     assertEquals('foo', request.Body.MYTESTRequestDocument.t1.text())
     assertEquals('bar', request.Body.MYTESTRequestDocument.t2.text())
   }
@@ -52,7 +52,7 @@ class RequestCreatorsWithDifferentNamespacePrefixesTest extends GroovyTestCase{
   def parseRequest(sw) {
     new XmlSlurper().parseText(sw.toString())
   }
-  
+
   private def getDefinitions(input) {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     parser.parse(input)

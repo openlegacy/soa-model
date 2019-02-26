@@ -12,25 +12,25 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl.creator;
+package com.predic8.wsdl.creator
 
-import groovy.xml.*
-import com.predic8.wsdl.*
-import com.predic8.xml.util.*
+import com.predic8.wsdl.WSDLParser
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
-class WSDLCreatorWithRPCStyleTest extends GroovyTestCase{
-  
+class WSDLCreatorWithRPCStyleTest extends GroovyTestCase {
+
   def definitions
   def createdWSDL
-  
+
   void setUp() {
     definitions = getDefinitions()
     def strWriter = new StringWriter()
-    def creator = new WSDLCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new WSDLCreator(builder: new MarkupBuilder(strWriter))
     creator.createDefinitions(definitions, new WSDLCreatorContext())
     createdWSDL = new XmlSlurper().parseText(strWriter.toString())
   }
-  
+
   private def getDefinitions() {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     definitions = parser.parse("/RPCStyle.wsdl")
@@ -40,5 +40,5 @@ class WSDLCreatorWithRPCStyleTest extends GroovyTestCase{
     assertEquals('xsd:date', createdWSDL.message.part[0].@type.toString())
     assertEquals('xsd:string', createdWSDL.message.part[1].@type.toString())
   }
-  
+
 }

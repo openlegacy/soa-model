@@ -11,17 +11,15 @@
 
 package com.predic8.schema
 
-
-import static com.predic8.soamodel.Consts.SCHEMA_NS
-
-import javax.xml.namespace.QName as JQName
-
+import com.predic8.soamodel.CreatorContext
+import com.predic8.soamodel.KnownSchemas
+import com.predic8.xml.util.ClasspathResolver
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import com.predic8.soamodel.CreatorContext
-import com.predic8.soamodel.KnownSchemas
-import com.predic8.xml.util.*
+import javax.xml.namespace.QName as JQName
+
+import static com.predic8.soamodel.Consts.SCHEMA_NS
 
 /**
  * 	SOAP Encoding schema with the namespace 'http://www.w3.org/2003/05/soap-encoding' will 
@@ -29,53 +27,53 @@ import com.predic8.xml.util.*
  */
 class Import extends SchemaComponent {
 
-	String namespace
-	String schemaLocation
-	Schema importSchema
+  String namespace
+  String schemaLocation
+  Schema importSchema
 
-	private static final Logger log = LoggerFactory.getLogger(Import.class)
+  private static final Logger log = LoggerFactory.getLogger(Import.class)
 
-	protected parseAttributes(token, ctx){
-		namespace = token.getAttributeValue( null , 'namespace')
-		schemaLocation = token.getAttributeValue( null , 'schemaLocation')
-		log.debug("import: $schemaLocation , ns: $namespace , schema.basedir: ${schema.baseDir}")
-		
-		// Known schemas will not be parsed from the schemaLocation. Instead the copy from Classpath will be used.
-		if(namespace in KnownSchemas.docs.keySet()){
-			log.info("Loading schema '$namespace' provided by SOA Model instead of user-provided document.")
-			return importSchema = (new SchemaParser(resourceResolver: new ClasspathResolver())).parse(KnownSchemas.docs[namespace])
-		}
-		
-		if(!schemaLocation)	return
-		
-		importSchema = ctx.getImportedSchema(this)
-	}
+  protected parseAttributes(token, ctx) {
+    namespace = token.getAttributeValue(null, 'namespace')
+    schemaLocation = token.getAttributeValue(null, 'schemaLocation')
+    log.debug("import: $schemaLocation , ns: $namespace , schema.basedir: ${schema.baseDir}")
 
-	def getImportSchema() {
-		if(importSchema) return importSchema
+    // Known schemas will not be parsed from the schemaLocation. Instead the copy from Classpath will be used.
+    if (namespace in KnownSchemas.docs.keySet()) {
+      log.info("Loading schema '$namespace' provided by SOA Model instead of user-provided document.")
+      return importSchema = (new SchemaParser(resourceResolver: new ClasspathResolver())).parse(KnownSchemas.docs[namespace])
+    }
 
-		if(schema.definitions?.localSchemas.find{it.targetNamespace == namespace}) {
-			log.debug("Inlined schema [$namespace] import resolving from the WSDL.")
-			return importSchema = schema.definitions?.localSchemas.find{it.targetNamespace==namespace}
-		}
-	}
+    if (!schemaLocation) return
 
-	def create(creator, CreatorContext ctx){
-		creator.createImport(this, ctx.clone())
-	}
+    importSchema = ctx.getImportedSchema(this)
+  }
 
-	protected getElementName(){
-		new JQName(SCHEMA_NS, 'import')
-	}
+  def getImportSchema() {
+    if (importSchema) return importSchema
 
-	String toString(){
-		"import[ namespace=$namespace, schemaLocation=$schemaLocation ]"
-	}
+    if (schema.definitions?.localSchemas.find { it.targetNamespace == namespace }) {
+      log.debug("Inlined schema [$namespace] import resolving from the WSDL.")
+      return importSchema = schema.definitions?.localSchemas.find { it.targetNamespace == namespace }
+    }
+  }
 
-	protected parseImportedSchema(ctx) {
-		ctx.baseDir = schema.baseDir
-		def impSchema = (new SchemaParser(resourceResolver: schema.resourceResolver)).parse(ctx)
-		log.debug("importedSchem.baseDir: ${impSchema.baseDir} , namespace: ${namespace}")
-		impSchema
-	}
+  def create(creator, CreatorContext ctx) {
+    creator.createImport(this, ctx.clone())
+  }
+
+  protected getElementName() {
+    new JQName(SCHEMA_NS, 'import')
+  }
+
+  String toString() {
+    "import[ namespace=$namespace, schemaLocation=$schemaLocation ]"
+  }
+
+  protected parseImportedSchema(ctx) {
+    ctx.baseDir = schema.baseDir
+    def impSchema = (new SchemaParser(resourceResolver: schema.resourceResolver)).parse(ctx)
+    log.debug("importedSchem.baseDir: ${impSchema.baseDir} , namespace: ${namespace}")
+    impSchema
+  }
 }

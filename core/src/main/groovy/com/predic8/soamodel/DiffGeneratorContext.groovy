@@ -16,8 +16,8 @@ package com.predic8.soamodel
 
 class DiffGeneratorContext implements Cloneable {
 
-	//List of compared elements to avoid a recursive comparison.
-	List<XMLElement> visited = []
-	String exchange //request, response or fault
+  //List of compared elements to avoid a recursive comparison.
+  List<XMLElement> visited = []
+  String exchange //request, response or fault
 }
 

@@ -14,15 +14,15 @@
 
 package com.predic8.wadl.creator
 
-import com.predic8.schema.Element;
-import com.predic8.schema.creator.SchemaCreatorContext;
+import com.predic8.schema.Element
+import com.predic8.schema.creator.SchemaCreatorContext
 
 class JsonCreatorContext extends SchemaCreatorContext implements Cloneable {
 
-	Element element
-	
-	def jsonElements = [:]
-	
+  Element element
+
+  def jsonElements = [:]
+
   public Object clone() {
     new JsonCreatorContext(element: element, jsonElements: jsonElements)
   }

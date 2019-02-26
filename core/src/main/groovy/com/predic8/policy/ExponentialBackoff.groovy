@@ -11,7 +11,7 @@
 
 package com.predic8.policy
 
-class ExponentialBackoff extends PolicyOperator{
+class ExponentialBackoff extends PolicyOperator {
 
 }
 

@@ -16,14 +16,14 @@ package com.predic8.schema.restriction.facet;
 
 import com.predic8.soamodel.CreatorContext
 
-class WhiteSpaceFacet extends Facet{
-  
-  def create(creator, CreatorContext ctx){
+class WhiteSpaceFacet extends Facet {
+
+  def create(creator, CreatorContext ctx) {
     creator.createWhiteSpaceFacet(this, ctx)
   }
-  
-  protected getElementName(){
+
+  protected getElementName() {
     'whiteSpace'
   }
-  
+
 }

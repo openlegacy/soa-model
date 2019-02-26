@@ -14,9 +14,6 @@
 
 package com.predic8.schema.restriction
 
-import javax.xml.namespace.QName as JQName
-
-
 class DerivationControlRestriction extends BaseRestriction {
 
 }

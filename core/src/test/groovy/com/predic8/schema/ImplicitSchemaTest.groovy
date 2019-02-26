@@ -14,39 +14,33 @@
 
 package com.predic8.schema
 
-import groovy.xml.*
-
-import javax.xml.stream.*
-
-import com.predic8.schema.creator.*
 import com.predic8.wsdl.Definitions
 import com.predic8.wsdl.WSDLParser
 import com.predic8.wsdl.WSDLParserContext
-import com.predic8.wstool.creator.*
-import com.predic8.xml.util.*
+import com.predic8.xml.util.ClasspathResolver
 
-class ImplicitSchemaTest extends GroovyTestCase{
+class ImplicitSchemaTest extends GroovyTestCase {
 
-	Definitions wsdl1 //Needs no implicit schemas
-	Definitions wsdl2 //Needs one implicit schema
-	Definitions wsdl3 //Needs two implicit schemas
-	Definitions wsdl4 //Declares all schemas itself -> no need!
-  
-	protected void setUp() throws Exception {
-		WSDLParser parser = new WSDLParser(resourceResolver: new ClasspathResolver())
-		wsdl1 = parser.parse('BLZService.wsdl')
-		wsdl2 = parser.parse('ImplicitSchema/BLZwithSOAPEnco.wsdl')
-		wsdl3 = parser.parse('ImplicitSchema/BLZwithSOAPEncoAndXMLMime.wsdl')
-	}
-	
-	void testSchemas() {
-		def ctx = new WSDLParserContext()
-		wsdl1.validate(ctx)
-		wsdl2.validate(ctx)
-		wsdl3.validate(ctx)
-		/* wsdl2 & wsdl3 use types from soap-enc and xmlmime without importing the schemas.
-		 * but there should not be an error in the context becaus of implicit schemas.
-		 */
-		assert 0 == ctx.errors.message.size()
-	}
+  Definitions wsdl1 //Needs no implicit schemas
+  Definitions wsdl2 //Needs one implicit schema
+  Definitions wsdl3 //Needs two implicit schemas
+  Definitions wsdl4 //Declares all schemas itself -> no need!
+
+  protected void setUp() throws Exception {
+    WSDLParser parser = new WSDLParser(resourceResolver: new ClasspathResolver())
+    wsdl1 = parser.parse('BLZService.wsdl')
+    wsdl2 = parser.parse('ImplicitSchema/BLZwithSOAPEnco.wsdl')
+    wsdl3 = parser.parse('ImplicitSchema/BLZwithSOAPEncoAndXMLMime.wsdl')
+  }
+
+  void testSchemas() {
+    def ctx = new WSDLParserContext()
+    wsdl1.validate(ctx)
+    wsdl2.validate(ctx)
+    wsdl3.validate(ctx)
+    /* wsdl2 & wsdl3 use types from soap-enc and xmlmime without importing the schemas.
+         * but there should not be an error in the context becaus of implicit schemas.
+         */
+    assert 0 == ctx.errors.message.size()
+  }
 }

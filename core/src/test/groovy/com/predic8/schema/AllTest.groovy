@@ -14,17 +14,20 @@
 
 package com.predic8.schema
 
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.creator.SchemaCreator
+import com.predic8.schema.creator.SchemaCreatorContext
+import com.predic8.wstool.creator.RequestCreator
+import com.predic8.wstool.creator.RequestCreatorContext
+import com.predic8.wstool.creator.RequestTemplateCreator
+import com.predic8.wstool.creator.RequestTemplateCreatorContext
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
+import groovy.xml.QName
 
-import com.predic8.xml.util.*
-import com.predic8.schema.creator.*
-import com.predic8.wstool.creator.*
-
-class AllTest extends GroovyTestCase{
+class AllTest extends GroovyTestCase {
 
   public static HR_NS = "http://predic8.com/human-resources/"
-  public static PERSON_GROUP = new QName(HR_NS,"PersonGroup")
+  public static PERSON_GROUP = new QName(HR_NS, "PersonGroup")
   public static EMPLOYEE_TYPE = new QName(HR_NS, "EmployeeType")
   def schema
 
@@ -33,21 +36,21 @@ class AllTest extends GroovyTestCase{
     schema = parser.parse("/schema/all/all.xsd")
   }
 
-  void testTopLevelAll(){
+  void testTopLevelAll() {
     assertNotNull(schema.getGroup(PERSON_GROUP))
-    assertNotNull(schema.getGroup(PERSON_GROUP).model.particles.find{it.name == 'firstName'})
-    assertNotNull(schema.getGroup(PERSON_GROUP).model.particles.find{it.name == 'lastName'})
+    assertNotNull(schema.getGroup(PERSON_GROUP).model.particles.find { it.name == 'firstName' })
+    assertNotNull(schema.getGroup(PERSON_GROUP).model.particles.find { it.name == 'lastName' })
   }
 
-  void testAllInComplexType(){
-    def all = schema.getType(EMPLOYEE_TYPE).model.particles.find{ it.name == 'person'}.embeddedType.model
+  void testAllInComplexType() {
+    def all = schema.getType(EMPLOYEE_TYPE).model.particles.find { it.name == 'person' }.embeddedType.model
     assertNotNull(all)
     assertEquals('1', schema.getType(EMPLOYEE_TYPE).model.minOccurs)
   }
 
-  void testSchemaCreator(){
+  void testSchemaCreator() {
     def strWriter = new StringWriter()
-    def creator = new SchemaCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new SchemaCreator(builder: new MarkupBuilder(strWriter))
     schema.create(creator, new SchemaCreatorContext())
     def testSchema = new XmlSlurper().parseText(strWriter.toString())
     assertEquals(3, testSchema.group[0].all.element.size())
@@ -56,8 +59,8 @@ class AllTest extends GroovyTestCase{
 
   void testRequestCreator() {
     def strWriter = new StringWriter()
-    def creator = new RequestCreator(builder : new MarkupBuilder(strWriter))
-    schema.getElement('employee').create(creator, new RequestCreatorContext(formParams: ["xpath:/employee/person/firstName":"Kaveh", "xpath:/employee/person/lastName":"Keshavarzi", "xpath:/employee/person/isHuman":"", "xpath:/employee/city":"Bonn"]))
+    def creator = new RequestCreator(builder: new MarkupBuilder(strWriter))
+    schema.getElement('employee').create(creator, new RequestCreatorContext(formParams: ["xpath:/employee/person/firstName": "Kaveh", "xpath:/employee/person/lastName": "Keshavarzi", "xpath:/employee/person/isHuman": "", "xpath:/employee/city": "Bonn"]))
     def emp = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('Kaveh', emp.person.firstName.toString())
     assertEquals('Keshavarzi', emp.person.lastName.toString())
@@ -67,7 +70,7 @@ class AllTest extends GroovyTestCase{
 
   void testRequestTemplateCreator() {
     def strWriter = new StringWriter()
-    def creator = new RequestTemplateCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new RequestTemplateCreator(builder: new MarkupBuilder(strWriter))
     schema.getElement('employee').create(creator, new RequestTemplateCreatorContext())
     def emp = new XmlSlurper().parseText(strWriter.toString())
     assertEquals('?XXX?', emp.person.firstName.toString())

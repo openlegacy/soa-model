@@ -14,17 +14,19 @@
 
 package com.predic8.schema.diff
 
-import com.predic8.soamodel.*
+
+import com.predic8.soamodel.AbstractDiffGenerator
+import com.predic8.soamodel.Difference
 
 class AttributeDiffGenerator extends AbstractDiffGenerator {
-	
-	public AttributeDiffGenerator(){
-		updateLabels()
-	}
-	
+
+  public AttributeDiffGenerator() {
+    updateLabels()
+  }
+
   private def labelTypeChanged, labelRefChanged, labelTo, labelAttributeChange, labelAttributeFormChange, labelAttributeFixedChange, labelAttributeDefaultChange
-	
-  def compare(){
+
+  def compare() {
     def diffs = compareType()
     diffs.addAll(compareUse())
     diffs.addAll(compareFixed())
@@ -32,57 +34,57 @@ class AttributeDiffGenerator extends AbstractDiffGenerator {
   }
 
   private compareType() {
-    if(a.type != b.type) {
-      return [new Difference(description:"{$labelTypeChanged} ${a.type} ${labelTo} ${b.type}.", type: 'attribute', breaks:ctx.exchange ? true: null)]
+    if (a.type != b.type) {
+      return [new Difference(description: "{$labelTypeChanged} ${a.type} ${labelTo} ${b.type}.", type: 'attribute', breaks: ctx.exchange ? true : null)]
     }
     []
   }
 
   private compareRef() {
-    if(a.ref != b.ref) {
-      return [new Difference(description:"${labelRefChanged} ${a.ref} ${labelTo} ${b.ref}.", type: 'attribute', breaks:ctx.exchange ? true: null)]
+    if (a.ref != b.ref) {
+      return [new Difference(description: "${labelRefChanged} ${a.ref} ${labelTo} ${b.ref}.", type: 'attribute', breaks: ctx.exchange ? true : null)]
     }
     []
   }
 
-  private compareUse(){
-    if(a.use != b.use) {
-      return [new Difference(description:"${labelAttributeChange} ${a.use} ${labelTo} ${b.use}.", type: 'attribute')]
+  private compareUse() {
+    if (a.use != b.use) {
+      return [new Difference(description: "${labelAttributeChange} ${a.use} ${labelTo} ${b.use}.", type: 'attribute')]
     }
     []
   }
 
-  private compareForm(){
-    if(a.form != b.form) {
-      return [new Difference(description:"${labelAttributeFormChange} ${a.form} ${labelTo} ${b.form}.", type: 'attribute')]
+  private compareForm() {
+    if (a.form != b.form) {
+      return [new Difference(description: "${labelAttributeFormChange} ${a.form} ${labelTo} ${b.form}.", type: 'attribute')]
     }
     []
   }
 
-  private compareFixed(){
-    if(a.fixedValue != b.fixedValue) {
-      return [new Difference(description:"${labelAttributeFixedChange} ${a.fixedValue} ${labelTo} ${b.fixedValue}.", type: 'attribute')]
+  private compareFixed() {
+    if (a.fixedValue != b.fixedValue) {
+      return [new Difference(description: "${labelAttributeFixedChange} ${a.fixedValue} ${labelTo} ${b.fixedValue}.", type: 'attribute')]
     }
     []
   }
 
-  private compareDefault(){
-    if(a.defaultValue != b.defaultValue) {
-      return [new Difference(description:"${labelAttributeDefaultChange} ${a.defaultValue} ${labelTo} ${b.defaultValue}.", type: 'attribute')]
+  private compareDefault() {
+    if (a.defaultValue != b.defaultValue) {
+      return [new Difference(description: "${labelAttributeDefaultChange} ${a.defaultValue} ${labelTo} ${b.defaultValue}.", type: 'attribute')]
     }
     []
   }
-	
-  protected def updateLabels(){
-	  
-	   labelTypeChanged = bundle.getString("com.predic8.schema.diff.labelTypeChanged")
-	   labelRefChanged = bundle.getString("com.predic8.schema.diff.labelRefChanged")
-	   labelTo = bundle.getString("com.predic8.schema.diff.labelTo")
-	   labelAttributeChange = bundle.getString("com.predic8.schema.diff.labelAttributeChange")
-	   labelAttributeFormChange = bundle.getString("com.predic8.schema.diff.labelAttributeFormChange")
-	   labelAttributeFixedChange = bundle.getString("com.predic8.schema.diff.labelAttributeFixedChange")
-	   labelAttributeDefaultChange = bundle.getString("com.predic8.schema.diff.labelAttributeDefaultChange")
 
-   }
-  
+  protected def updateLabels() {
+
+    labelTypeChanged = bundle.getString("com.predic8.schema.diff.labelTypeChanged")
+    labelRefChanged = bundle.getString("com.predic8.schema.diff.labelRefChanged")
+    labelTo = bundle.getString("com.predic8.schema.diff.labelTo")
+    labelAttributeChange = bundle.getString("com.predic8.schema.diff.labelAttributeChange")
+    labelAttributeFormChange = bundle.getString("com.predic8.schema.diff.labelAttributeFormChange")
+    labelAttributeFixedChange = bundle.getString("com.predic8.schema.diff.labelAttributeFixedChange")
+    labelAttributeDefaultChange = bundle.getString("com.predic8.schema.diff.labelAttributeDefaultChange")
+
+  }
+
 }

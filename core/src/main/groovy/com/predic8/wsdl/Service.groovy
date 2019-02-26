@@ -12,44 +12,43 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl;
+package com.predic8.wsdl
 
-import groovy.xml.QName
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
 
 import javax.xml.namespace.QName as JQName
 
-import com.predic8.policy.*
-import com.predic8.soamodel.*
-
-class Service extends WSDLElement{
+class Service extends WSDLElement {
 
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL11_NS, 'service')
   List<Port> ports = []
 
-  protected parseAttributes(token, WSDLParserContext ctx){
-    name = token.getAttributeValue(null , 'name')
+  protected parseAttributes(token, WSDLParserContext ctx) {
+    name = token.getAttributeValue(null, 'name')
   }
 
-  protected parseChildren(token, child, WSDLParserContext ctx){
+  protected parseChildren(token, child, WSDLParserContext ctx) {
     super.parseChildren(token, child, ctx)
-    switch (token.name ){
-      case Port.ELEMENTNAME :
-      def port = new Port(definitions : definitions)
-      port.parse(token, ctx)
-      ports << port ; break
+    switch (token.name) {
+      case Port.ELEMENTNAME:
+        def port = new Port(definitions: definitions)
+        port.parse(token, ctx)
+        ports << port; break
     }
   }
 
   void create(AbstractCreator creator, CreatorContext ctx) {
     creator.createService(this, ctx)
   }
-  
-  public Port newPort(String name){
-    def port = new Port(definitions: definitions, name : name, parent: this)
+
+  public Port newPort(String name) {
+    def port = new Port(definitions: definitions, name: name, parent: this)
     ports << port
     port
   }
-  
+
   String toString() {
     "service[ ports=$ports ]"
   }

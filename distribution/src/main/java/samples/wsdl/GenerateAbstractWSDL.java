@@ -15,9 +15,12 @@
 package samples.wsdl;
 
 
-import com.predic8.wsdl.*;
-import com.predic8.schema.*;
-import static com.predic8.schema.Schema.*;
+import com.predic8.schema.Schema;
+import com.predic8.wsdl.Definitions;
+import com.predic8.wsdl.Operation;
+import com.predic8.wsdl.PortType;
+
+import static com.predic8.schema.Schema.INT;
 
 public class GenerateAbstractWSDL {
 
@@ -25,11 +28,11 @@ public class GenerateAbstractWSDL {
 
     Schema schema = new Schema("http://predic8.com/add/1/");
     schema.newElement("add").newComplexType().newSequence()
-        .newElement("summand", INT).setMaxOccurs("unbounded");
+      .newElement("summand", INT).setMaxOccurs("unbounded");
     schema.newElement("addResponse").newComplexType().newSequence()
-        .newElement("number", INT);
+      .newElement("number", INT);
 
-    Definitions wsdl = new Definitions("http://predic8.com/wsdl/AddService/1/","AddService");
+    Definitions wsdl = new Definitions("http://predic8.com/wsdl/AddService/1/", "AddService");
     wsdl.addSchema(schema);
 
     PortType pt = wsdl.newPortType("AddPortType");
@@ -37,8 +40,8 @@ public class GenerateAbstractWSDL {
 
     op.newInput("add").newMessage("add").newPart("parameters", "tns:add");
     op.newOutput("addResponse").newMessage("addResponse")
-        .newPart("parameters", "tns:addResponse");
-    
+      .newPart("parameters", "tns:addResponse");
+
     System.out.println(wsdl.getAsString());
   }
 }

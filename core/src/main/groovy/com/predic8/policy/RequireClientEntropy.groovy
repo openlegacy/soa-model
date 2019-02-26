@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class RequireClientEntropy extends PolicyOperator{
+class RequireClientEntropy extends PolicyOperator {
 
 }
 

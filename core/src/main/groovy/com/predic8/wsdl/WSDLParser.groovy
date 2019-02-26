@@ -11,48 +11,48 @@
 
 package com.predic8.wsdl
 
+import com.predic8.soamodel.AbstractParser
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.WrongGrammarException
+import com.predic8.wsi.WSIResult
+
 import javax.xml.stream.XMLStreamReader
 
-import com.predic8.soamodel.*
-import com.predic8.wsi.*
+class WSDLParser extends AbstractParser {
 
-class WSDLParser extends AbstractParser{
-	
-	Registry registry
+  Registry registry
 
-	Definitions parse(String input){
-		super.parse(new WSDLParserContext(input: input))
-	}
-	
-	Definitions parse(InputStream input){
-		super.parse(new WSDLParserContext(input: input))
-	}
-	
-	Definitions parse(WSDLParserContext ctx){
-		super.parse(ctx)
-	}
-	
-	protected Definitions parseLocal(XMLStreamReader token, WSDLParserContext ctx){
-		def encoding = token.getCharacterEncodingScheme()
-		if( !encoding || (encoding != 'UTF-8' && encoding != 'UTF-16')) ctx.wsiResults << new WSIResult(rule : 'R4003')
-		def definitions
-		while(token.hasNext()) {
-			if (token.startElement) {
-				if(token.name == Definitions.ELEMENTNAME) {
-					definitions = new Definitions(baseDir : ctx.newBaseDir, resourceResolver: ctx.resourceResolver, registry : registry ?: new Registry())
-					ctx.wsdlElementOrder << definitions
-					definitions.parse(token, ctx)
-				}
-				else if(token.name.namespaceURI == Consts.WSDL20_NS) {
-					throw new WSDLVersion2NotSupportedException("WSDL 2.0 is not supported yet.")
-				}
-				else {
-					throw new WrongGrammarException("Expected root element '{http://schemas.xmlsoap.org/wsdl/}definitions' for the WSDL document but was '${token.name}'.", token.name, token.location)
-				}
-			}
-			if(token.hasNext()) token.next()
-		}
-		if(!definitions) throw new RuntimeException("The parsed document ${ctx.input} is not a valid WSDL document.")
-		definitions
-	}
+  Definitions parse(String input) {
+    super.parse(new WSDLParserContext(input: input))
+  }
+
+  Definitions parse(InputStream input) {
+    super.parse(new WSDLParserContext(input: input))
+  }
+
+  Definitions parse(WSDLParserContext ctx) {
+    super.parse(ctx)
+  }
+
+  protected Definitions parseLocal(XMLStreamReader token, WSDLParserContext ctx) {
+    def encoding = token.getCharacterEncodingScheme()
+    if (!encoding || (encoding != 'UTF-8' && encoding != 'UTF-16')) ctx.wsiResults << new WSIResult(rule: 'R4003')
+    def definitions
+    while (token.hasNext()) {
+      if (token.startElement) {
+        if (token.name == Definitions.ELEMENTNAME) {
+          definitions = new Definitions(baseDir: ctx.newBaseDir, resourceResolver: ctx.resourceResolver, registry: registry ?: new Registry())
+          ctx.wsdlElementOrder << definitions
+          definitions.parse(token, ctx)
+        } else if (token.name.namespaceURI == Consts.WSDL20_NS) {
+          throw new WSDLVersion2NotSupportedException("WSDL 2.0 is not supported yet.")
+        } else {
+          throw new WrongGrammarException("Expected root element '{http://schemas.xmlsoap.org/wsdl/}definitions' for the WSDL document but was '${token.name}'.", token.name, token.location)
+        }
+      }
+      if (token.hasNext()) token.next()
+    }
+    if (!definitions) throw new RuntimeException("The parsed document ${ctx.input} is not a valid WSDL document.")
+    definitions
+  }
 }

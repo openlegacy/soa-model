@@ -14,43 +14,46 @@
 
 package com.predic8.wsdl.header
 
-import groovy.xml.*
-import com.predic8.wsdl.*
-import com.predic8.wsdl.creator.*
-import com.predic8.wstool.creator.*
-import com.predic8.xml.util.*
-import com.predic8.wsdl.soap11.*
+import com.predic8.wsdl.WSDLParser
+import com.predic8.wsdl.creator.WSDLCreator
+import com.predic8.wsdl.creator.WSDLCreatorContext
+import com.predic8.wsdl.soap11.SOAPHeader
+import com.predic8.wstool.creator.FormCreator
+import com.predic8.xml.util.ClasspathResolver
+import groovy.xml.MarkupBuilder
 
 class WSDLHeaderTest extends GroovyTestCase {
 
   def wsdl
   def createdWSDL
 
-  void setUp(){
+  void setUp() {
     def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     wsdl = parser.parse("/header/LibraryServiceService.wsdl")
     def strWriter = new StringWriter()
-    def creator = new WSDLCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new WSDLCreator(builder: new MarkupBuilder(strWriter))
     creator.createDefinitions(wsdl, new WSDLCreatorContext())
     createdWSDL = new XmlSlurper().parseText(strWriter.toString())
   }
 
-  void testParsing(){
+  void testParsing() {
     assertEquals(3, wsdl.getBinding('LibraryServicePortBinding').getOperation('addBook').input.bindingElements.size())
-    assertEquals(2, wsdl.getBinding('LibraryServicePortBinding').getOperation('addBook').input.bindingElements.findAll{it instanceof SOAPHeader}.size())
+    assertEquals(2, wsdl.getBinding('LibraryServicePortBinding').getOperation('addBook').input.bindingElements.findAll {
+      it instanceof SOAPHeader
+    }.size())
   }
 
-  void testWSDLCreator(){
+  void testWSDLCreator() {
     assert createdWSDL.binding.operation.input.body.@parts.toString().contains('parameters')
     assert createdWSDL.binding.operation.input.header.@part.toString().contains('username')
     assert createdWSDL.binding.operation.input.header.@part.toString().contains('timeout')
   }
 
-  void testFormCreator(){
+  void testFormCreator() {
     def strWriter = new StringWriter()
-    def creator = new FormCreator(builder : new MarkupBuilder(strWriter), definitions : wsdl)
+    def creator = new FormCreator(builder: new MarkupBuilder(strWriter), definitions: wsdl)
     creator.createRequest('LibraryService', 'addBook', 'LibraryServicePortBinding')
-    strWriter = "<div>"+ strWriter + "</div>"
+    strWriter = "<div>" + strWriter + "</div>"
     def request = new XmlSlurper().parseText(strWriter.toString())
     assert request.table.tbody.tr.td.input.@name.toString().contains('username')
     assert request.table.tbody.tr.td.input.@name.toString().contains('timeout')

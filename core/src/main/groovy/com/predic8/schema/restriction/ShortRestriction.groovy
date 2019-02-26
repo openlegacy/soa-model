@@ -14,6 +14,6 @@
 
 package com.predic8.schema.restriction;
 
-class ShortRestriction extends IntRestriction{
-  
+class ShortRestriction extends IntRestriction {
+
 }

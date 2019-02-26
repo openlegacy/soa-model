@@ -14,10 +14,10 @@
 
 package com.predic8.schema.restriction;
 
-class FloatRestriction extends BaseRestriction{
-  
-  String getBuildInType(){
+class FloatRestriction extends BaseRestriction {
+
+  String getBuildInType() {
     'float'
   }
-  
+
 }

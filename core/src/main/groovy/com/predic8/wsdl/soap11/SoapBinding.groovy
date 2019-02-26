@@ -12,29 +12,30 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl.soap11;
+package com.predic8.wsdl.soap11
+
+import com.predic8.soamodel.Consts
+import com.predic8.wsdl.AbstractSOAPBinding
+import com.predic8.wsdl.WSDLParserContext
+import com.predic8.wsi.WSIResult
 
 import javax.xml.namespace.QName as JQName
 
-import com.predic8.wsdl.*
-import com.predic8.wsi.*
-import com.predic8.soamodel.Consts
-
-class SOAPBinding extends AbstractSOAPBinding{
+class SOAPBinding extends AbstractSOAPBinding {
 
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL_SOAP11_NS, 'binding')
 
-  protected parseAttributes(token, WSDLParserContext ctx){
+  protected parseAttributes(token, WSDLParserContext ctx) {
     super.parseAttributes(token, ctx)
-    if(!transport) ctx.wsiResults << new WSIResult(rule : 'R2701')
-    if(transport && transport != 'http://schemas.xmlsoap.org/soap/http') ctx.wsiResults << new WSIResult(rule : 'R2702')
+    if (!transport) ctx.wsiResults << new WSIResult(rule: 'R2701')
+    if (transport && transport != 'http://schemas.xmlsoap.org/soap/http') ctx.wsiResults << new WSIResult(rule: 'R2702')
   }
 
-  String getContentType(){
+  String getContentType() {
     'text/xml'
   }
-  
-  String getProtocol(){
+
+  String getProtocol() {
     "SOAP11"
   }
 }

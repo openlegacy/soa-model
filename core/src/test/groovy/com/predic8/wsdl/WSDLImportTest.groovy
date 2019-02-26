@@ -14,17 +14,18 @@
 
 package com.predic8.wsdl
 
-import groovy.xml.QName as GQName
-import com.predic8.xml.util.*
-import com.predic8.wsdl.creator.*
+import com.predic8.wsdl.creator.WSDLCreator
+import com.predic8.wsdl.creator.WSDLCreatorContext
+import com.predic8.xml.util.ClasspathResolver
 import groovy.xml.MarkupBuilder
+import groovy.xml.QName as GQName
 
-class WSDLImportTest extends GroovyTestCase{
+class WSDLImportTest extends GroovyTestCase {
 
   Definitions wsdl
 
-  void setUp(){
-    def parser = new WSDLParser( resourceResolver: new ClasspathResolver())
+  void setUp() {
+    def parser = new WSDLParser(resourceResolver: new ClasspathResolver())
     wsdl = parser.parse("/import/stockquoteservice.wsdl")
   }
 
@@ -52,7 +53,7 @@ class WSDLImportTest extends GroovyTestCase{
 
   void testCreator() {
     def strWriter = new StringWriter()
-    def creator = new WSDLCreator(builder : new MarkupBuilder(strWriter))
+    def creator = new WSDLCreator(builder: new MarkupBuilder(strWriter))
     creator.createDefinitions(wsdl, new WSDLCreatorContext())
     def createdWSDL = new XmlSlurper().parseText(strWriter.toString())
   }

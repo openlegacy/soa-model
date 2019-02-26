@@ -11,38 +11,41 @@
 
 package com.predic8.policy.creator
 
-import com.predic8.schema.*
-import com.predic8.soamodel.*
-import com.predic8.wsdl.*
+
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.wsdl.Binding
+import com.predic8.wsdl.BindingMessage
+import com.predic8.wsdl.BindingOperation
+import com.predic8.wsdl.Definitions
 
 class PolicyVisitor extends AbstractCreator {
 
-	public static PolicyVisitorContext getWSDLPolicyInfo(Definitions wsdl, PolicyVisitorContext ctx = new PolicyVisitorContext()) {
-		wsdl.bindings.each {
-			it.create(this, ctx)
-		}
+  public static PolicyVisitorContext getWSDLPolicyInfo(Definitions wsdl, PolicyVisitorContext ctx = new PolicyVisitorContext()) {
+    wsdl.bindings.each {
+      it.create(this, ctx)
+    }
 //		wsdl.operations.each {
 //			//TODO
 //		}
-	}
+  }
 
-	public void createBinding(Binding binding, PolicyVisitorContext ctx){
-		if(binding.policyReference) ctx.policyRefs[binding] = binding.policy
-		binding.operations.each {
-			it.create(this, ctx)
-		}
-	}
+  public void createBinding(Binding binding, PolicyVisitorContext ctx) {
+    if (binding.policyReference) ctx.policyRefs[binding] = binding.policy
+    binding.operations.each {
+      it.create(this, ctx)
+    }
+  }
 
-	public void createBindingOperation(BindingOperation operation, PolicyVisitorContext ctx){
-		operation.input.create(this, ctx)
-		operation.output.create(this, ctx)
-		operation.faults.each {
-			it.create(this, ctx)
-		}
-	}
+  public void createBindingOperation(BindingOperation operation, PolicyVisitorContext ctx) {
+    operation.input.create(this, ctx)
+    operation.output.create(this, ctx)
+    operation.faults.each {
+      it.create(this, ctx)
+    }
+  }
 
-	public void createBindingMessage(BindingMessage bndmsg, PolicyVisitorContext ctx){
-		if(bndmsg.policyReference) ctx.policyRefs[bndmsg] = bndmsg.policy
-	}
+  public void createBindingMessage(BindingMessage bndmsg, PolicyVisitorContext ctx) {
+    if (bndmsg.policyReference) ctx.policyRefs[bndmsg] = bndmsg.policy
+  }
 
 }

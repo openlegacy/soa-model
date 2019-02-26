@@ -9,72 +9,68 @@
  See the License for the specific language governing permissions and
  limitations under the License. */
 
-package com.predic8.schema;
+package com.predic8.schema
 
-import java.util.List;
-
-import groovy.xml.*
 import com.predic8.soamodel.CreatorContext
-import com.predic8.wstool.creator.*
-import javax.xml.stream.*
+import groovy.xml.QName
 
-class AttributeGroup extends SchemaComponent{
+class AttributeGroup extends SchemaComponent {
 
   QName ref
   List<Attribute> attributes = []
   List<AttributeGroup> attributeGroups = []
   AnyAttribute anyAttribute
 
-  protected parseAttributes(token, params){
+  protected parseAttributes(token, params) {
     super.parseAttributes(token, params)
-    if (token.getAttributeValue( null , 'ref'))
-      ref = getTypeQName(token.getAttributeValue( null , 'ref'))
+    if (token.getAttributeValue(null, 'ref'))
+      ref = getTypeQName(token.getAttributeValue(null, 'ref'))
   }
 
-  protected parseChildren(token, child, params){
-    switch (child ){
-      case 'attribute' :
-        def attribute = new Attribute(schema:schema)
+  protected parseChildren(token, child, params) {
+    switch (child) {
+      case 'attribute':
+        def attribute = new Attribute(schema: schema)
         attribute.parse(token, params)
-          attributes << attribute ; break
-      case 'attributeGroup' :
-        def attributeGroup = new AttributeGroup(schema:schema)
+        attributes << attribute; break
+      case 'attributeGroup':
+        def attributeGroup = new AttributeGroup(schema: schema)
         attributeGroup.parse(token, params)
-          attributeGroups << attributeGroup ; break
-      case 'anyAttribute' :
+        attributeGroups << attributeGroup; break
+      case 'anyAttribute':
         anyAttribute = new AnyAttribute(schema: schema)
-        anyAttribute.parse(token, params) ; break
+        anyAttribute.parse(token, params); break
     }
   }
 
-  Attribute getAttribute(String name){
-    attributes.find{it.name == name}
+  Attribute getAttribute(String name) {
+    attributes.find { it.name == name }
   }
 
-  List<Attribute> getAttributesFromRef(){
-    if(!ref) return
-      schema.getAttributeGroup(ref).allAttributes?.flatten()
+  List<Attribute> getAttributesFromRef() {
+    if (!ref) return
+    schema.getAttributeGroup(ref).allAttributes?.flatten()
   }
 
-  List<Attribute> getAllAttributes(){
+  List<Attribute> getAllAttributes() {
     def res = attributes ?: attributesFromRef
     attributeGroups.each { res << it.allAttributes }
     res.flatten()
   }
 
-  protected getElementName(){
+  protected getElementName() {
     'attributeGroup'
   }
 
-  def create(creator, CreatorContext ctx){
+  def create(creator, CreatorContext ctx) {
     creator.createAttributeGroup(this, ctx.clone())
   }
 
-  def compare(generator, other){
+  def compare(generator, other) {
     generator.compareGroups(this, other)
   }
 
-  String toString(){
+  String toString() {
     "attributeGroup[name= $name, ref=$ref,attributes=$attributes, attributeGroups=$attributeGroups]"
   }
 }

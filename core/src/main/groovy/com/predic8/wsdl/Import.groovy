@@ -14,10 +14,11 @@
 
 package com.predic8.wsdl
 
-import javax.xml.namespace.QName as JQName
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
 
-import com.predic8.soamodel.*
-import com.predic8.xml.util.*
+import javax.xml.namespace.QName as JQName
 
 class Import extends WSDLElement {
 
@@ -26,19 +27,19 @@ class Import extends WSDLElement {
   String location
   Definitions importedWSDL
 
-  protected parseAttributes(token, WSDLParserContext ctx){
-    namespace = token.getAttributeValue(null , 'namespace')
-    location = token.getAttributeValue(null , 'location')
-		if(location in ctx.wsdlImports[namespace]) return ctx.importedWSDLs[namespace] 
+  protected parseAttributes(token, WSDLParserContext ctx) {
+    namespace = token.getAttributeValue(null, 'namespace')
+    location = token.getAttributeValue(null, 'location')
+    if (location in ctx.wsdlImports[namespace]) return ctx.importedWSDLs[namespace]
     parseImport(token, ctx)
   }
 
-  private parseImport(token, WSDLParserContext ctx){
-		ctx.wsdlImports[namespace] ? (ctx.wsdlImports[namespace] << location) : (ctx.wsdlImports[namespace] = [location])
+  private parseImport(token, WSDLParserContext ctx) {
+    ctx.wsdlImports[namespace] ? (ctx.wsdlImports[namespace] << location) : (ctx.wsdlImports[namespace] = [location])
     ctx.input = this
     ctx.baseDir = definitions.baseDir
-    importedWSDL = (new WSDLParser(resourceResolver: definitions.resourceResolver, registry: definitions.registry )).parse(ctx)
-		
+    importedWSDL = (new WSDLParser(resourceResolver: definitions.resourceResolver, registry: definitions.registry)).parse(ctx)
+
   }
 
   void create(AbstractCreator creator, CreatorContext ctx) {

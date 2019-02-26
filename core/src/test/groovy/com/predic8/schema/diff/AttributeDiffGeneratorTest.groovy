@@ -14,13 +14,10 @@
 
 package com.predic8.schema.diff
 
-import javax.xml.stream.*
-import groovy.xml.*
+import com.predic8.schema.SchemaParser
+import com.predic8.xml.util.ClasspathResolver
 
-import com.predic8.xml.util.*
-import com.predic8.schema.*
-
-class AttributeDiffGeneratorTest extends GroovyTestCase{
+class AttributeDiffGeneratorTest extends GroovyTestCase {
 
   def schema
   def a
@@ -43,41 +40,41 @@ class AttributeDiffGeneratorTest extends GroovyTestCase{
     g = schema.getType('contactG').attributes
   }
 
-  void testAwithB(){
-    def diffGen = new AttributesDiffGenerator(a: a, b: b, generator : new SchemaDiffGenerator())
+  void testAwithB() {
+    def diffGen = new AttributesDiffGenerator(a: a, b: b, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assertEquals(0, diffs.size())
   }
 
-  void testAwithC(){
-    def diffGen = new AttributesDiffGenerator(a: a, b: c, generator : new SchemaDiffGenerator())
+  void testAwithC() {
+    def diffGen = new AttributesDiffGenerator(a: a, b: c, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assert diffs.description.toString().contains('The type has changed')
     assert diffs.description.toString().contains('string')
     assert diffs.description.toString().contains('NMTOKEN')
   }
 
-  void testAwithD(){
-    def diffGen = new AttributesDiffGenerator(a: a, b: d, generator : new SchemaDiffGenerator())
+  void testAwithD() {
+    def diffGen = new AttributesDiffGenerator(a: a, b: d, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assert diffs.description.toString().contains('The attribute use has changed from optional to required')
     assert diffs.description.toString().contains('The attribute fixed changed from null to Germany')
   }
 
-  void testAwithE(){
-    def diffGen = new AttributesDiffGenerator(a: a, b: e, generator : new SchemaDiffGenerator())
+  void testAwithE() {
+    def diffGen = new AttributesDiffGenerator(a: a, b: e, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assert diffs.description.toString().contains('Attribute icq added.')
   }
 
-  void testAwithF(){
-    def diffGen = new AttributesDiffGenerator(a: a, b: f, generator : new SchemaDiffGenerator())
+  void testAwithF() {
+    def diffGen = new AttributesDiffGenerator(a: a, b: f, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assert diffs.description.toString().contains('Attribute fax removed.')
   }
 
-  void testAwithG(){
-    def diffGen = new AttributesDiffGenerator(a: a, b: g, generator : new SchemaDiffGenerator())
+  void testAwithG() {
+    def diffGen = new AttributesDiffGenerator(a: a, b: g, generator: new SchemaDiffGenerator())
     def diffs = diffGen.compare()
     assert diffs.description.toString().contains('Attribute fax removed.')
   }

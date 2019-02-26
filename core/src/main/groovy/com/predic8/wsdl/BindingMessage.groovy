@@ -12,13 +12,17 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl;
-
-import groovy.xml.*
+package com.predic8.wsdl
 
 import com.predic8.policy.Policy
 import com.predic8.policy.PolicyReference
-import com.predic8.soamodel.*
+import com.predic8.soamodel.AbstractCreator
+import com.predic8.soamodel.Consts
+import com.predic8.soamodel.CreatorContext
+import com.predic8.soamodel.MessageAccessException
+import com.predic8.soamodel.ModelAccessException
+import com.predic8.soamodel.OperationAccessException
+import com.predic8.soamodel.PortTypeAccessException
 import com.predic8.wsdl.soap11.SOAPBody as SOAP11Body
 import com.predic8.wsdl.soap11.SOAPFault as SOAP11Fault
 import com.predic8.wsdl.soap11.SOAPHeader as SOAP11Header
@@ -26,109 +30,109 @@ import com.predic8.wsdl.soap12.SOAPBody as SOAP12Body
 import com.predic8.wsdl.soap12.SOAPFault as SOAP12Fault
 import com.predic8.wsdl.soap12.SOAPHeader as SOAP12Header
 
-abstract class BindingMessage extends WSDLElement{
-  
+abstract class BindingMessage extends WSDLElement {
+
   BindingOperation bindingOperation
   List<BindingElement> bindingElements = []
-	
-	PolicyReference policyReference
 
-  protected parseAttributes(token, WSDLParserContext ctx){
-    name = token.getAttributeValue(null , 'name')
+  PolicyReference policyReference
+
+  protected parseAttributes(token, WSDLParserContext ctx) {
+    name = token.getAttributeValue(null, 'name')
   }
 
-  protected parseChildren(token, child, WSDLParserContext ctx){
+  protected parseChildren(token, child, WSDLParserContext ctx) {
     super.parseChildren(token, child, ctx)
     def be
-    switch (token.name){
-      case SOAP11Header.ELEMENTNAME :
-      be = new SOAP11Header(definitions : definitions, parent : this); break
-      case SOAP11Body.ELEMENTNAME :
-      be = new SOAP11Body(definitions : definitions, parent : this); break
-      case SOAP11Fault.ELEMENTNAME :
-      be = new SOAP11Fault(definitions : definitions, parent : this); break
-      case SOAP12Header.ELEMENTNAME :
-    	be = new SOAP12Header(definitions : definitions, parent : this); break
-      case SOAP12Body.ELEMENTNAME :
-      be = new SOAP12Body(definitions : definitions, parent : this); break
-      case SOAP12Fault.ELEMENTNAME :
-      be = new SOAP12Fault(definitions : definitions, parent : this); break
-			
-			case {it.namespaceURI in Consts.POLICY_NAMESPACES && it.localPart == 'PolicyReference'}:
-				policyReference = new PolicyReference(ELEMENTNAME: token.name)
-				policyReference.parse(token, ctx) ; break
-			
+    switch (token.name) {
+      case SOAP11Header.ELEMENTNAME:
+        be = new SOAP11Header(definitions: definitions, parent: this); break
+      case SOAP11Body.ELEMENTNAME:
+        be = new SOAP11Body(definitions: definitions, parent: this); break
+      case SOAP11Fault.ELEMENTNAME:
+        be = new SOAP11Fault(definitions: definitions, parent: this); break
+      case SOAP12Header.ELEMENTNAME:
+        be = new SOAP12Header(definitions: definitions, parent: this); break
+      case SOAP12Body.ELEMENTNAME:
+        be = new SOAP12Body(definitions: definitions, parent: this); break
+      case SOAP12Fault.ELEMENTNAME:
+        be = new SOAP12Fault(definitions: definitions, parent: this); break
+
+      case { it.namespaceURI in Consts.POLICY_NAMESPACES && it.localPart == 'PolicyReference' }:
+        policyReference = new PolicyReference(ELEMENTNAME: token.name)
+        policyReference.parse(token, ctx); break
+
     }
     be?.parse(token, ctx)
-    if(be) bindingElements << be
+    if (be) bindingElements << be
   }
-  
-  List<AbstractSOAPHeader> getSOAPHeaders(){
-    bindingElements.findAll {it instanceof AbstractSOAPHeader}
+
+  List<AbstractSOAPHeader> getSOAPHeaders() {
+    bindingElements.findAll { it instanceof AbstractSOAPHeader }
   }
-	
-	Policy getPolicy() {
-		definitions.policies[policyReference?.uri - '#']
-	}
-	
-	List<String> getPolicyAssertions() {
-		policy?.assertions
-	}
-  
-  SOAP11Header newSOAP11Header(){
-    BindingElement be = new SOAP11Header(definitions : definitions, parent : this)
+
+  Policy getPolicy() {
+    definitions.policies[policyReference?.uri - '#']
+  }
+
+  List<String> getPolicyAssertions() {
+    policy?.assertions
+  }
+
+  SOAP11Header newSOAP11Header() {
+    BindingElement be = new SOAP11Header(definitions: definitions, parent: this)
     bindingElements << be
     be
   }
 
-  SOAP11Body newSOAP11Body(List<Part> parts){
-    def be = new SOAP11Body(definitions : definitions, parent : this, parts : parts)
+  SOAP11Body newSOAP11Body(List<Part> parts) {
+    def be = new SOAP11Body(definitions: definitions, parent: this, parts: parts)
     bindingElements << be
     be
   }
-    
-  SOAP11Body newSOAP11Body(){
+
+  SOAP11Body newSOAP11Body() {
     newSOAP11Body(message.parts)
   }
-  
-  SOAP11Fault newSOAP11Fault(List<Part> parts){
-    def be = new SOAP11Fault(definitions : definitions, parent : this, parts: parts)
+
+  SOAP11Fault newSOAP11Fault(List<Part> parts) {
+    def be = new SOAP11Fault(definitions: definitions, parent: this, parts: parts)
     bindingElements << be
     be
   }
-  
-  SOAP11Fault newSOAP11Fault(){
+
+  SOAP11Fault newSOAP11Fault() {
     newSOAP11Fault(message.parts)
   }
-  
-  SOAP12Body newSOAP12Body(List<Part> parts){
-    def be = new SOAP12Body(definitions : definitions, parent : this, parts : parts)
+
+  SOAP12Body newSOAP12Body(List<Part> parts) {
+    def be = new SOAP12Body(definitions: definitions, parent: this, parts: parts)
     bindingElements << be
     be
   }
-  
-  SOAP12Body newSOAP12Body(){
+
+  SOAP12Body newSOAP12Body() {
     newSOAP12Body(message.parts)
   }
-  
-  protected Message getMessage(){
-		Operation pTOperation
-		try {
-			PortType pT = bindingOperation.binding.portType
-			if(!pT)	throw new PortTypeAccessException("Could not find the portType definition for '${bindingOperation.binding.typePN}' in the binding'${bindingOperation.binding.name}'.", bindingOperation.binding)
-			pTOperation = pT.getOperation(bindingOperation.name)
-			if(!pTOperation) throw new OperationAccessException("Could not find the matching operation for '${bindingOperation.name}' in the portType '${pT.name}'.", pT)
-			if(!pTOperation."$ELEMENTNAME.localPart") throw new ModelAccessException("No ${ELEMENTNAME.localPart} declared for operation ${pTOperation.name}.", pTOperation)
-			definitions.getMessage(pTOperation."$ELEMENTNAME.localPart".message.qname) 
-		} catch(ModelAccessException e) {
-			//OperationAccessException | PortTypeAccessException | ModelAccessException
-			throw e
+
+  protected Message getMessage() {
+    Operation pTOperation
+    try {
+      PortType pT = bindingOperation.binding.portType
+      if (!pT) throw new PortTypeAccessException("Could not find the portType definition for '${bindingOperation.binding.typePN}' in the binding'${bindingOperation.binding.name}'.", bindingOperation.binding)
+      pTOperation = pT.getOperation(bindingOperation.name)
+      if (!pTOperation) throw new OperationAccessException("Could not find the matching operation for '${bindingOperation.name}' in the portType '${pT.name}'.", pT)
+      if (!pTOperation."$ELEMENTNAME.localPart") throw new ModelAccessException("No ${ELEMENTNAME.localPart} declared for operation ${pTOperation.name}.", pTOperation)
+      definitions.getMessage(pTOperation."$ELEMENTNAME.localPart".message.qname)
+    } catch (ModelAccessException e) {
+      //OperationAccessException | PortTypeAccessException | ModelAccessException
+      throw e
     } catch (Exception e) {
-			def msgName = pTOperation."$ELEMENTNAME.localPart".messagePrefixedName.toString()
-	    throw new MessageAccessException("Could not find the message '$msgName', used in the $ELEMENTNAME.localPart of the operation '${bindingOperation.name}'.", pTOperation, msgName)
+      def msgName = pTOperation."$ELEMENTNAME.localPart".messagePrefixedName.toString()
+      throw new MessageAccessException("Could not find the message '$msgName', used in the $ELEMENTNAME.localPart of the operation '${bindingOperation.name}'.", pTOperation, msgName)
     }
   }
-  
+
   void create(AbstractCreator creator, CreatorContext ctx) {
     creator.createBindingMessage(this, ctx)
   }

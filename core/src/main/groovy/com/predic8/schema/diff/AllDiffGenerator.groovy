@@ -14,34 +14,35 @@
 
 package com.predic8.schema.diff
 
-import java.util.ResourceBundle;
+import com.predic8.soamodel.Difference
 
-import com.predic8.soamodel.*
-import com.predic8.schema.*
+class AllDiffGenerator extends AbstractModelDiffGenerator {
 
-class AllDiffGenerator extends AbstractModelDiffGenerator{
-  
   private def labelHasChanged, labelRemoved, labelAdded
 
-  def removed = {new Difference(description:"'All' ${labelRemoved}.", type: 'all', breaks: ctx.exchange ? true: null, safe:false, exchange: a.exchange)}
+  def removed = {
+    new Difference(description: "'All' ${labelRemoved}.", type: 'all', breaks: ctx.exchange ? true : null, safe: false, exchange: a.exchange)
+  }
 
-  def added = { new Difference(description:"'All' ${labelAdded}.", type: 'all', breaks: ctx.exchange ? true: null, safe:false, exchange: b.exchange)}
-  
-  
+  def added = {
+    new Difference(description: "'All' ${labelAdded}.", type: 'all', breaks: ctx.exchange ? true : null, safe: false, exchange: b.exchange)
+  }
+
+
   def changed = { diffs ->
-    new Difference(description:"'All':" , type: 'all' ,  diffs : diffs, a: a, b:b, exchange: a.exchange)
+    new Difference(description: "'All':", type: 'all', diffs: diffs, a: a, b: b, exchange: a.exchange)
   }
-  
-  public AllDiffGenerator(){
-	  updateLabels()
+
+  public AllDiffGenerator() {
+    updateLabels()
   }
-  
-  protected def updateLabels(){
-	  
-	  labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
-	  labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
-	  labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
+
+  protected def updateLabels() {
+
+    labelHasChanged = bundle.getString("com.predic8.schema.diff.labelHasChanged")
+    labelRemoved = bundle.getString("com.predic8.schema.diff.labelRemoved")
+    labelAdded = bundle.getString("com.predic8.schema.diff.labelAdded")
   }
- 
+
 }
 

@@ -14,10 +14,11 @@
 
 package com.predic8.wsdl
 
-import groovy.xml.*
 
-class TwoInlineSchemasTest extends AbstractWSDLTest{
-  
+import groovy.xml.QName
+
+class TwoInlineSchemasTest extends AbstractWSDLTest {
+
   def schemaA
   def schemaB
   def static wsdl = '''
@@ -64,25 +65,25 @@ class TwoInlineSchemasTest extends AbstractWSDLTest{
 
   void setUp() {
     super.setUp()
-    schemaA = definitions.localSchemas.find{ it.targetNamespace == 'urn:a'}
-    schemaB = definitions.localSchemas.find{ it.targetNamespace == 'urn:b'}
+    schemaA = definitions.localSchemas.find { it.targetNamespace == 'urn:a' }
+    schemaB = definitions.localSchemas.find { it.targetNamespace == 'urn:b' }
   }
-  
+
   void testGetElement() {
     assertNotNull(definitions.getElement('ns0:aa'))
     assertNotNull(definitions.getElement('ns1:bb'))
   }
-  
+
   void testElementType() {
-    assertEquals(new QName('urn:a','AType'), (definitions.getElement('ns0:aa').type))
-    assertEquals(new QName('urn:b','BType'), (definitions.getElement('ns1:bb').type))
+    assertEquals(new QName('urn:a', 'AType'), (definitions.getElement('ns0:aa').type))
+    assertEquals(new QName('urn:b', 'BType'), (definitions.getElement('ns1:bb').type))
   }
-  
+
   void testFindTypeInImportedSchema() {
-    assertEquals(new QName('urn:a','AType'), schemaB.getType(schemaB.getElement('cc').type).qname) 
+    assertEquals(new QName('urn:a', 'AType'), schemaB.getType(schemaB.getElement('cc').type).qname)
   }
-  
+
   void testFindTypeInImportedSchemabBeforeDeclaration() {
-    assertEquals(new QName('urn:b','BType'), schemaA.getType(schemaA.getElement('dd').type).qname) 
+    assertEquals(new QName('urn:b', 'BType'), schemaA.getType(schemaA.getElement('dd').type).qname)
   }
 }

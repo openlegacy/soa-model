@@ -14,7 +14,7 @@
 
 package com.predic8.policy
 
-class ProtectionToken extends PolicyOperator{
+class ProtectionToken extends PolicyOperator {
 
 }
 

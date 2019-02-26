@@ -12,13 +12,14 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.wsdl.soap12;
+package com.predic8.wsdl.soap12
+
+import com.predic8.soamodel.Consts
+import com.predic8.wsdl.AbstractSOAPBody
 
 import javax.xml.namespace.QName as JQName
-import com.predic8.soamodel.Consts
-import com.predic8.wsdl.*
 
-class SOAPBody extends AbstractSOAPBody{
+class SOAPBody extends AbstractSOAPBody {
 
   public static final JQName ELEMENTNAME = new JQName(Consts.WSDL_SOAP12_NS, 'body')
 }

@@ -14,12 +14,8 @@
 
 package com.predic8.schema.namespace
 
-import groovy.xml.*
-
-import com.predic8.schema.*
-import com.predic8.xml.util.*
-import com.predic8.schema.diff.*
-import com.predic8.schema.creator.*
+import com.predic8.schema.SchemaParser
+import com.predic8.xml.util.ClasspathResolver
 
 class NamespaceTest extends GroovyTestCase {
 
