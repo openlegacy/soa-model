@@ -1,0 +1,32 @@
+dist: xenial
+
+language: java
+jdk:
+  - openjdk8
+
+cache:
+  directories:
+  - "$HOME/.m2"
+
+before_install:
+  - chmod +x mvnw
+install: echo "skip 'maven install' step"
+
+jobs:
+  include:
+    - stage: install & test
+      if: branch =~ ^ol-master$|^feature\/.*$
+      script:
+        - ./mvnw -B clean install
+    - stage: push to dev artifactory
+      if: branch =~ ^ol-master$
+      script:
+        - ./mvnw -B -P ol-deploy clean deploy
+    - stage: push to public artifactory
+      if: tag =~ ^v
+      script:
+        - ./mvnw -B -P ol-deploy -Dartifactory.repo.key=ol-3rd-party-libs -Dchangelist= clean deploy
+
+notifications:
+  slack:
+    secure: z8zvXUSn33WwLWPEnjXTyRT8MB8NUNZK7sszepwN927MTb7AjSHkZ2uk6/CY5eq6aRjNwzBttPWozYaGsb60dDw9TzjnQF3m1aCGBgPVvDNtUxOPS/OCssjFXs5VSFcmBS3vZCKgSPfDrr4FN3EB150fD7GwWttElA9PFS/nQsvhj6a17xwHPgyREzEJ1AGVF6ZNsoLthxqPf5ngQ06uwYR4FyX5h/3+rY3FSADBy/ASDVCbwb8VLbxhI6mw51k9zqY0qGsZBwEZ2ZrgeQgEokPAGQmQuwdnLdoQkbykh2jYjVf+Yipd1Lpsz6+AnsqU7xDnnwUFSlEVgfdeWMdAOGYLetbvkHV71mYr9Ki5VCtFQEsXaAUIkVhESIDvuruxmSgeAALvQZ035jJwils2GdiLhF7FSVILD8sXgGvRyhHg66nYuNnWEkzZsMiYTG3BsVZUZAE5VYyYksP2Mm2oq3X6PdQjk2lnUUHq1zNpAthrz8CTZwKg6GCSAsYgwqvGCrsxxJfJIZSE3drS1sWO7bDM/66yuEXcjX6tfvuJK/pw7VkQWVYTFg1Oe7vmabv/1NbO6gmQyYAmlWqEhmm1zruH4+1c5wAXJuC84lAXZJcPfxrkRv3KydhbgLbsSybxCyjgcXxhkCaR69X2gQ9g0zxUqXNWG+vva81IhXB7m90=
