@@ -6,7 +6,7 @@ jdk:
 
 cache:
   directories:
-  - "$HOME/.m2"
+  - $HOME/.m2
 
 before_install:
   - chmod +x mvnw
@@ -21,11 +21,11 @@ jobs:
     - stage: push to dev artifactory
       if: branch =~ ^ol-master$
       script:
-        - ./mvnw -B -P ol-deploy clean deploy
+        - ./mvnw -B -P ol-deploy clean deploy -DskipTests
     - stage: push to public artifactory
       if: tag =~ ^v
       script:
-        - ./mvnw -B -P ol-deploy -Dartifactory.repo.key=ol-3rd-party-libs -Dchangelist= clean deploy
+        - ./mvnw -B -P ol-deploy -Dartifactory.repo.key=ol-3rd-party-libs -Dchangelist= clean deploy -DskipTests
 
 notifications:
   slack:
