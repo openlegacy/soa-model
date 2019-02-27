@@ -24,17 +24,17 @@ class WSDLParser extends AbstractParser {
   Registry registry
 
   Definitions parse(String input) {
-    NamespaceUtil.clear();
+    NamespaceUtil.clear()
     super.parse(new WSDLParserContext(input: input))
   }
 
   Definitions parse(InputStream input) {
-    NamespaceUtil.clear();
+    NamespaceUtil.clear()
     super.parse(new WSDLParserContext(input: input))
   }
 
   Definitions parse(WSDLParserContext ctx) {
-    NamespaceUtil.clear();
+    NamespaceUtil.clear()
     super.parse(ctx)
   }
 
