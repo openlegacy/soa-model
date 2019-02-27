@@ -132,7 +132,7 @@ abstract class XMLElement {
   protected parseNamespaces(token) {
     token.getNamespaceCount().times {
       //avoids prefix override
-      Map.Entry<String, String> ns = NamespaceUtil.getNamespace(this, token.getNamespacePrefix(it) ?: '', token.getNamespaceURI(it)?:'')
+      Map.Entry<String, String> ns = NamespaceUtil.getNamespace(this, token.getNamespacePrefix(it) ?: '', token.getNamespaceURI(it) ?: '')
       namespaces[ns.key] = ns.value
     }
   }
