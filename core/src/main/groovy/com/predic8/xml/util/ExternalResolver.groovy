@@ -14,6 +14,7 @@ package com.predic8.xml.util
 import com.predic8.schema.Import as SchemaImport
 import com.predic8.schema.Include as SchemaInclude
 import com.predic8.wsdl.Import as WsdlImport
+import org.apache.commons.lang3.StringUtils
 import org.apache.http.HttpHost
 import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient
@@ -25,6 +26,8 @@ import org.apache.http.params.HttpParams
 import org.apache.http.util.EntityUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
+import java.nio.charset.StandardCharsets
 
 class ExternalResolver extends ResourceResolver {
 
@@ -94,12 +97,21 @@ class ExternalResolver extends ResourceResolver {
   private resolveAsString(url) {
     try {
       HttpResponse con = request(url)
-      EntityUtils.toString(con.entity)
+      return convertIfNeed(EntityUtils.toString(con.entity))
     } catch (ResourceDownloadException e) {
       throw e
     } catch (Exception e) {
       throw new ResourceDownloadException(rootCause: e, url: url)
     }
+  }
+
+
+  private static convertIfNeed(String value) {
+    //avoid exception in com.ctc.wstx.io.ReaderBootstrapper#bootstrapInput
+    if (!StringUtils.isEmpty(value) && value.charAt(0) == 0xEF) {
+      return new String(value.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+    }
+    return value;
   }
 
   private request(url) {
