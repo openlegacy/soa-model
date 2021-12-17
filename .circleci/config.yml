@@ -1,0 +1,26 @@
+version: 2.1
+orbs:
+  slack: openlegacy/slack-notify-orb@0.0.10
+
+executors:
+  cimg-openjdk:
+    docker:
+      - image: cimg/openjdk:11.0.9
+
+###
+workflows:
+  DEV-WORKFLOW:
+    jobs:
+      - INSTALL-AND-TEST
+
+###
+jobs:
+  INSTALL-AND-TEST:
+    executor: cimg-openjdk
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: "Install & Test"
+          command: |
+            bash ./mvnw -B clean install
