@@ -9,11 +9,19 @@ executors:
 
 ###
 workflows:
+
   DEV-WORKFLOW:
     jobs:
       - INSTALL-AND-TEST:
           context:
             - CI_GLOBAL
+      - PUSH-DEV-TO-ARTIFACTORY:
+          context:
+            - CI_GLOBAL
+
+#  TAG:
+#    jobs:
+#      - INSTALL-AND-TEST
 
 ###
 jobs:
@@ -26,3 +34,12 @@ jobs:
           name: "Install & Test"
           command: |
             bash ./mvnw -B clean install
+  PUSH-DEV-TO-ARTIFACTORY:
+    executor: cimg-openjdk
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: "Push dev artifacts to Jfrog"
+          command: |
+            bash ./mvnw -B -P ol-deploy clean deploy -DskipTests
