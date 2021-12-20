@@ -11,7 +11,9 @@ executors:
 workflows:
   DEV-WORKFLOW:
     jobs:
-      - INSTALL-AND-TEST
+      - INSTALL-AND-TEST:
+          context:
+            - CI_GLOBAL
 
 ###
 jobs:
