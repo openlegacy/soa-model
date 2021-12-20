@@ -32,6 +32,9 @@ workflows:
           context:
             - CI_GLOBAL
       - PUSH-DEV-TO-ARTIFACTORY:
+          branches:
+            only:
+              - /openlegacy-master/
           requires:
             - INSTALL-AND-TEST
           context:
