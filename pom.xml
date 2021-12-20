@@ -176,6 +176,55 @@ Analyze a WSDL or Schema document and generate an HMTL report</description>
 				</snapshotRepository>
 			</distributionManagement>
 		</profile>
+		<profile>
+			<id>ol-deploy</id>
+			<pluginRepositories>
+				<!-- JCenter -->
+				<pluginRepository>
+					<id>jcenter</id>
+					<url>https://jcenter.bintray.com</url>
+				</pluginRepository>
+			</pluginRepositories>
+			<properties>
+				<artifactory.repo.key>ol-dev</artifactory.repo.key>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jfrog.buildinfo</groupId>
+						<artifactId>artifactory-maven-plugin</artifactId>
+						<version>2.6.1</version>
+						<executions>
+							<execution>
+								<id>build-info</id>
+								<goals>
+									<goal>publish</goal>
+								</goals>
+								<configuration>
+									<artifactory>
+										<includeEnvVars>true</includeEnvVars>
+										<envVarsExcludePatterns>*password*,*secret*,*key*,*token*,*passphrase*
+										</envVarsExcludePatterns>
+										<timeoutSec>3600</timeoutSec>
+									</artifactory>
+									<publisher>
+										<contextUrl>https://openlegacy.jfrog.io/openlegacy/</contextUrl>
+										<username>${ARTIFACTORY_OL_OPS_USER}</username>
+										<password>${ARTIFACTORY_OL_OPS_PASSWORD}</password>
+										<excludePatterns>*-tests.jar</excludePatterns>
+										<repoKey>${artifactory.repo.key}</repoKey>
+									</publisher>
+									<buildInfo>
+										<buildName>soa-model-${revision}</buildName>
+										<buildNumber>${CIRCLE_BUILD_NUM}</buildNumber>
+									</buildInfo>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
 </project>
