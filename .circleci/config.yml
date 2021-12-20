@@ -1,0 +1,78 @@
+version: 2.1
+orbs:
+  slack: openlegacy/slack-notify-orb@0.0.10
+
+executors:
+  cimg-openjdk:
+    docker:
+      - image: cimg/openjdk:8.0.312
+
+parameters:
+  slack_channel:
+    type: string
+    default: C02R62TCYTG   #ci-soa-model
+
+commands:
+  slack-fail-job:
+    steps:
+      - slack/notify:
+          event: fail
+          channel: << pipeline.parameters.slack_channel >>
+  slack-pass-workflow:
+    steps:
+      - slack/notify:
+          event: pass
+          channel: << pipeline.parameters.slack_channel >>
+
+###
+workflows:
+  DEV-WORKFLOW:
+    jobs:
+      - INSTALL-AND-TEST:
+          context:
+            - CI_GLOBAL
+      - PUSH-DEV-TO-ARTIFACTORY:
+          filters:
+            branches:
+              only:
+                - /openlegacy-master/
+          requires:
+            - INSTALL-AND-TEST
+          context:
+            - CI_GLOBAL
+      - POST-ACTIONS:
+          requires:
+            - PUSH-DEV-TO-ARTIFACTORY
+          context:
+            - CI_SLACK
+
+###
+jobs:
+  INSTALL-AND-TEST:
+    executor: cimg-openjdk
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: "Install & Test"
+          command: |
+            bash ./mvnw -B clean install
+      - slack-fail-job
+
+  PUSH-DEV-TO-ARTIFACTORY:
+    executor: cimg-openjdk
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: "Push dev artifacts to Jfrog"
+          command: |
+            bash ./mvnw -B -P ol-deploy clean deploy -DskipTests
+      - slack-fail-job
+
+  POST-ACTIONS:
+    executor: cimg-openjdk
+    resource_class: small
+    steps:
+      - checkout
+      - slack-pass-workflow

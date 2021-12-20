@@ -11,3 +11,4 @@ temp
 .idea
 *.iml
 target/
+.flattened-pom.xml
