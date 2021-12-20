@@ -16,6 +16,8 @@ workflows:
           context:
             - CI_GLOBAL
       - PUSH-DEV-TO-ARTIFACTORY:
+          requires:
+            - INSTALL-AND-TEST
           context:
             - CI_GLOBAL
 
