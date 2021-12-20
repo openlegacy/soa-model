@@ -7,9 +7,25 @@ executors:
     docker:
       - image: cimg/openjdk:8.0.312
 
+parameters:
+  slack_channel:
+    type: string
+    default: C02R62TCYTG   #ci-soa-model
+
+commands:
+  slack-fail-job:
+    steps:
+      - slack/notify:
+          event: fail
+          channel: << pipeline.parameters.slack_channel >>
+  slack-pass-workflow:
+    steps:
+      - slack/notify:
+          event: pass
+          channel: << pipeline.parameters.slack_channel >>
+
 ###
 workflows:
-
   DEV-WORKFLOW:
     jobs:
       - INSTALL-AND-TEST:
@@ -20,10 +36,9 @@ workflows:
             - INSTALL-AND-TEST
           context:
             - CI_GLOBAL
-
-#  TAG:
-#    jobs:
-#      - INSTALL-AND-TEST
+      - POST-ACTIONS:
+          requires:
+            - PUSH-DEV-TO-ARTIFACTORY
 
 ###
 jobs:
@@ -36,6 +51,8 @@ jobs:
           name: "Install & Test"
           command: |
             bash ./mvnw -B clean install
+      - slack-fail-job
+
   PUSH-DEV-TO-ARTIFACTORY:
     executor: cimg-openjdk
     resource_class: small
@@ -45,3 +62,11 @@ jobs:
           name: "Push dev artifacts to Jfrog"
           command: |
             bash ./mvnw -B -P ol-deploy clean deploy -DskipTests
+      - slack-fail-job
+
+  POST-ACTIONS:
+    executor: cimg-python-node
+    resource_class: small
+    steps:
+      - checkout
+      - slack-pass-workflow
