@@ -55,6 +55,8 @@ Analyze a WSDL or Schema document and generate an HMTL report</description>
 	</modules>
 
 	<properties>
+		<revision>1.6.4.1</revision>
+		<changelist>-SNAPSHOT</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<gpg.keyname>5B8A65F6</gpg.keyname>
 		<groovy.version>3.0.7</groovy.version>
