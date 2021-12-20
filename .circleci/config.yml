@@ -39,6 +39,8 @@ workflows:
       - POST-ACTIONS:
           requires:
             - PUSH-DEV-TO-ARTIFACTORY
+          context:
+            - CI_SLACK
 
 ###
 jobs:
