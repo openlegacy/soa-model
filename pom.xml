@@ -1,19 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+				 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.predic8</groupId>
 	<artifactId>soa-model-parent</artifactId>
-	<version>1.6.5-SNAPSHOT</version>
+	<version>${revision}${changelist}</version>
 	<packaging>pom</packaging>
 
 	<name>soa-model-parent</name>
-	<description>Membrane SOA Model is an open-source toolkit and Java API for WSDL and XML Schema, licensed under ASF 2.0. that can:
+	<description>Membrane SOA Model is an open-source toolkit and Java API for WSDL and XML Schema,
+		licensed under ASF 2.0. that can:
 
-Parse, create or modify a WSDL or XML Schema Document from Java
-Compare two WSDL or XML Schema Documents
-Create a SOAP Request or Template
-Analyze a WSDL or Schema document and generate an HMTL report</description>
+		Parse, create or modify a WSDL or XML Schema Document from Java
+		Compare two WSDL or XML Schema Documents
+		Create a SOAP Request or Template
+		Analyze a WSDL or Schema document and generate an HMTL report
+	</description>
 	<url>https://github.com/membrane/soa-model</url>
 
 	<licenses>
@@ -37,10 +40,10 @@ Analyze a WSDL or Schema document and generate an HMTL report</description>
 		<url>http://predic8.com/</url>
 	</organization>
 
-	<scm>
+<!--	<scm>
 		<connection>scm:git:git@github.com:membrane/soa-model.git</connection>
 		<url>https://github.com/membrane/soa-model</url>
-	</scm>
+	</scm>-->
 
 	<issueManagement>
 		<system>Github Issue Tracker</system>
@@ -228,5 +231,38 @@ Analyze a WSDL or Schema document and generate an HMTL report</description>
 			</build>
 		</profile>
 	</profiles>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<configuration>
+					<updatePomFile>true</updatePomFile>
+				</configuration>
+				<executions>
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+						<configuration>
+							<flattenMode>defaults</flattenMode>
+						</configuration>
+					</execution>
+					<execution>
+						<id>flatten.clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
