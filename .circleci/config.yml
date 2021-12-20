@@ -65,7 +65,7 @@ jobs:
       - slack-fail-job
 
   POST-ACTIONS:
-    executor: cimg-python-node
+    executor: cimg-openjdk
     resource_class: small
     steps:
       - checkout
