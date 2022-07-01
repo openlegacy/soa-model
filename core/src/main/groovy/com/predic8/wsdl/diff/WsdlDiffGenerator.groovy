@@ -37,31 +37,31 @@ class WsdlDiffGenerator extends AbstractDiffGenerator{
 	List<Difference> compare() {
 		def diffs = []
 		def lDiffs = []
-		
+
 		if( a.targetNamespace != b.targetNamespace )
 			diffs << new Difference(description:"TargetNamespace changed from ${a.targetNamespace} to ${b.targetNamespace}.", breaks:true)
 
 		if( a.services[0] && b.services[0] && a.services[0].name != b.services[0].name )
 			diffs << new Difference(description:"Servicename changed from ${a.services[0].name} to ${b.services[0].name}.", breaks:false)
-		
+
 		diffs.addAll(compareDocumentation(a, b))
 
 		/* Do not change the order of comparePortTypes and compareTypes!
 		 * Exchange information for schema elements would be available
-		 * after comparing portTypes. 
+		 * after comparing portTypes.
 		 */
 		diffs.addAll(comparePortTypes())
-		
+
 		diffs.addAll(compareTypes())
 
 		diffs.addAll(compareBindings())
-		
+
 		lDiffs.addAll(compareDocumentation(a.services[0], b.services[0]))
 		if ( a.services[0] && b.services[0] ) {
 			lDiffs.addAll(comparePorts())
 		}
 		if(lDiffs) diffs << new Difference(description:"Service ${a.services[0].name}:", type : 'service', diffs: lDiffs)
-		
+
 		if(diffs) return [new Difference(description:"Definitions:", type : 'definitions', diffs: diffs)]
 		[]
 	}
@@ -102,7 +102,7 @@ class WsdlDiffGenerator extends AbstractDiffGenerator{
 				if(diffs) return [
 					new Difference(description:"PortType name has changed from ${aPortTypes[0].name} to ${bPortTypes[0].name}:" , type: 'portType' ,  diffs : diffs)
 				]
-				return [new Difference(description:"PortType name has changed from ${aPortTypes[0].name} to ${bPortTypes[0].name}." , type: 'portType')] 
+				return [new Difference(description:"PortType name has changed from ${aPortTypes[0].name} to ${bPortTypes[0].name}." , type: 'portType')]
 			}
 		}
 		else {
@@ -163,7 +163,7 @@ class WsdlDiffGenerator extends AbstractDiffGenerator{
 		switch (ptmName) {
 			case "input" : exchange = ['request'] ; break
 			case "output" : exchange = ['response'] ; break
-			case "fault" : exchange = ['fault'] ; break 
+			case "fault" : exchange = ['fault'] ; break
 		}
 		ctx.exchange = exchange[0]
 		if(!aPTM && !bPTM) return []
@@ -173,7 +173,7 @@ class WsdlDiffGenerator extends AbstractDiffGenerator{
 		if(aPTM.name != bPTM.name) {
 			lDiffs << new Difference(description:"Name has changed from ${aPTM.name} to ${bPTM.name}.", type:'input', breaks : false, exchange:['request'])
 		}
-		if(aPTM.message.name != bPTM.message.name || aPTM.message.namespaceUri != bPTM.message.namespaceUri) 
+		if(aPTM.message.name != bPTM.message.name || aPTM.message.namespaceUri != bPTM.message.namespaceUri)
 			lDiffs << new Difference(description: "Message has changed from ${aPTM.message.qname} to ${bPTM.message.qname}.", type: ptmName, breaks : false, exchange:exchange.clone())
 		lDiffs.addAll(compareMessage(aPTM.message, bPTM.message, exchange))
 		if(lDiffs) return [ new Difference(description:"${ptmName.capitalize()}:", diffs: lDiffs, exchange:exchange.clone(), type: ptmName)]
@@ -281,7 +281,7 @@ class WsdlDiffGenerator extends AbstractDiffGenerator{
 					type:'element', breaks : true, exchange:exchange.clone())
 			}
 			else if(a.getNamespace(a.elementPN.prefix) != b.getNamespace(b.elementPN.prefix)) {
-				diffs << new Difference(description:"Element has changed from ${a.element.qname} to ${b.element.qname}.", 
+				diffs << new Difference(description:"Element has changed from ${a.element.qname} to ${b.element.qname}.",
 					type:'element', breaks : true, exchange:exchange.clone())
 			}
 			else if(a.element && b.element) {
@@ -305,11 +305,11 @@ class WsdlDiffGenerator extends AbstractDiffGenerator{
 			(aSchemas.targetNamespace - bSchemas.targetNamespace).each { tns ->
 				diffs << new Difference(description:"Schema ${tns ? tns+' ' : ''}removed." , type: 'schema')
 			}
-			
+
 			(bSchemas.targetNamespace - aSchemas.targetNamespace).each { tns ->
 				diffs << new Difference(description:"Schema ${tns ? tns+' ' : ''}added." , type: 'schema')
 			}
-			
+
 			def schemas = aSchemas.targetNamespace.intersect(bSchemas.targetNamespace)
 			schemas.each{  tns ->
 				def aSchema = aSchemas.find{it.targetNamespace == tns}
@@ -335,7 +335,7 @@ class WsdlDiffGenerator extends AbstractDiffGenerator{
 			]
 		[]
 	}
-	
+
 	private List<Difference> compareBindings(){
 		def aBindings = a.bindings
 		def bBindings = b.bindings
@@ -343,7 +343,7 @@ class WsdlDiffGenerator extends AbstractDiffGenerator{
 		diffs.addAll(compare(aBindings, bBindings,
 			{ new Difference(description:"Binding ${it.name} removed.", original: it, type:'binding') },
 			{ new Difference(description:"Binding ${it.name} added.", modified: it, type:'binding') }))
-		
+
 		def bndNames = aBindings.name.intersect(bBindings.name)
 		bndNames.each{ bndName ->
 			//TODO Test if input/output name matches.
@@ -353,7 +353,7 @@ class WsdlDiffGenerator extends AbstractDiffGenerator{
 		}
 		diffs
 	}
-	
+
 	private List<Difference> compareBinding(Binding a, Binding b){
 		def lDiffs = []
 		if(a.protocol != b.protocol) {

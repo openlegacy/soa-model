@@ -45,6 +45,22 @@ workflows:
             - PUSH-DEV-TO-ARTIFACTORY
           context:
             - CI_SLACK
+  TAG:
+    jobs:
+      - PUSH-TAG-TO-ARTIFACTORY:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only:
+                - /^v[0-9].*/
+          context:
+            - CI_GLOBAL
+      - POST-ACTIONS:
+          requires:
+            - PUSH-TAG-TO-ARTIFACTORY
+          context:
+            - CI_SLACK
 
 ###
 jobs:
@@ -68,6 +84,17 @@ jobs:
           name: "Push dev artifacts to Jfrog"
           command: |
             bash ./mvnw -B -P ol-deploy clean deploy -DskipTests
+      - slack-fail-job
+
+  PUSH-TAG-TO-ARTIFACTORY:
+    executor: cimg-openjdk
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: "Push tagged artifacts to Jfrog"
+          command: |
+            bash ./mvnw -B -P ol-tag clean deploy -DskipTests
       - slack-fail-job
 
   POST-ACTIONS:

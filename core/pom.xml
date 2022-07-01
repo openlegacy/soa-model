@@ -34,12 +34,6 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -71,7 +65,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<id>groovydoc</id>
@@ -101,12 +95,13 @@
 						<groupId>org.codehaus.groovy</groupId>
 						<artifactId>groovy-all</artifactId>
 						<version>${groovy.version}</version>
+						<type>pom</type>
 					</dependency>
 				</dependencies>
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.10.1</version>
 				<configuration>
 					<compilerId>groovy-eclipse-compiler</compilerId>
 					<verbose>true</verbose>
@@ -135,7 +130,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
+				<version>3.2.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -149,7 +144,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>1.3.1</version>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<id>banned-dependencies</id>
@@ -182,7 +177,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>2.4</version>
+						<version>3.2.1</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -195,7 +190,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.10.1</version>
+						<version>3.4.0</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -208,7 +203,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
+						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -240,7 +235,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.7</version>
+				<version>3.3.0</version>
 				<reportSets>
 					<reportSet>
 						<reports>
