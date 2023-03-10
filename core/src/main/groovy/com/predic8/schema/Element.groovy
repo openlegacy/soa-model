@@ -12,26 +12,25 @@
    See the License for the specific language governing permissions and
    limitations under the License. */
 
-package com.predic8.schema;
+package com.predic8.schema
 
+import com.predic8.soamodel.Consts;
 import groovy.xml.*
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import com.predic8.schema.creator.*
 import com.predic8.soamodel.AbstractDiffGenerator
 import com.predic8.soamodel.CreatorContext
 import com.predic8.soamodel.DiffGeneratorContext
 import com.predic8.wadl.creator.JsonCreator
 import com.predic8.wadl.creator.JsonCreatorContext
 import com.predic8.wstool.creator.*
-import com.predic8.xml.util.*
 
 class Element extends Declaration {
-  
+
   private static final Logger log = LoggerFactory.getLogger(Element.class)
-  
+
   TypeDefinition embeddedType
   boolean toplevel = false
   Annotation annotation
@@ -46,30 +45,34 @@ class Element extends Declaration {
   String form // Possible values: qualified/unqualified. Cannot be used if element is top level
   boolean nillable = false
   Unique unique
-  
+	String expectedContentTypes
+
   protected parseAttributes(token, params){
     super.parseAttributes(token, params)
       if (token.getAttributeValue( null , 'type'))
         type = getTypeQName(token.getAttributeValue( null , 'type'))
     minOccurs = token.getAttributeValue( null , 'minOccurs') ?: 1
     maxOccurs = token.getAttributeValue( null , 'maxOccurs') ?: 1
-    
+
     refValue = token.getAttributeValue( null , 'ref')
     if (refValue)
 	    ref = getTypeQName(refValue)
-	
-	substitutionGroupValue = token.getAttributeValue( null , 'substitutionGroup')
-    if (substitutionGroupValue)
-	    substitutionGroup = getTypeQName(substitutionGroupValue)
 
-	// Element can have a default value OR a fixed value specified.
-	defaultValue = token.getAttributeValue( null , 'default')
-	fixedValue = token.getAttributeValue( null , 'fixed')
-	nillable = (token.getAttributeValue( null , 'nillable') == 'true')
-	form = token.getAttributeValue( null , 'form') 
-    log.debug "element attribute parsed: [name=$name, type=$type, ref=$ref, nillable=$nillable]"
+		substitutionGroupValue = token.getAttributeValue( null , 'substitutionGroup')
+			if (substitutionGroupValue)
+				substitutionGroup = getTypeQName(substitutionGroupValue)
+
+		// Element can have a default value OR a fixed value specified.
+		defaultValue = token.getAttributeValue( null , 'default')
+		fixedValue = token.getAttributeValue( null , 'fixed')
+		nillable = (token.getAttributeValue( null , 'nillable') == 'true')
+		form = token.getAttributeValue( null , 'form')
+		expectedContentTypes = token.getAttributeValue(Consts.XML_MIME_NS, 'expectedContentTypes')
+
+		log.debug "element attribute parsed: [name=$name, type=$type, ref=$ref, nillable=$nillable]"
   }
-  
+
+
   protected parseChildren(token, child, params){
 		//		Can't use super.parseChildren(token, child, params) to parse annotation!
     switch (child ){
@@ -88,46 +91,46 @@ class Element extends Declaration {
     }
     log.debug "child [$child] of element [$name] parsed!"
   }
-  
+
   protected getElementName(){
     'element'
   }
-  
+
   def create(creator, CreatorContext ctx){
     creator.createElement(this, ctx.clone())
   }
-  
+
   def compare(AbstractDiffGenerator generator, other, DiffGeneratorContext ctx = new DiffGeneratorContext()){
     generator.compareElement(this, other, ctx)
   }
-  
+
   String getRequest(formParams){
     def writer = new StringWriter()
     create(new RequestCreator(builder:new MarkupBuilder(writer)),new RequestCreatorContext(path:"xpath:/",formParams:formParams))
     writer.toString()
   }
-	
+
 	String getAsJson(JsonCreatorContext ctx = new JsonCreatorContext()) {
 		new JsonCreator().getElementAsJson(this)
 	}
-  
+
   String getHtmlForm(){
     def writer = new StringWriter()
     create(new FormCreator(builder:new MarkupBuilder(writer)),new FormCreatorContext(path:'xpath:/'))
     writer.toString()
   }
-  
+
   String getBuildInTypeNameLocal(){
 	  if (embeddedType)
 	  	return embeddedType.buildInTypeName
-		  
+
   	  // @TODO same for ref simpleTypes
   }
-  
+
   ComplexType newComplexType(){
     embeddedType = new ComplexType(schema:schema)
   }
-  
+
   String toString(){
     "element[name=$name,type=$type,ref=$ref,embeddedType=$embeddedType]"
   }
