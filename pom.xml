@@ -206,7 +206,7 @@
 				</pluginRepository>
 			</pluginRepositories>
 			<properties>
-				<artifactory.repo.key>ol-dev</artifactory.repo.key>
+				<artifactory.repo.key>ol-3rd-party-libs</artifactory.repo.key>
 			</properties>
 			<build>
 				<plugins>
