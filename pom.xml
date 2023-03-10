@@ -58,7 +58,7 @@
 	</modules>
 
 	<properties>
-		<revision>1.6.5.1</revision>
+		<revision>1.6.5.2</revision>
 		<changelist>-OL</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<gpg.keyname>5B8A65F6</gpg.keyname>
