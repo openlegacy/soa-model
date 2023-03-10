@@ -213,7 +213,7 @@
 					<plugin>
 						<groupId>org.jfrog.buildinfo</groupId>
 						<artifactId>artifactory-maven-plugin</artifactId>
-						<version>3.4.0</version>
+						<version>3.5.1</version>
 						<executions>
 							<execution>
 								<id>build-info</id>
@@ -231,7 +231,6 @@
 										<contextUrl>https://openlegacy.jfrog.io/openlegacy/</contextUrl>
 										<username>${ARTIFACTORY_OL_OPS_USER}</username>
 										<password>${ARTIFACTORY_OL_OPS_PASSWORD}</password>
-										<excludePatterns>*-tests.jar</excludePatterns>
 										<repoKey>${artifactory.repo.key}</repoKey>
 									</publisher>
 									<buildInfo>
@@ -262,7 +261,7 @@
 					<plugin>
 						<groupId>org.jfrog.buildinfo</groupId>
 						<artifactId>artifactory-maven-plugin</artifactId>
-						<version>3.4.0</version>
+						<version>3.5.1</version>
 						<executions>
 							<execution>
 								<id>build-info</id>
@@ -280,7 +279,6 @@
 										<contextUrl>https://openlegacy.jfrog.io/openlegacy/</contextUrl>
 										<username>${ARTIFACTORY_OL_OPS_USER}</username>
 										<password>${ARTIFACTORY_OL_OPS_PASSWORD}</password>
-										<excludePatterns>*-tests.jar</excludePatterns>
 										<repoKey>${artifactory.repo.key}</repoKey>
 									</publisher>
 									<buildInfo>
@@ -295,7 +293,6 @@
 			</build>
 		</profile>
 	</profiles>
-
 
 	<build>
 		<plugins>
