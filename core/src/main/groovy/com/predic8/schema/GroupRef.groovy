@@ -15,6 +15,7 @@
 package com.predic8.schema;
 
 import groovy.xml.*
+import groovy.namespace.*
 
 import com.predic8.soamodel.AbstractDiffGenerator;
 import com.predic8.soamodel.CreatorContext 
@@ -46,7 +47,7 @@ class GroupRef extends SchemaComponent{
     obj && getClass() == obj.getClass() && ref == obj.ref
   }
   
-  protected getElementName(){
+  public getElementName(){
     'group'
   }
   

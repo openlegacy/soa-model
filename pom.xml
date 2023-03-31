@@ -62,8 +62,8 @@
 		<changelist>-OL</changelist>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<gpg.keyname>5B8A65F6</gpg.keyname>
-		<groovy.version>3.0.12</groovy.version>
-		<slf4j.version>1.7.36</slf4j.version>
+		<groovy.version>4.0.5</groovy.version>
+		<slf4j.version>1.7.21</slf4j.version>
 		<commons-codec.version>1.15</commons-codec.version>
 	</properties>
 
@@ -76,22 +76,22 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.codehaus.groovy</groupId>
+				<groupId>org.apache.groovy</groupId>
 				<artifactId>groovy</artifactId>
 				<version>${groovy.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.codehaus.groovy</groupId>
+				<groupId>org.apache.groovy</groupId>
 				<artifactId>groovy-xml</artifactId>
 				<version>${groovy.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.codehaus.groovy</groupId>
+				<groupId>org.apache.groovy</groupId>
 				<artifactId>groovy-cli-commons</artifactId>
 				<version>${groovy.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.codehaus.groovy</groupId>
+				<groupId>org.apache.groovy</groupId>
 				<artifactId>groovy-json</artifactId>
 				<version>${groovy.version}</version>
 			</dependency>
@@ -116,7 +116,7 @@
 				<version>${commons-codec.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.codehaus.groovy</groupId>
+				<groupId>org.apache.groovy</groupId>
 				<artifactId>groovy-test</artifactId>
 				<version>${groovy.version}</version>
 			</dependency>

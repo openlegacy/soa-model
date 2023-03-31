@@ -15,6 +15,7 @@
 package com.predic8.schema;
 
 import groovy.xml.*
+import groovy.namespace.*
 
 import javax.xml.namespace.QName as JQName;
 
@@ -63,7 +64,7 @@ class ComplexType extends TypeDefinition {
     }
   }
 
-  protected getElementName(){
+  public getElementName(){
     'complexType'
   }
 

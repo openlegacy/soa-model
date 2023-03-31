@@ -13,6 +13,7 @@ package com.predic8.schema;
 
 import static com.predic8.soamodel.Consts.SCHEMA_NS
 import groovy.xml.*
+import groovy.namespace.*
 
 import com.predic8.schema.restriction.BaseRestriction
 import com.predic8.schema.restriction.RestrictionUtil
@@ -72,7 +73,7 @@ class SimpleType extends TypeDefinition {
 				list == obj.list )
 	}
 
-	protected getElementName(){
+	public getElementName(){
 		'simpleType'
 	}
 

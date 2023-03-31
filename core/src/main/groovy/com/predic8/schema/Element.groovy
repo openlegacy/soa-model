@@ -16,6 +16,7 @@ package com.predic8.schema
 
 import com.predic8.soamodel.Consts;
 import groovy.xml.*
+import groovy.namespace.*
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -92,7 +93,7 @@ class Element extends Declaration {
     log.debug "child [$child] of element [$name] parsed!"
   }
 
-  protected getElementName(){
+  public getElementName(){
     'element'
   }
 
