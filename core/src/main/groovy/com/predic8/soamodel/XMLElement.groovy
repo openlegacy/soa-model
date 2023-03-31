@@ -15,7 +15,7 @@
 package com.predic8.soamodel
 
 import com.predic8.wsdl.ns.NSContext
-import groovy.xml.QName
+import groovy.namespace.QName
 import javax.xml.stream.*
 import javax.xml.namespace.QName as JQName
 import com.predic8.xml.util.*
@@ -71,7 +71,7 @@ abstract class XMLElement {
 
 	protected parseText(text){}
 
-	abstract protected getElementName()
+	abstract getElementName()
 
 	private isEndTagReached(token){
 		if(! token.endElement) return false

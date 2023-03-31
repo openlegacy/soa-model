@@ -17,6 +17,7 @@ package com.predic8.schema;
 import static com.predic8.soamodel.Consts.SCHEMA_NS
 
 import groovy.xml.*
+import groovy.namespace.*
 
 import javax.xml.namespace.QName as JQName
 
@@ -132,7 +133,7 @@ class Schema extends SchemaComponent{
     }
   }
 
-  protected getElementName(){
+  public getElementName(){
     'schema'
   }
   

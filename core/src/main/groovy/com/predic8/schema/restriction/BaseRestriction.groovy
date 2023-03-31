@@ -16,7 +16,7 @@ package com.predic8.schema.restriction;
 
 import javax.xml.namespace.QName as JQName
 
-import groovy.xml.QName as GQName
+import groovy.namespace.QName as GQName
 
 import com.predic8.wstool.creator.*
 import com.predic8.schema.restriction.facet.*
@@ -100,7 +100,7 @@ class BaseRestriction  extends SchemaComponent {
     obj && getClass() == obj.getClass() && facets == obj.facets && base == obj.base &&  childSimpleType == obj.childSimpleType
   }
   
-  protected getElementName(){
+  public getElementName(){
     new JQName(SCHEMA_NS, 'restriction')
   }
   

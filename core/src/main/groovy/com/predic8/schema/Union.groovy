@@ -15,7 +15,7 @@
 package com.predic8.schema;
 
 import com.predic8.soamodel.CreatorContext 
-import groovy.xml.QName
+import groovy.namespace.QName
 import com.predic8.wstool.creator.*
 
 class Union extends SchemaComponent{
@@ -45,7 +45,7 @@ class Union extends SchemaComponent{
              simpleTypes == obj.simpleTypes )
   }
   
-  protected getElementName(){
+  public getElementName(){
     'union'
   }
   

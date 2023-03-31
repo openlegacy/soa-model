@@ -14,6 +14,7 @@ package com.predic8.schema;
 import java.util.List;
 
 import groovy.xml.*
+import groovy.namespace.*
 import com.predic8.soamodel.CreatorContext
 import com.predic8.wstool.creator.*
 import javax.xml.stream.*
@@ -62,7 +63,7 @@ class AttributeGroup extends SchemaComponent{
     res.flatten()
   }
 
-  protected getElementName(){
+  public getElementName(){
     'attributeGroup'
   }
 
