@@ -5,7 +5,7 @@ orbs:
 executors:
   cimg-openjdk:
     docker:
-      - image: cimg/openjdk:8.0.312
+      - image: cimg/openjdk:11.0.18
 
 parameters:
   slack_channel:
