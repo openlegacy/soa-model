@@ -268,6 +268,29 @@ class Schema extends SchemaComponent{
 		getType(new QName(targetNamespace,typeName))
 	}
 
+  /**
+   * Binds the default namespace to this schema's targetNamespace, for a chameleon include.
+   *
+   * An <code>xs:include</code> of a schema with no <code>targetNamespace</code> is a "chameleon": its
+   * components become components of the including schema, in the including schema's namespace. Its
+   * unqualified references have to follow them - a <code>base="SingleLineString"</code> written
+   * inside such a document means the type that is now in the including namespace, and resolving it as
+   * "no namespace" finds nothing.
+   *
+   * Which breaks the chain quietly rather than loudly: the EU's EORI validation service declares
+   * <code>EORINumber</code> restricting <code>SingleLineString</code> in a chameleon, so the parse
+   * stopped one step short, no built-in was ever reached, and the type came through with no primitive
+   * behind it - published as an empty complexType, and every value of every request dropped.
+   *
+   * Only when nothing is bound to the default prefix already: a document with its own default xmlns
+   * said what it meant and is left alone.
+   */
+  void adoptUnqualifiedReferences() {
+    if (targetNamespace && !namespaces['']) {
+      namespaces[''] = targetNamespace
+    }
+  }
+
   Group getGroup(QName qname){
     (allSchemas.groups).flatten().find{
       it.qname == qname

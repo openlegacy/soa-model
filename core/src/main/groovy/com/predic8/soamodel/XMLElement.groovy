@@ -104,7 +104,20 @@ abstract class XMLElement {
 		prefix = ns.prefix(this, prefix)
 		if(prefix == "xml") return Consts.XML_NS
 		def res = namespaces[prefix] // Don't use ?: because res == '' should be a valid response
-		if ( res == null ) return parent?.getNamespace(prefix) ?: prefix=='' ? '' : null
+		if ( res == null ) {
+			// The ancestor's answer, and only then the fallback. Written as
+			// `parent?.getNamespace(prefix) ?: prefix=='' ? '' : null` this said the opposite: elvis
+			// binds tighter than the ternary, so it read as `(up ?: prefix=='') ? '' : null` and threw
+			// the ancestor's answer away - every unqualified reference resolved to no namespace even
+			// where an ancestor bound a default xmlns, which is the one thing xml says it must follow.
+			//
+			// It is also what kept a chameleon include from working: the included components take the
+			// including schema's namespace, the unqualified references beside them have to follow, and
+			// the binding that says so sits on the schema - an ancestor.
+			def inherited = parent?.getNamespace(prefix)
+			if ( inherited != null ) return inherited
+			return prefix=='' ? '' : null
+		}
 		res
 	}
 
