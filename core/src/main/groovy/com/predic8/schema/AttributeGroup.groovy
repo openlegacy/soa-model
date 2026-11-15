@@ -57,10 +57,24 @@ class AttributeGroup extends SchemaComponent{
       schema.getAttributeGroup(ref).allAttributes?.flatten()
   }
 
+  /**
+   * Every attribute this group contributes: its own, or the ones the group it references has, plus
+   * every nested group's.
+   *
+   * Built into a new list. It used to append into whichever list it started from, which for a group
+   * with attributes of its own was `attributes` - the group's own field - so asking twice grew the
+   * model, and what it appended was a nested List rather than its elements. `flatten()` hid that in
+   * the answer and not in the field, so a later reader of `attributes` got an ArrayList where an
+   * Attribute belongs and a ClassCastException with it.
+   *
+   * A group that names neither attributes nor a reference contributes nothing, which is an empty
+   * list rather than a null - every caller here adds the result to a list of its own.
+   */
   List<Attribute> getAllAttributes(){
-    def res = attributes ?: attributesFromRef
-    attributeGroups.each { res << it.allAttributes }
-    res.flatten()
+    def res = new ArrayList<Attribute>()
+    res.addAll(attributes ?: attributesFromRef ?: [])
+    attributeGroups.each { res.addAll(it.allAttributes ?: []) }
+    res
   }
 
   public getElementName(){
