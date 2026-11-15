@@ -59,7 +59,19 @@ class Include extends SchemaComponent {
     schema.baseDir = HTTPUtil.updateBaseDir(schemaLocation , schema.baseDir)
     log.debug("includedSchema.baseDir ${schema.baseDir}")
     ctx.ns.push(schema)
-    schema.parse(incToken, ctx.createNewSubContext([targetNamespace: schema.targetNamespace]))
+
+    // An xs:include re-parses THIS schema element from the included document, and XMLElement.parse
+    // begins by taking its parent from the context. A fresh sub-context carries no parent, so the
+    // schema came out of its own include detached from the tree it sits in - and a prefix declared
+    // above it then resolved to nothing.
+    //
+    // Which matters for an inline schema in a wsdl: declaring xmlns:xsd on wsdl:definitions and
+    // using it inside wsdl:types is ordinary, legal xml, and JAX-WS RI publishes exactly that. Such
+    // a contract parsed until an include was added to it, and then failed on xsd:string with "No
+    // namespace declared for prefix 'xsd'" - naming the one reference that was never in doubt.
+    def includedCtx = ctx.createNewSubContext([targetNamespace: schema.targetNamespace])
+    includedCtx.parent = schema.parent
+    schema.parse(incToken, includedCtx)
     ctx.ns.pop(schema)
     schema.baseDir = origBaseDir
   }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  A schema that redefines one type of the document it brings in.
+
+  `xs:redefine` is an include that may restate some of what it includes, and the element was in no
+  dispatch at all - so it was skipped whole, the document it names was never read, and every
+  component declared there went missing. `PayslipType` is referenced below and is declared exactly
+  where this document says it is.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:t="urn:soa-model:test:redefine"
+           targetNamespace="urn:soa-model:test:redefine"
+           elementFormDefault="qualified">
+  <xs:redefine schemaLocation="base.xsd">
+    <xs:simpleType name="AmountType">
+      <xs:restriction base="t:AmountType">
+        <xs:totalDigits value="9"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:redefine>
+
+  <xs:element name="Payslip" type="t:PayslipType"/>
+</xs:schema>

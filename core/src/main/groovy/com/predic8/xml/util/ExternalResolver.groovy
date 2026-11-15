@@ -65,7 +65,13 @@ class ExternalResolver extends ResourceResolver {
 		if (! input instanceof String)
 			throw new RuntimeException("Do not know how to resolve $input")
 
-		if(input.startsWith('file')) {
+		// 'file:', with the colon. Without it this claims every relative location whose name merely
+		// begins with those four letters - and then hands it to `new URL`, which has no scheme to
+		// work with and throws `no protocol: fileCabinetTypes.xsd`. NetSuite's published wsdl imports
+		// exactly that file, so a 2.7 MB contract of 46 schemas could not be read at all, and the
+		// message blames the document rather than this line. A relative location belongs to
+		// `resolveAsFile` at the bottom of this method, which resolves it against its baseDir.
+		if(input.startsWith('file:')) {
 			return fixUtf(new FileInputStream(new URL(input).getPath()))
 		}
 

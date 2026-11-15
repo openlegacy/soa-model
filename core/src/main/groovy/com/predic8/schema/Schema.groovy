@@ -58,6 +58,12 @@ class Schema extends SchemaComponent{
 	 * includes contains a list of Include objects for each included schema.
 	 */
   List<Include> includes = []
+	/**
+	 * redefines contains an entry per xs:redefine. Kept apart from includes so that a reader can
+	 * tell which documents arrived through one - the components they brought in keep the definitions
+	 * the included document gave them, and the restatements are not applied. See Redefine.
+	 */
+  List<Redefine> redefines = []
 	
 	/**
 	 * includedPaths contains a list of Strings with the real schema location 
@@ -122,6 +128,12 @@ class Schema extends SchemaComponent{
       log.debug "including schema $inc"
       inc.parse(token, ctx)
       includes << inc ; break
+      case 'redefine':
+      ctx.token = token
+      def redefine = new Redefine(schema : this)
+      log.debug "redefining from schema $redefine"
+      redefine.parse(token, ctx)
+      redefines << redefine ; break
       case 'attribute' :
       def attribute = new Attribute(schema: this)
       attribute.parse(token, ctx)

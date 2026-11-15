@@ -34,4 +34,16 @@ class ExternalResolverTest {
      Assume.assumeTrue(!System.getenv('OFFLINETESTING'))
      assert resolver.resolveAsString(url) != null
    }
+
+   @Test
+   void testRelativeLocationBeginningWithFile() {
+     // The scheme test used to read `startsWith('file')`, with no colon, so it claimed every
+     // relative location whose name merely begins with those four letters and handed it to
+     // `new URL` - which has no scheme to work with: `no protocol: fileCabinetTypes.xsd`.
+     // NetSuite's published wsdl imports exactly that name, so a 2.7 MB contract of 46 schemas
+     // could not be read at all, and the message blamed the document rather than this resolver.
+     def baseDir = new File(getClass().getResource('/fileCabinetTypes.xsd').toURI()).parent
+
+     assert resolver.resolve('fileCabinetTypes.xsd', baseDir) != null
+   }
 }

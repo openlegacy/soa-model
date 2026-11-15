@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  A schema whose file name begins with the four letters "file".
+
+  NetSuite's published wsdl imports one, and the resolver claimed it as a `file:` URL because its
+  scheme test had no colon - so a 2.7 MB contract of 46 schemas failed with `no protocol:
+  fileCabinetTypes.xsd`, blaming the document.
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="urn:soa-model:test:file-like"
+            elementFormDefault="qualified">
+  <xsd:element name="cabinet" type="xsd:string"/>
+</xsd:schema>

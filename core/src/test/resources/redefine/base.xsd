@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The document a redefine names. Every component here has to survive the redefine. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:t="urn:soa-model:test:redefine"
+           targetNamespace="urn:soa-model:test:redefine"
+           elementFormDefault="qualified">
+  <xs:simpleType name="AmountType">
+    <xs:restriction base="xs:decimal">
+      <xs:totalDigits value="12"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="PayslipType">
+    <xs:sequence>
+      <xs:element name="Gross" type="t:AmountType"/>
+      <xs:element name="Net" type="t:AmountType"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
