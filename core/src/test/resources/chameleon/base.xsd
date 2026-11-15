@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A chameleon: no targetNamespace, and a two-step simple type chain referenced unqualified. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:simpleType name="SingleLineString">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="128"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="EORINumber">
+    <xs:restriction base="SingleLineString">
+      <xs:minLength value="3"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

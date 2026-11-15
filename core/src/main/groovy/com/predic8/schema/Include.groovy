@@ -55,9 +55,24 @@ class Include extends SchemaComponent {
       }
       if(incToken.hasNext()) incToken.next()
     }
+    // Whether the included document names a namespace of its own. Read here, off the schema element
+    // the loop above stopped on, because after the parse the schema carries the INCLUDING one either
+    // way - the same object is re-parsed - and the two cases are then indistinguishable.
+    def includedTargetNamespace = incToken.getAttributeValue( null , 'targetNamespace')
+
     def origBaseDir = schema.baseDir
     schema.baseDir = HTTPUtil.updateBaseDir(schemaLocation , schema.baseDir)
     log.debug("includedSchema.baseDir ${schema.baseDir}")
+    // A chameleon: the included components become this schema's, in this schema's namespace, and the
+    // unqualified references written beside them have to resolve there too. Bound BEFORE the parse,
+    // because a reference is resolved to a QName while its attributes are read and not lazily
+    // afterwards - binding it after left every such reference already resolved to no namespace.
+    // `parseNamespaces` merges the included root's own declarations over this, so a chameleon that
+    // does declare a default xmlns still wins.
+    if (!includedTargetNamespace) {
+      schema.adoptUnqualifiedReferences()
+    }
+
     ctx.ns.push(schema)
 
     // An xs:include re-parses THIS schema element from the included document, and XMLElement.parse

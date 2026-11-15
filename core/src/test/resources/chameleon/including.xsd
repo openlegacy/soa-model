@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="urn:soa-model:test:chameleon"
+           targetNamespace="urn:soa-model:test:chameleon"
+           elementFormDefault="qualified">
+  <xs:include schemaLocation="base.xsd"/>
+  <xs:element name="validate">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="eori" type="tns:EORINumber" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
