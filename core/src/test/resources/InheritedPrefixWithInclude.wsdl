@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  An inline schema that declares no prefix of its own, beside an xs:include.
+
+  `xmlns:xsd` is declared on `wsdl:definitions` and used inside `wsdl:types`, which is ordinary,
+  legal xml - JAX-WS RI publishes exactly this. The include is what used to break it: re-parsing the
+  schema element from the included document took its parent from a fresh context that carried none,
+  so the schema came out detached from the wsdl and `xsd:string` resolved to nothing.
+-->
+<wsdl:definitions name="InheritedPrefix" targetNamespace="urn:soa-model:test:inherited"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:tns="urn:soa-model:test:inherited">
+  <wsdl:types>
+    <xsd:schema targetNamespace="urn:soa-model:test:inherited" elementFormDefault="qualified">
+      <xsd:include schemaLocation="redefine/chameleon.xsd"/>
+      <xsd:element name="Ping">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Msg" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="In"><wsdl:part name="parameters" element="tns:Ping"/></wsdl:message>
+  <wsdl:portType name="P"><wsdl:operation name="Ping"><wsdl:input message="tns:In"/></wsdl:operation></wsdl:portType>
+</wsdl:definitions>
