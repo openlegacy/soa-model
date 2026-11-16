@@ -61,6 +61,14 @@ class Include extends SchemaComponent {
     def includedTargetNamespace = incToken.getAttributeValue( null , 'targetNamespace')
 
     def origBaseDir = schema.baseDir
+    // The form defaults belong to THIS document, and the re-parse below reads the included
+    // document's `<xs:schema>` attributes onto this same object - so without putting them back,
+    // everything this document declares after the include reads back with the included document's
+    // form. Restored the way baseDir is, for the same reason and in the same place; what the
+    // included document declared keeps its own answer, which `Declaration.formDefault` captured
+    // while it was being parsed.
+    def origElementForm = schema.elementFormDefault
+    def origAttributeForm = schema.attributeFormDefault
     schema.baseDir = HTTPUtil.updateBaseDir(schemaLocation , schema.baseDir)
     log.debug("includedSchema.baseDir ${schema.baseDir}")
     // A chameleon: the included components become this schema's, in this schema's namespace, and the
@@ -89,6 +97,8 @@ class Include extends SchemaComponent {
     schema.parse(incToken, includedCtx)
     ctx.ns.pop(schema)
     schema.baseDir = origBaseDir
+    schema.elementFormDefault = origElementForm
+    schema.attributeFormDefault = origAttributeForm
   }
 
   public getElementName(){

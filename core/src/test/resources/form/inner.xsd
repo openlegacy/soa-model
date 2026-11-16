@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  A chameleon with NO form defaults of its own, so its local declarations are unqualified. The
+  including document says qualified, but a form default belongs to the document that writes the
+  declaration, not to the namespace the declaration ends up in - so these stay unqualified even
+  after the chameleon moves them into the includer's namespace.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="InnerType">
+    <xs:sequence>
+      <xs:element name="fromInner" type="xs:string"/>
+    </xs:sequence>
+    <xs:attribute name="innerAttribute" type="xs:string"/>
+  </xs:complexType>
+</xs:schema>
