@@ -50,6 +50,9 @@ class Element extends Declaration {
 
   protected parseAttributes(token, params){
     super.parseAttributes(token, params)
+    // Taken now, while the schema still holds the form default of the document being parsed - see
+    // Declaration.formDefault for why it cannot be read back later.
+    formDefault = schema?.elementFormDefault
       if (token.getAttributeValue( null , 'type'))
         type = getTypeQName(token.getAttributeValue( null , 'type'))
     minOccurs = token.getAttributeValue( null , 'minOccurs') ?: 1

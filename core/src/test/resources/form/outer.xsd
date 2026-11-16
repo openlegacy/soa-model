@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Qualified for both elements and attributes, and the include is the first child: everything this
+  document declares after it is qualified, and nothing the included document declares is.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="urn:soa-model:test:form"
+           targetNamespace="urn:soa-model:test:form"
+           elementFormDefault="qualified"
+           attributeFormDefault="qualified">
+  <xs:include schemaLocation="inner.xsd"/>
+  <xs:complexType name="OuterType">
+    <xs:sequence>
+      <xs:element name="fromOuter" type="xs:string"/>
+      <xs:element name="saysUnqualified" type="xs:string" form="unqualified"/>
+    </xs:sequence>
+    <xs:attribute name="outerAttribute" type="xs:string"/>
+    <xs:attribute name="unqualifiedAttribute" type="xs:string" form="unqualified"/>
+  </xs:complexType>
+  <xs:element name="outerElement" type="tns:OuterType"/>
+</xs:schema>
