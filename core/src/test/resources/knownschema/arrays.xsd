@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  A document of a namespace this library ships a copy of, declaring a type that copy does not have.
+  Microsoft's ad-platform contract is exactly this: the same namespace, with ArrayOflong in it.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/Arrays"
+           targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"
+           elementFormDefault="qualified">
+  <xs:complexType name="ArrayOflong">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="long" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

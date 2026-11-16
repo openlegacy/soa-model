@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="urn:soa-model:test:knownschema"
+           xmlns:arr="http://schemas.microsoft.com/2003/10/Serialization/Arrays"
+           targetNamespace="urn:soa-model:test:knownschema"
+           elementFormDefault="qualified">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" schemaLocation="arrays.xsd"/>
+  <xs:element name="request">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="accountIds" type="arr:ArrayOflong"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

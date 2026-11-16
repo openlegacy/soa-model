@@ -40,15 +40,26 @@ class Import extends SchemaComponent {
 		schemaLocation = token.getAttributeValue( null , 'schemaLocation')
 		log.debug("import: $schemaLocation , ns: $namespace , schema.basedir: ${schema.baseDir}")
 		
-		// Known schemas will not be parsed from the schemaLocation. Instead the copy from Classpath will be used.
-		if(namespace in KnownSchemas.docs.keySet()){
-			log.info("Loading schema '$namespace' provided by SOA Model instead of user-provided document.")
-			return importSchema = (new SchemaParser(resourceResolver: new ClasspathResolver())).parse(KnownSchemas.docs[namespace])
-		}
-		
-		if(!schemaLocation)	return
+		// A copy of a well-known namespace ships with this library, and it used to REPLACE the
+		// document the author pointed at. Which is wrong whenever the two differ, and they do: two
+		// services may both declare `.../Serialization/Arrays` and declare different array types in
+		// it - the copy here carries `ArrayOfguid`, `ArrayOfunsignedInt` and `ArrayOfbase64Binary`,
+		// Microsoft's ad-platform contract declares `ArrayOflong`, and with the copy substituted
+		// every element typed `ArrayOflong` resolved to no type at all. A consumer then published a
+		// contract with nine of its elements missing, and REFUSED the requests the real service
+		// accepts.
+		//
+		// So the copy is a fallback, for the case it was added for: an `xs:import` with no
+		// `schemaLocation` is legal and says only that components of that namespace may appear,
+		// leaving the document to the consumer - and these eight namespaces are the ones imported
+		// that way. The author's own document wins whenever there is one to read.
+		if(!schemaLocation)	return importSchema = knownSchema()
 		
 		importSchema = ctx.getImportedSchema(this)
+		
+		// and when it cannot be read - an unreachable location, an unparsable document - the copy is
+		// still better than nothing for a namespace this library knows
+		if(!importSchema) importSchema = knownSchema()
 	}
 
 	def getImportSchema() {
@@ -70,6 +81,15 @@ class Import extends SchemaComponent {
 
 	String toString(){
 		"import[ namespace=$namespace, schemaLocation=$schemaLocation ]"
+	}
+
+	/**
+	 * The copy of this namespace that ships with this library, or null where it knows none.
+	 */
+	private Schema knownSchema() {
+		if(!(namespace in KnownSchemas.docs.keySet())) return null
+		log.info("Loading schema '$namespace' provided by SOA Model: the import names no document that could be read.")
+		(new SchemaParser(resourceResolver: new ClasspathResolver())).parse(KnownSchemas.docs[namespace])
 	}
 
 	protected parseImportedSchema(ctx) {
