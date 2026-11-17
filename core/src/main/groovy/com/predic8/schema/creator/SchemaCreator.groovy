@@ -108,6 +108,11 @@ class SchemaCreator extends AbstractSchemaCreator <SchemaCreatorContext>{
 		if(complexType.abstractAttr) {
       attrs['abstract'] = complexType.abstractAttr
     }
+    // Now that the parser reads it, the creator writes it: a document that round trips through this
+    // model would otherwise lose the one thing it says about the text between its elements.
+    if(complexType.mixed) {
+      attrs['mixed'] = 'true'
+    }
     builder.'xsd:complexType'(attrs){
       if(complexType.annotation) {
         complexType.annotation?.create(this, ctx)

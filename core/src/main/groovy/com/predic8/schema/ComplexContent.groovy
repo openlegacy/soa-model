@@ -29,7 +29,11 @@ class ComplexContent extends SchemaComponent {
   BaseRestriction restriction
 
    protected parseAttributes(token, params){
-		 mixed = token.getAttributeValue( null , 'mixed')
+		 // Compared, not coerced: assigning the raw attribute value to a boolean made an explicit
+		 // `mixed="false"` read as true, so nothing downstream could tell the two apart. Xsd's boolean
+		 // lexical space is `true|false|1|0`.
+		 def mixedValue = token.getAttributeValue( null , 'mixed')
+		 mixed = mixedValue == 'true' || mixedValue == '1'
    }
 
   protected parseChildren(token, child, params) {

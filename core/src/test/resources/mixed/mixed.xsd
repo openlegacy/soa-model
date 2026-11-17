@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The three ways a document talks about character data between its elements.
+
+  `mixed` is allowed on the complexType itself and on a complexContent, and the two were not read
+  the same way: the first was not read at all, and the second was coerced by truthiness, so an
+  explicit mixed="false" was indistinguishable from mixed="true".
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:tns="urn:predic8:mixed"
+            targetNamespace="urn:predic8:mixed"
+            elementFormDefault="qualified">
+
+  <!-- on the type itself: free text between the elements -->
+  <xsd:complexType name="Narrative" mixed="true">
+    <xsd:sequence>
+      <xsd:element name="emphasis" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="reference" type="xsd:anyURI" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- said explicitly, and said NO: element-only content, on purpose -->
+  <xsd:complexType name="Strict" mixed="false">
+    <xsd:sequence>
+      <xsd:element name="value" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- not said at all, which xsd reads as element-only -->
+  <xsd:complexType name="Silent">
+    <xsd:sequence>
+      <xsd:element name="value" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- the other place xsd allows it: on the content model of a derivation -->
+  <xsd:complexType name="DerivedNarrative">
+    <xsd:complexContent mixed="true">
+      <xsd:extension base="tns:Silent">
+        <xsd:sequence>
+          <xsd:element name="note" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <!-- and the same place saying no -->
+  <xsd:complexType name="DerivedStrict">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="tns:Silent">
+        <xsd:sequence>
+          <xsd:element name="note" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:element name="narrative" type="tns:Narrative"/>
+</xsd:schema>
