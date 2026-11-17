@@ -28,10 +28,24 @@ class ComplexType extends TypeDefinition {
   
   SchemaComponent model
   String abstractAttr 
+
+  /**
+   * Whether character data may appear between this type's elements.
+   *
+   * Read here because xsd allows `mixed` on the complexType itself as well as on a
+   * `complexContent`, and only the second was read - so a type declaring it the first way came
+   * through as element-only content, which is the opposite of what the document says about its text.
+   *
+   * Compared rather than coerced: xsd's boolean lexical space is `true|false|1|0`, and assigning the
+   * raw attribute value to a boolean makes an explicit `mixed="false"` read as true.
+   */
+  boolean mixed
 	
 	protected parseAttributes(token, params){
 		super.parseAttributes(token, params)
 		abstractAttr = token.getAttributeValue( null , 'abstract')
+		def mixedValue = token.getAttributeValue( null , 'mixed')
+		mixed = mixedValue == 'true' || mixedValue == '1'
 	}
 	
   protected parseChildren(token, child, params){
