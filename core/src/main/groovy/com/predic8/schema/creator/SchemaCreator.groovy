@@ -90,6 +90,12 @@ class SchemaCreator extends AbstractSchemaCreator <SchemaCreatorContext>{
 		if(element.fixedValue) attrs['fixed'] = element.fixedValue
 		if(element.nillable) attrs['nillable'] = element.nillable
 		if(element.form) attrs['form'] = element.form
+		// Both are parsed, so both have to survive a round trip through this model. `abstract` says the
+		// declaration may not appear in an instance, and `substitutionGroup` says which head it stands
+		// in for: a document that lost them would claim a substitution group accepting its own head and
+		// holding no members.
+		if(element.abstractElement) attrs['abstract'] = 'true'
+		if(element.substitutionGroup) attrs['substitutionGroup'] = element.getTypeString(element.substitutionGroup)
     builder.'xsd:element'(attrs){
       element.annotation?.create(this, ctx)
       element.embeddedType?.create(this, ctx)

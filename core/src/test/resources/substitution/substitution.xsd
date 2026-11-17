@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  A substitution group whose head may not appear in an instance, and one whose head may.
+
+  `abstract` was not parsed at all, so neither could be told from the other: a consumer building a
+  choice out of a group had to guess, and the guess was the head's TYPE - a different statement
+  about a different component.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="urn:ol:test:substitution"
+           targetNamespace="urn:ol:test:substitution"
+           elementFormDefault="qualified">
+
+  <xs:complexType name="ShapeType">
+    <xs:sequence>
+      <xs:element name="label" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- the head: never in an instance, and its type is NOT abstract -->
+  <xs:element name="shape" type="tns:ShapeType" abstract="true"/>
+
+  <!-- a member that may not appear either, and heads a group of its own -->
+  <xs:element name="roundish" type="tns:ShapeType" abstract="1" substitutionGroup="tns:shape"/>
+
+  <!-- the ones an instance may carry -->
+  <xs:element name="circle" type="tns:ShapeType" substitutionGroup="tns:roundish"/>
+  <xs:element name="square" type="tns:ShapeType" abstract="false" substitutionGroup="tns:shape"/>
+
+</xs:schema>
