@@ -58,7 +58,29 @@ class Element extends Declaration {
    * */
   boolean abstractElement
 
+  /**
+   * `block` and `final` on a declaration: which substitutions this element refuses in an instance,
+   * and which derivations may head a group under it. Unparsed before - see
+   * `TypeDefinition.blockValue` for what they cost.
+   * */
+  String blockValue
+  String finalValue
+
   Unique unique
+
+  /**
+   * The `xs:key` and `xs:keyref` constraints declared here, which nothing parsed at all.
+   *
+   * `xs:unique` was read and these two were not, so a document stating its identity the usual way -
+   * a key and the references to it - said nothing a consumer could even see, and a report about
+   * identity constraints was silently about a third of them.
+   *
+   * Held as [Unique] and [Keyref]: a key IS a unique with a stronger claim - every selected node
+   * must carry the fields, not merely differ in them - and a keyref is a key plus the name of the
+   * key it refers to.
+   * */
+  List<Unique> keys = []
+  List<Keyref> keyrefs = []
 	String expectedContentTypes
 
   protected parseAttributes(token, params){
@@ -83,6 +105,8 @@ class Element extends Declaration {
 		defaultValue = token.getAttributeValue( null , 'default')
 		fixedValue = token.getAttributeValue( null , 'fixed')
 		nillable = (token.getAttributeValue( null , 'nillable') == 'true')
+		blockValue = token.getAttributeValue( null , 'block')
+		finalValue = token.getAttributeValue( null , 'final')
 		def abstractValue = token.getAttributeValue( null , 'abstract')
 		abstractElement = abstractValue == 'true' || abstractValue == '1'
 		form = token.getAttributeValue( null , 'form')
@@ -107,6 +131,14 @@ class Element extends Declaration {
 			case 'unique' :
 				unique = new Unique(schema:schema, parent: this)
 					unique.parse(token, params) ; break
+			case 'key' :
+				def key = new Key(schema:schema, parent: this)
+					key.parse(token, params)
+					keys << key ; break
+			case 'keyref' :
+				def keyref = new Keyref(schema:schema, parent: this)
+					keyref.parse(token, params)
+					keyrefs << keyref ; break
     }
     log.debug "child [$child] of element [$name] parsed!"
   }

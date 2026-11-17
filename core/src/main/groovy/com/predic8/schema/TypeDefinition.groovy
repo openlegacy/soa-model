@@ -22,6 +22,23 @@ import groovy.namespace.*
 abstract class TypeDefinition extends SchemaComponent {
 
 	QName qname
+
+	/**
+	 * `block` and `final`: what may SUBSTITUTE for a declaration of this type in an instance, and
+	 * what may be DERIVED from it.
+	 *
+	 * Neither was parsed, and both are statements an author makes on purpose - insurance's `Coverage`
+	 * is `block="restriction"`, and the schema around it sets a `finalDefault` as well. A consumer
+	 * that cannot read them republishes a type open to every derivation and substitution the original
+	 * forbids.
+	 *
+	 * Kept as the raw attribute value, which is a list over `#all`, `extension`, `restriction`,
+	 * `substitution`, `list` and `union`: that is what a reader has to put back, and xsd gives the
+	 * same two attributes different vocabularies on a complexType and on a simpleType.
+	 * */
+	String blockValue
+	String finalValue
+
 	List<Attribute> attributes = []
 	List<AttributeGroup> attributeGroups = []
 	AnyAttribute anyAttribute
@@ -29,6 +46,8 @@ abstract class TypeDefinition extends SchemaComponent {
 	protected parseAttributes(token, params){
 		super.parseAttributes(token, params)
 		name = token.getAttributeValue( null , 'name')
+		blockValue = token.getAttributeValue( null , 'block')
+		finalValue = token.getAttributeValue( null , 'final')
 		if (name) {
 			def preName = new PrefixedName(name)
 			qname = new QName(schema.targetNamespace, preName.localName)
