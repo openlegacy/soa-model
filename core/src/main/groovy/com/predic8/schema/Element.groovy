@@ -45,6 +45,19 @@ class Element extends Declaration {
   String fixedValue //can only be used if the element's content is a simple type or text only
   String form // Possible values: qualified/unqualified. Cannot be used if element is top level
   boolean nillable = false
+
+  /**
+   * `abstract="true"`: this declaration may not appear in an instance at all, and a member of the
+   * substitution group it heads appears in its place.
+   *
+   * Not parsed before, and nothing downstream could ask - so a consumer building a choice out of a
+   * substitution group had to guess whether the head belonged in it, and offered it unless its TYPE
+   * was abstract, which is a different statement about a different component. Read the way
+   * `ComplexType.mixed` is, over xsd's lexical space for a boolean rather than by coercing the raw
+   * attribute value, so that an `abstract="false"` said out loud is false.
+   * */
+  boolean abstractElement
+
   Unique unique
 	String expectedContentTypes
 
@@ -70,10 +83,12 @@ class Element extends Declaration {
 		defaultValue = token.getAttributeValue( null , 'default')
 		fixedValue = token.getAttributeValue( null , 'fixed')
 		nillable = (token.getAttributeValue( null , 'nillable') == 'true')
+		def abstractValue = token.getAttributeValue( null , 'abstract')
+		abstractElement = abstractValue == 'true' || abstractValue == '1'
 		form = token.getAttributeValue( null , 'form')
 		expectedContentTypes = token.getAttributeValue(Consts.XML_MIME_NS, 'expectedContentTypes')
 
-		log.debug "element attribute parsed: [name=$name, type=$type, ref=$ref, nillable=$nillable]"
+		log.debug "element attribute parsed: [name=$name, type=$type, ref=$ref, nillable=$nillable, abstract=$abstractElement]"
   }
 
 
