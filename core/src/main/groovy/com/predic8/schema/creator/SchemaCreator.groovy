@@ -96,10 +96,14 @@ class SchemaCreator extends AbstractSchemaCreator <SchemaCreatorContext>{
 		// holding no members.
 		if(element.abstractElement) attrs['abstract'] = 'true'
 		if(element.substitutionGroup) attrs['substitutionGroup'] = element.getTypeString(element.substitutionGroup)
+		if(element.blockValue) attrs['block'] = element.blockValue
+		if(element.finalValue) attrs['final'] = element.finalValue
     builder.'xsd:element'(attrs){
       element.annotation?.create(this, ctx)
       element.embeddedType?.create(this, ctx)
   		element.unique?.create(this, ctx)
+  		element.keys.each { it.create(this, ctx) }
+  		element.keyrefs.each { it.create(this, ctx) }
     }
   }
 
@@ -113,6 +117,15 @@ class SchemaCreator extends AbstractSchemaCreator <SchemaCreatorContext>{
     }
 		if(complexType.abstractAttr) {
       attrs['abstract'] = complexType.abstractAttr
+    }
+		// What may be derived from this type, and what may substitute for a declaration of it. Parsed
+		// now, so a round trip has to keep them: a type published without its `final` stands open to a
+		// derivation the original forbids.
+		if(complexType.blockValue) {
+      attrs['block'] = complexType.blockValue
+    }
+		if(complexType.finalValue) {
+      attrs['final'] = complexType.finalValue
     }
     // Now that the parser reads it, the creator writes it: a document that round trips through this
     // model would otherwise lose the one thing it says about the text between its elements.
@@ -410,15 +423,39 @@ class SchemaCreator extends AbstractSchemaCreator <SchemaCreatorContext>{
   }
   
   void createUnique(Unique unique, SchemaCreatorContext  ctx){
+  	createIdentityConstraint('xsd:unique', unique, [:])
+  }
+
+  /**
+   * An `xs:key`, written the way the unique next to it is: the two differ in their name and in what
+   * they claim, not in what they hold.
+   * */
+  void createKey(Key key, SchemaCreatorContext  ctx){
+  	createIdentityConstraint('xsd:key', key, [:])
+  }
+
+  /**
+   * An `xs:keyref`, with the `refer` that is the whole point of it - a keyref written without the
+   * name of the key it points at says nothing at all.
+   * */
+  void createKeyref(Keyref keyref, SchemaCreatorContext  ctx){
+  	def extra = [:]
+  	if(keyref.refer) extra['refer'] = keyref.getTypeString(keyref.refer)
+  	else if(keyref.referValue) extra['refer'] = keyref.referValue
+  	createIdentityConstraint('xsd:keyref', keyref, extra)
+  }
+
+  private void createIdentityConstraint(String elementName, Unique constraint, Map extra){
   	def attribs = [:]
-  	if(unique.name) attribs['name'] = unique.name
-  			if(unique.id) attribs['id'] = unique.id
-  			builder.'xsd:unique'(attribs) {
-  				if(unique.selector) builder.'xsd:selector'(xpath:unique.selector.xpath)
-  				unique.fields.each { 
-						 builder.'xsd:field'(xpath: it.xpath)
-  				}
-				}
+  	if(constraint.name) attribs['name'] = constraint.name
+  	if(constraint.id) attribs['id'] = constraint.id
+  	attribs.putAll(extra)
+  	builder."$elementName"(attribs) {
+  		if(constraint.selector) builder.'xsd:selector'(xpath:constraint.selector.xpath)
+  		constraint.fields.each {
+  			builder.'xsd:field'(xpath: it.xpath)
+  		}
+  	}
   }
 
   /**

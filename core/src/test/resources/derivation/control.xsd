@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  What a schema says about what may be derived from its declarations, and about the identity of its
+  content. Three attributes and two elements that nothing parsed:
+
+   * `block` and `final`, on a type and on an element - insurance writes both, and a consumer that
+     cannot read them republishes a declaration open to what the original forbids;
+   * `finalDefault` and `blockDefault`, which say it once for the whole document;
+   * `xs:key` and `xs:keyref`, where `xs:unique` was the only identity constraint read.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="urn:ol:test:derivation"
+           targetNamespace="urn:ol:test:derivation"
+           elementFormDefault="qualified"
+           blockDefault="substitution"
+           finalDefault="restriction">
+
+  <xs:complexType name="CoverageType" abstract="true" block="restriction" final="extension">
+    <xs:sequence>
+      <xs:element name="coverageCd" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="CurrencyCode" final="#all">
+    <xs:restriction base="xs:string">
+      <xs:length value="3"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="coverage" type="tns:CoverageType" abstract="true" block="restriction"/>
+
+  <xs:element name="policy">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="coverage" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="cd" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="claim" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="against" type="xs:string"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:unique name="coverageIsDistinct">
+      <xs:selector xpath="tns:coverage"/>
+      <xs:field xpath="@cd"/>
+    </xs:unique>
+
+    <xs:key name="coverageKey">
+      <xs:selector xpath="tns:coverage"/>
+      <xs:field xpath="@cd"/>
+    </xs:key>
+
+    <xs:keyref name="claimCoverage" refer="tns:coverageKey">
+      <xs:selector xpath="tns:claim"/>
+      <xs:field xpath="@against"/>
+    </xs:keyref>
+  </xs:element>
+
+</xs:schema>

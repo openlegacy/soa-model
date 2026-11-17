@@ -53,6 +53,8 @@ class Schema extends SchemaComponent{
   String targetNamespace = ''
   String attributeFormDefault = "unqualified"
   String elementFormDefault = "unqualified"
+  String blockDefault
+  String finalDefault
   List<Import> imports = []
 	/**
 	 * includes contains a list of Include objects for each included schema.
@@ -94,6 +96,10 @@ class Schema extends SchemaComponent{
     ctx.setImportedSchema(this)
     attributeFormDefault = token.getAttributeValue( null , 'attributeFormDefault') ?: "unqualified"
     elementFormDefault = token.getAttributeValue( null , 'elementFormDefault') ?: "unqualified"
+    // What every declaration in this document blocks and forbids unless it says otherwise. Insurance
+    // states `finalDefault="restriction"` once, at the top, and means it about every type below.
+    blockDefault = token.getAttributeValue( null , 'blockDefault')
+    finalDefault = token.getAttributeValue( null , 'finalDefault')
   }
 
   protected parseChildren(token, child, ctx){
